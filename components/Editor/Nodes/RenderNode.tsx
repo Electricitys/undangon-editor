@@ -1,3 +1,5 @@
+"use client";
+
 import { useEditor, useNode } from "@craftjs/core";
 import { ROOT_NODE } from "@craftjs/utils";
 import { ReactElement, useCallback, useEffect, useRef } from "react";

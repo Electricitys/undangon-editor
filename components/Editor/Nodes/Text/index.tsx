@@ -1,12 +1,13 @@
+"use client";
+
 import { UserComponent, useEditor, useNode } from "@craftjs/core";
 import { ReactNode, useEffect, useState } from "react";
 import ContentEditable from "react-contenteditable";
-import { TextSettings } from "./TextSettings";
 import { useFontFace } from "./FontFaceProvider";
-
+import { TextSettings } from "./TextSettings";
 
 type TextProps = {
-  children: ReactNode;
+  children?: ReactNode;
   lineHeight: number;
   text: string;
   textAlign: string;
@@ -68,7 +69,7 @@ export const Text: UserComponent<TextProps> = ({
 
   if (children) {
     return (
-      <div ref={(ref)=>connect(ref as any)} style={style as any}>
+      <div ref={(ref) => connect(ref as any)} style={style as any}>
         {children}
       </div>
     );
@@ -76,7 +77,7 @@ export const Text: UserComponent<TextProps> = ({
 
   if (!editorEnabled) {
     return (
-      <div ref={(ref)=>connect(ref as any)} style={style as any}>
+      <div ref={(ref) => connect(ref as any)} style={style as any}>
         <div dangerouslySetInnerHTML={{ __html: text }} />
       </div>
     );
@@ -84,7 +85,7 @@ export const Text: UserComponent<TextProps> = ({
 
   return (
     <div
-      ref={(ref)=>connect(ref as any)}
+      ref={(ref) => connect(ref as any)}
       style={style as any}
       onDoubleClick={() => {
         setIsEditable(true);
@@ -115,6 +116,7 @@ Text.craft = {
     text: "Text Area",
     textAlign: "left",
     textShadow: undefined,
+    lineHeight: 1,
     fontSize: 12,
     fontWeight: "normal",
     fontFamily: "Roboto",

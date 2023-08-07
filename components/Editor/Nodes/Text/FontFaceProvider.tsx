@@ -1,21 +1,17 @@
-import {
-  FC,
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+"use client";
+
+import React from "react";
 import { useDebounce, useList, useQueue } from "react-use";
 
-const FontFaceContext = createContext<any>(null);
+const FontFaceContext = React.createContext<any>(null);
 
 type FontFaceProviderProps = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
-export const FontFaceProvider: FC<FontFaceProviderProps> = ({ children }) => {
+export const FontFaceProvider: React.FC<FontFaceProviderProps> = ({
+  children,
+}) => {
   const [list, { push }] = useList([]);
   const loadQueue = useQueue();
 
@@ -69,6 +65,6 @@ export const FontFaceProvider: FC<FontFaceProviderProps> = ({ children }) => {
 };
 
 export const useFontFace = () => {
-  const fontFace = useContext(FontFaceContext);
+  const fontFace = React.useContext(FontFaceContext);
   return fontFace;
 };

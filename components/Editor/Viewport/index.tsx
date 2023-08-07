@@ -1,25 +1,35 @@
-import { Editor, SerializedNode, serializeNode, useEditor } from "@craftjs/core";
+import {
+  Editor,
+  SerializedNode,
+  serializeNode,
+  useEditor,
+} from "@craftjs/core";
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { getCloneTree } from "../utils/getCloneTree";
 import { useToast } from "@/components/ui/use-toast";
 import { FontFaceProvider } from "../Nodes/Text/FontFaceProvider";
-import { ViewportProvider } from "./useViewport";
+import {
+  ViewportProvider,
+  ViewportProviderProps,
+  useViewport,
+} from "./useViewport";
 import { RenderNode } from "../Nodes/RenderNode";
 
 import * as ResolverNodes from "../Nodes";
+import { Toolbar } from "./Toolbar";
+import { Toolbox } from "./Toolbox/Toolbox";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
   children: ReactNode;
 };
-type ViewportProps = {
-  children: ReactNode;
-  isProduction: boolean;
-};
+
+interface ViewportProps extends ViewportProviderProps {}
 
 export const ViewportWrapper: FC<ViewportWrapperProps> = ({ children }) => {
   const { toast } = useToast();
+  const { media } = useViewport();
   const {
     connectors,
     actions,
@@ -188,57 +198,51 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({ children }) => {
   });
 
   return (
-    <div tabIndex={0} className="prevent-select fixed inset-0 flex-col">
-      <div className="border-1 border-gray-300">{/* <Toolbar /> */}</div>
-      <div className="grow">
-        <div className="w-72 border-1 border-gray-300 relative">
-          <div className="absolute inset-0 overflow-auto">
-            {/* <Toolbox />
-            <ComponentPanel />
-            <LayerPanel /> */}
-          </div>
-        </div>
-        <div className="page-container grow">
-          <div
-            className="editor-renderer bg-gray-200 overflow-y-auto overflow-x-hidden h-px min-h-full absolute"
-            ref={(ref) =>
-              connectors.select(
-                connectors.hover(ref as any, null as any),
-                null as any
-              )
-            }
-          >
-            <div className="py-4 px-2">
-              <div
-                className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"
-                style={{
-                  // maxWidth: media.currentMedia.width,
-                  transition: "max-width 500ms ease",
-                }}
-              >
-                {children}
-                <div className="absolute bottom-full left-0">
-                  {/* {media.currentMedia.width} x {media.currentMedia.height} */}
-                </div>
+    <>
+      <div className="fixed inset-0 bg-gray-200" />
+      <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+        <Toolbox />
+        {/* <ComponentPanel />
+          <LayerPanel /> */}
+      </div>
+      <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
+        {/* <SettingPanel /> */}
+      </div>
+      <div className="border-b border-gray-300 fixed right-0 left-0 top-0 bg-white">
+        <Toolbar />
+      </div>
+      <div className="page-container pt-14 mr-72 ml-72 h-screen">
+        <div
+          className="editor-renderer bg-gray-200"
+          ref={(ref) =>
+            connectors.select(
+              connectors.hover(ref as any, null as any),
+              null as any
+            )
+          }
+        >
+          <div className="py-4 px-2">
+            <div
+              className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"
+              style={{
+                maxWidth: media.currentMedia.width,
+                transition: "max-width 500ms ease",
+              }}
+            >
+              {children}
+              <div className="absolute bottom-full left-0">
+                {media.currentMedia.width} x {media.currentMedia.height}
               </div>
             </div>
           </div>
         </div>
-        <div className="w-72 border-l border-gray-300 relative">
-          <div className="absolute inset-0 overflow-auto">
-            {/* <SettingPanel /> */}
-          </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export const Viewport: FC<ViewportProps> = ({
-  isProduction = false,
-  children,
-  ...props
-}) => {
+export const Viewport: FC<ViewportProps> = ({ children, ...props }) => {
+  const { isProduction } = props;
   if (isProduction) {
     return (
       <Editor
@@ -263,7 +267,7 @@ export const Viewport: FC<ViewportProps> = ({
       onRender={RenderNode}
     >
       <FontFaceProvider>
-        <ViewportProvider isProduction={isProduction} {...props}>
+        <ViewportProvider {...props}>
           <ViewportWrapper>{children}</ViewportWrapper>
         </ViewportProvider>
       </FontFaceProvider>

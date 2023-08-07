@@ -1,25 +1,30 @@
+"use client";
+
 import { generateId } from "@/components/utils/generateId";
-import {
-  FC,
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInternalEditor";
+import { Delete } from "@craftjs/utils";
+import React from "react";
 
-const ViewportContext = createContext<any>(null);
+const ViewportContext = React.createContext<any>(null);
 
-type ViewportProviderProps = {
-  children: ReactNode;
-  isProduction: boolean;
+export type ViewportProviderProps = {
+  children: React.ReactNode;
+  isProduction?: boolean;
   onClose?: () => void;
-  onPublish?: () => void;
-  constructPreviewUrl?: string;
+  onPublish: (
+    query: Delete<useInternalEditorReturnType<any>["query"], "deserialize">,
+    loadingState: { isLoading: boolean; setLoading: (value: boolean) => void }
+  ) => void;
+  constructPreviewUrl?: () => void;
   id?: string;
 };
 
-export const ViewportProvider: FC<ViewportProviderProps> = ({
+interface IViewportProviderProp
+  extends Omit<ViewportProviderProps, "onPublish"> {
+  onPublish?: ViewportProviderProps["onPublish"];
+}
+
+export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   isProduction = false,
 
   children,
@@ -41,9 +46,9 @@ export const ViewportProvider: FC<ViewportProviderProps> = ({
       width: 375,
     },
   };
-  let [currentMedia, setCurrentMedia] = useState(availableMedia["mobile"]);
+  let [currentMedia, setCurrentMedia] = React.useState(availableMedia["mobile"]);
 
-  const setMedia = useCallback((name: "desktop" | "mobile") => {
+  const setMedia = React.useCallback((name: "desktop" | "mobile") => {
     setCurrentMedia(availableMedia[name]);
   }, []);
 
@@ -74,6 +79,6 @@ export const ViewportProvider: FC<ViewportProviderProps> = ({
 };
 
 export const useViewport = () => {
-  const viewport = useContext(ViewportContext);
+  const viewport = React.useContext(ViewportContext);
   return viewport;
 };
