@@ -19,7 +19,7 @@ type TextProps = {
   textShadow: string;
 };
 
-export const Text: UserComponent<TextProps> = ({
+export const Text: UserComponent<Partial<TextProps>> = ({
   lineHeight,
   text,
   textAlign,
@@ -45,7 +45,7 @@ export const Text: UserComponent<TextProps> = ({
   const fontFace = useFontFace();
 
   const style = {
-    lineHeight: `${lineHeight}px`,
+    lineHeight: lineHeight,
     textAlign: textAlign,
     fontWeight: fontWeight,
     fontSize: fontSize,
@@ -78,7 +78,7 @@ export const Text: UserComponent<TextProps> = ({
   if (!editorEnabled) {
     return (
       <div ref={(ref) => connect(ref as any)} style={style as any}>
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div dangerouslySetInnerHTML={{ __html: text as string }} />
       </div>
     );
   }
@@ -96,11 +96,11 @@ export const Text: UserComponent<TextProps> = ({
     >
       {children}
       {!isEditable ? (
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div dangerouslySetInnerHTML={{ __html: text as string }} />
       ) : (
         <ContentEditable
           disabled={false}
-          html={text}
+          html={text as string}
           onChange={(e: any) => {
             setProp((prop: any) => (prop.text = e.target.value), 500);
           }}

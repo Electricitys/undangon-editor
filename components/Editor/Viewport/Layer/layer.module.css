@@ -1,0 +1,7 @@
+.editor-layer {
+  min-height: 250px;
+}
+
+.editor-layer .craft-layer-node.ROOT > div {
+  padding-bottom: 24px;
+}

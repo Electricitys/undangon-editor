@@ -2,7 +2,7 @@
 
 import { useEditor, useNode } from "@craftjs/core";
 import { ROOT_NODE } from "@craftjs/utils";
-import { ReactElement, useCallback, useEffect, useRef } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
 import { getCloneTree } from "../utils/getCloneTree";
 import {
@@ -56,15 +56,18 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     }
   }, [dom, isActive, isHover]);
 
-  const getPos = useCallback((dom: HTMLElement) => {
-    const { top, left, bottom } = dom
-      ? dom.getBoundingClientRect()
-      : { top: 0, left: 0, bottom: 0 };
-    return {
-      top: `${top > 0 ? top : bottom}px`,
-      left: `${left}px`,
-    };
-  }, []);
+  const getPos = useCallback(
+    (dom: HTMLElement): { top: string; left: string } => {
+      const { top, left, bottom } = dom
+        ? dom.getBoundingClientRect()
+        : { top: 0, left: 0, bottom: 0 };
+      return {
+        top: `${top > 0 ? top : bottom}px`,
+        left: `${left}px`,
+      };
+    },
+    []
+  );
 
   const scroll = useCallback(() => {
     const { current: currentDOM } = currentRef;
@@ -93,97 +96,113 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     };
   }, [scroll]);
 
+  const pos = getPos(dom as any);
+
+  const domDimension: DOMRect = dom
+    ? dom?.getBoundingClientRect()
+    : ({} as any);
+
   return (
     <>
       {isHover || isActive
         ? ReactDOM.createPortal(
-            <IndicatorDiv
-              ref={currentRef as any}
-              className="bg-blue-400 px-2 py-1"
-              style={{
-                left: getPos(dom as any).left,
-                top: getPos(dom as any).top,
-                zIndex: 9999,
-              }}
-            >
-              <div>{name}</div>
-              {isActive && (
-                <>
-                  {id !== ROOT_NODE && (
-                    <div
-                      className="ml-2"
-                      onClick={() => {
-                        actions.selectNode(parent as any);
-                      }}
-                      title="Select parent"
-                    >
-                      <ArrowUpIcon color="white" />
-                    </div>
-                  )}
-                  {moveable ? (
-                    <div
-                      ref={(ref) => drag(ref as any)}
-                      className="ml-2"
-                      title="Drag"
-                    >
-                      <DragHandleDots2Icon color="white" />
-                    </div>
-                  ) : null}
-                  {duplicatable ? (
-                    <div className="ml-2" title="Duplicate node">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button>
-                            <CopyIcon color="white" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>
-                            Do you want to duplicate?
-                          </DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            color="red"
-                            onMouseDown={(e) => {
-                              e.stopPropagation();
-                              duplicateNode(id);
-                            }}
-                          >
-                            Yes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>Cancel</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  ) : null}
-                  {deletable ? (
-                    <div className="ml-3" title="Delete node">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button>
-                            <TrashIcon color="white" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>Are you sure?</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onMouseDown={(e) => {
-                              e.stopPropagation();
-                              actions.delete(id);
-                            }}
-                            color="red"
-                          >
-                            Yes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>Cancel</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  ) : null}
-                </>
-              )}
-            </IndicatorDiv>,
+            <>
+              <IndicatorDiv
+                ref={currentRef as any}
+                className="bg-blue-400 px-2 py-1 flex"
+                style={{
+                  left: pos.left,
+                  top: pos.top,
+                  zIndex: 9999,
+                }}
+              >
+                <div>{name}</div>
+                {isActive && (
+                  <>
+                    {id !== ROOT_NODE && (
+                      <div
+                        className="ml-2"
+                        onClick={() => {
+                          actions.selectNode(parent as any);
+                        }}
+                        title="Select parent"
+                      >
+                        <ArrowUpIcon color="white" />
+                      </div>
+                    )}
+                    {moveable ? (
+                      <div
+                        ref={(ref) => drag(ref as any)}
+                        className="ml-2"
+                        title="Drag"
+                      >
+                        <DragHandleDots2Icon color="white" />
+                      </div>
+                    ) : null}
+                    {duplicatable ? (
+                      <div className="ml-2" title="Duplicate node">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button>
+                              <CopyIcon color="white" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuLabel>
+                              Do you want to duplicate?
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              color="red"
+                              onMouseDown={(e) => {
+                                e.stopPropagation();
+                                duplicateNode(id);
+                              }}
+                            >
+                              Yes
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Cancel</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    ) : null}
+                    {deletable ? (
+                      <div className="ml-3" title="Delete node">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button>
+                              <TrashIcon color="white" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuLabel>Are you sure?</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onMouseDown={(e) => {
+                                e.stopPropagation();
+                                actions.delete(id);
+                              }}
+                              color="red"
+                            >
+                              Yes
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Cancel</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    ) : null}
+                  </>
+                )}
+              </IndicatorDiv>
+              <IndicatorBorderDiv
+                style={{
+                  top: domDimension.top,
+                  left: domDimension.left,
+                  width: domDimension.width,
+                  height: domDimension.height,
+                }}
+              />
+            </>,
             document.querySelector(".page-container") as any
           )
         : null}
@@ -205,4 +224,10 @@ const IndicatorDiv = styled("div", {
   svg: {
     fill: "#fff",
   },
+});
+
+const IndicatorBorderDiv = styled("div", {
+  position: "fixed",
+  border: "1px dashed red",
+  pointerEvents: "none",
 });

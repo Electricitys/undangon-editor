@@ -19,15 +19,21 @@ import { RenderNode } from "../Nodes/RenderNode";
 import * as ResolverNodes from "../Nodes";
 import { Toolbar } from "./Toolbar";
 import { Toolbox } from "./Toolbox/Toolbox";
+import { LayerPanel } from "./Layer";
+import { SettingPanel } from "./Settings";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
   children: ReactNode;
+  enableToolbar?: boolean;
 };
 
-interface ViewportProps extends ViewportProviderProps {}
+interface ViewportProps extends ViewportProviderProps, ViewportWrapperProps {}
 
-export const ViewportWrapper: FC<ViewportWrapperProps> = ({ children }) => {
+export const ViewportWrapper: FC<ViewportWrapperProps> = ({
+  children,
+  enableToolbar = true,
+}) => {
   const { toast } = useToast();
   const { media } = useViewport();
   const {
@@ -197,51 +203,61 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({ children }) => {
     }
   });
 
+  if (!enableToolbar) {
+    return <>{children}</>;
+  }
+
   return (
     <>
-      <div className="fixed inset-0 bg-gray-200" />
-      <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
-        <Toolbox />
-        {/* <ComponentPanel />
-          <LayerPanel /> */}
-      </div>
-      <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
-        {/* <SettingPanel /> */}
-      </div>
-      <div className="border-b border-gray-300 fixed right-0 left-0 top-0 bg-white">
-        <Toolbar />
-      </div>
-      <div className="page-container pt-14 mr-72 ml-72 h-screen">
-        <div
-          className="editor-renderer bg-gray-200"
-          ref={(ref) =>
-            connectors.select(
-              connectors.hover(ref as any, null as any),
-              null as any
-            )
-          }
-        >
-          <div className="py-4 px-2">
-            <div
-              className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"
-              style={{
-                maxWidth: media.currentMedia.width,
-                transition: "max-width 500ms ease",
-              }}
-            >
-              {children}
-              <div className="absolute bottom-full left-0">
-                {media.currentMedia.width} x {media.currentMedia.height}
+      <div className="prevent-select" tabIndex={0}>
+        <div className="fixed inset-0 bg-gray-200" />
+        <div className="page-container pt-16 mr-72 ml-72 min-h-screen">
+          <div
+            className="editor-renderer bg-gray-200"
+            ref={(ref) =>
+              connectors.select(
+                connectors.hover(ref as any, null as any),
+                null as any
+              )
+            }
+          >
+            <div className="py-4 px-2">
+              <div
+                className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"
+                style={{
+                  maxWidth: media.currentMedia.width,
+                  transition: "max-width 500ms ease",
+                }}
+              >
+                {children}
+                <div className="absolute bottom-full left-0">
+                  {media.currentMedia.width} x {media.currentMedia.height}
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+          <Toolbox />
+          {/* <ComponentPanel /> */}
+          <LayerPanel />
+        </div>
+        <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
+          <SettingPanel />
+        </div>
+        <div className="border-b border-gray-300 fixed right-0 left-0 top-0 bg-white">
+          <Toolbar />
         </div>
       </div>
     </>
   );
 };
 
-export const Viewport: FC<ViewportProps> = ({ children, ...props }) => {
+export const Viewport: FC<ViewportProps> = ({
+  children,
+  enableToolbar,
+  ...props
+}) => {
   const { isProduction } = props;
   if (isProduction) {
     return (
@@ -268,7 +284,9 @@ export const Viewport: FC<ViewportProps> = ({ children, ...props }) => {
     >
       <FontFaceProvider>
         <ViewportProvider {...props}>
-          <ViewportWrapper>{children}</ViewportWrapper>
+          <ViewportWrapper enableToolbar={enableToolbar}>
+            {children}
+          </ViewportWrapper>
         </ViewportProvider>
       </FontFaceProvider>
     </Editor>

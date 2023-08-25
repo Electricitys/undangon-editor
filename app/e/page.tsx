@@ -4,11 +4,14 @@ import lz from "lzutf8";
 import { Viewport } from "@/components/Editor/Viewport";
 import { ViewportProviderProps } from "@/components/Editor/Viewport/useViewport";
 import { Button } from "@/components/ui/button";
-import { Frame, useEditor } from "@craftjs/core";
+import { Element, Frame, useEditor } from "@craftjs/core";
+import IFrame, { FrameContextConsumer } from "react-frame-component";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useClient } from "@/components/client";
+import { Text } from "@/components/Editor/Nodes";
+import { Container } from "@/components/Editor/Nodes/Container";
 
 export interface EditorPageProps {
   id: string;
@@ -56,7 +59,14 @@ export default function Page({ content, ...props }: EditorPageProps) {
       onPublish={onPublish}
       constructPreviewUrl={constructPreviewUrl}
     >
-      <Frame></Frame>
+      <Frame data={content}>
+        <div>
+          <Element is={Text} text="coba" />
+          <Element is={Container} canvas>
+            <Element is={Text} text="CONTAINER" />
+          </Element>
+        </div>
+      </Frame>
     </Viewport>
   );
 }

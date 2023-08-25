@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 export const Toolbox = () => {
   const { connectors } = useEditor();
   return (
-    <PanelSection text="Toolbox">
+    <PanelSection
+      text="Toolbox"
+      description="Available component that can be added to your project"
+    >
       {[
         {
           icon: "widget-button",
