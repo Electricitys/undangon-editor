@@ -16,7 +16,6 @@ import {
   TextAlignCenterIcon,
   TextAlignJustifyIcon,
   TextAlignLeftIcon,
-  TextAlignMiddleIcon,
   TextAlignRightIcon,
   UnderlineIcon,
 } from "@radix-ui/react-icons";
@@ -51,8 +50,8 @@ const defaultValue: Partial<TypographyProps> = {
   textShadow: undefined,
   textDecoration: undefined,
   lineHeight: "12px",
-  letterSpacing: "0%",
-  fontSize: 12,
+  letterSpacing: "0px",
+  fontSize: "12px",
   fontStyle: undefined,
   fontWeight: "normal",
   fontFamily: "Roboto",
@@ -94,11 +93,11 @@ export const Typography = () => {
             icon={<FontSizeIcon />}
             initialValue={uncss.parse(typography.fontSize)}
             defaultValue={{
-              value: "12",
+              value: 12,
               unit: "px",
             }}
             unitOptions={["px"]}
-            onChange={function (value: any, raw: CSSUnitValue): void {
+            onChange={function (_value: any, raw: CSSUnitValue): void {
               setProp((props: any) =>
                 _set(
                   props,
@@ -117,11 +116,11 @@ export const Typography = () => {
             icon={<LineHeightIcon />}
             initialValue={uncss.parse(typography.lineHeight)}
             defaultValue={{
-              value: "12",
-              unit: "px",
+              value: 1,
+              unit: "",
             }}
-            unitOptions={["px"]}
-            onChange={function (value: any, raw: CSSUnitValue): void {
+            unitOptions={["", "px"]}
+            onChange={function (_value: any, raw: CSSUnitValue): void {
               setProp((props: any) =>
                 _set(
                   props,
@@ -138,17 +137,19 @@ export const Typography = () => {
             className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LetterSpacingIcon />}
-            initialValue={uncss.parse(typography.lineHeight)}
+            initialValue={uncss.parse(typography.letterSpacing)}
+            min={-255}
+            max={255}
             defaultValue={{
-              value: "0",
-              unit: "%",
+              value: 0,
+              unit: "px",
             }}
-            unitOptions={["%"]}
-            onChange={function (value: any, raw: CSSUnitValue): void {
+            unitOptions={["px"]}
+            onChange={function (_value: any, raw: CSSUnitValue): void {
               setProp((props: any) =>
                 _set(
                   props,
-                  "typography.lineHeight",
+                  "typography.letterSpacing",
                   uncss.compile(raw.value, raw.unit)
                 )
               );

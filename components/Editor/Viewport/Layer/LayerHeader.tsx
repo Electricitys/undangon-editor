@@ -15,6 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { AddNodeAction } from "./AddNodeAction";
 
 export const LayerTrigger = () => {
   const {
@@ -33,7 +34,6 @@ export const LayerTrigger = () => {
       const node = query.node(id);
       const nodeRaw = node.get();
       const sNode = state.nodes[id];
-      // console.log(id, node.get());
 
       return {
         isHovered: node.isHovered(),
@@ -89,31 +89,11 @@ export const LayerTrigger = () => {
           )}
         </div>
 
+        <AddNodeAction />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              size={"sm"}
-              variant={"ghost"}
-              className="hover:bg-gray-200 p-0 h-7 w-7"
-            >
-              <PlusIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <span>Add Before</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Add Child</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Add After</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
+              disabled={id === "ROOT"}
               size={"sm"}
               variant={"ghost"}
               className="hover:bg-gray-200 p-0 h-7 w-7 mr-1"
@@ -122,7 +102,7 @@ export const LayerTrigger = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem color="red">
+            <DropdownMenuItem color="red" onClick={() => actions.delete(id)}>
               <TrashIcon className="mr-2 h-4 w-4" />
               <span>Delete</span>
             </DropdownMenuItem>

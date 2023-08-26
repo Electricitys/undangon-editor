@@ -41,7 +41,10 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
   } = useNode((node) => ({
     isHover: node.events.hovered,
     dom: node.dom,
-    name: node.data.custom.displayName || node.data.displayName,
+    name:
+      node.data.custom.name ||
+      node.data.custom.displayName ||
+      node.data.displayName,
     duplicatable: query.node(node.id).isDeletable(),
     moveable: query.node(node.id).isDraggable(),
     deletable: query.node(node.id).isDeletable(),

@@ -24,7 +24,10 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 
   children,
 }) => {
-  const { tag } = useNode((node) => ({
+  const {
+    tag,
+    connectors: { connect },
+  } = useNode((node) => ({
     tag: node.data.custom.name,
   }));
 
@@ -38,7 +41,11 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     (classList as ClassListProps).map(({ className }) => className)
   );
 
-  return React.createElement(tag || "div", { style, className }, children);
+  return React.createElement(
+    tag || "div",
+    { style, className, ref: (ref: any) => connect(ref as any) },
+    children
+  );
 };
 
 NativeTag.craft = {

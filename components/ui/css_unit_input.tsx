@@ -16,6 +16,7 @@ import {
   TooltipTrigger,
 } from "./tooltip";
 import { TooltipArrow, TooltipPortal } from "@radix-ui/react-tooltip";
+import { parseIntSafe, parseIntSafeForInput } from "../utils/parseIntSafe";
 
 export const defaultUnitOptions = ["", "px", "vh", "vw", "%", "auto"];
 
@@ -125,8 +126,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                     paddingLeft: 0,
                     border: 0,
                   }}
-                  // type="number"
-                  value={value || ""}
+                  value={parseIntSafeForInput(value, "")}
                   onKeyDown={(e) => {
                     if (e.code === "ArrowUp") {
                       ChangeHandler({ value: value + 1, unit });
@@ -136,7 +136,10 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                     }
                   }}
                   onChange={(e) => {
-                    ChangeHandler({ value: Number(e.target.value), unit });
+                    ChangeHandler({
+                      value: parseIntSafeForInput(e.target.value, ""),
+                      unit,
+                    });
                   }}
                 />
               </div>
