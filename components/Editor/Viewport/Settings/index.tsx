@@ -8,14 +8,12 @@ export const SettingPanel = () => {
     const [currentNodeId] = state.events.selected;
     const currentNode = state.nodes[currentNodeId];
     let selected;
-
     if (currentNodeId) {
       selected = {
         id: currentNodeId,
-        name: currentNode.data.name,
+        name: currentNode.data.custom.name || currentNode.data.name,
         settings: currentNode.related && currentNode.related.settings,
-        component_type:
-          typeof currentNode.data.type === "string" ? "tag" : "component",
+        component_type: currentNode.data.custom.type,
       };
     }
     return {

@@ -1,21 +1,14 @@
 import PaddingBottomIcon from "@/components/Icons/PaddingBottomIcon";
-import PaddingHorizontalIcon from "@/components/Icons/PaddingHorizontalIcon";
 import PaddingLeftIcon from "@/components/Icons/PaddingLeftIcon";
 import PaddingRightIcon from "@/components/Icons/PaddingRightIcon";
 import PaddingTopIcon from "@/components/Icons/PaddingTopIcon";
-import PaddingVerticalIcon from "@/components/Icons/PaddingVerticalIcon";
-import { Select } from "@/components/component/Select";
 import { Button } from "@/components/ui/button";
 import { CSSUnitInput, uncss } from "@/components/ui/css_unit_input";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
 import { MarginIcon, PaddingIcon } from "@radix-ui/react-icons";
-import { CSSProperties } from "@stitches/react";
 import { OnlyStringNumeric } from "@stitches/react/types/css";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
-import { useForm } from "react-hook-form";
 
 export interface SpacingProps {
   marginTop: "auto" | OnlyStringNumeric;
@@ -63,6 +56,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Margin Left"}
               disabled={false}
               icon={<PaddingLeftIcon />}
@@ -80,6 +74,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Margin Top"}
               disabled={false}
               icon={<PaddingTopIcon />}
@@ -99,6 +94,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Margin Right"}
               disabled={false}
               icon={<PaddingRightIcon />}
@@ -116,6 +112,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Margin Bottom"}
               disabled={false}
               icon={<PaddingBottomIcon />}
@@ -145,6 +142,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Padding Left"}
               disabled={false}
               icon={<PaddingLeftIcon />}
@@ -162,6 +160,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Padding Top"}
               disabled={false}
               icon={<PaddingTopIcon />}
@@ -181,6 +180,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Padding Right"}
               disabled={false}
               icon={<PaddingRightIcon />}
@@ -198,6 +198,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              className="border-transparent hover:border-gray-200"
               label={"Padding Bottom"}
               disabled={false}
               icon={<PaddingBottomIcon />}

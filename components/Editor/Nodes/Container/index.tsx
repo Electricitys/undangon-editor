@@ -50,6 +50,9 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
 
 Container.craft = {
   name: "Container",
+  custom: {
+    type: "component",
+  },
   props: {
     boxSizing: BoxSizing.defaultValue,
     spacing: Spacing.defaultValue,

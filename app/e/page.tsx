@@ -12,6 +12,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useClient } from "@/components/client";
 import { Text } from "@/components/Editor/Nodes";
 import { Container } from "@/components/Editor/Nodes/Container";
+import { NativeTag } from "@/components/Editor/Nodes/NativeTag";
 
 export interface EditorPageProps {
   id: string;
@@ -60,12 +61,24 @@ export default function Page({ content, ...props }: EditorPageProps) {
       constructPreviewUrl={constructPreviewUrl}
     >
       <Frame data={content}>
-        <div>
-          <Element is={Text} text="coba" />
-          <Element is={Container} canvas>
-            <Element is={Text} text="CONTAINER" />
+        <Element
+          is={NativeTag}
+          custom={{
+            name: "div",
+          }}
+        >
+          <Element is={Text} text="contoh" />
+          <Element
+            is={NativeTag}
+            custom={{
+              name: "div",
+            }}
+          >
+            <Element is={Container} canvas>
+              <Element is={Text} text="CONTAINER" />
+            </Element>
           </Element>
-        </div>
+        </Element>
       </Frame>
     </Viewport>
   );

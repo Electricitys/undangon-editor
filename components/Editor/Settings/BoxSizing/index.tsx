@@ -35,6 +35,7 @@ export const BoxSizing = () => {
       <div className="flex pb-2">
         <div className="px-1 w-1/2">
           <CSSUnitInput
+            className="border-transparent hover:border-gray-200"
             label={"Width"}
             disabled={false}
             icon={"W"}
@@ -52,6 +53,7 @@ export const BoxSizing = () => {
         </div>
         <div className="px-1 w-1/2">
           <CSSUnitInput
+            className="border-transparent hover:border-gray-200"
             label={"Height"}
             disabled={false}
             icon={"H"}
@@ -71,6 +73,7 @@ export const BoxSizing = () => {
       <div className="flex">
         <div className="px-1 w-1/2">
           <Select
+            className="border-transparent hover:border-gray-200"
             label={"Horizontal Resizing"}
             disabled={false}
             onChange={function (value: any): void {
@@ -83,6 +86,7 @@ export const BoxSizing = () => {
         </div>
         <div className="px-1 w-1/2">
           <Select
+            className="border-transparent hover:border-gray-200"
             label={"Vertical Resizing"}
             disabled={false}
             onChange={function (value: any): void {

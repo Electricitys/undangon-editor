@@ -111,6 +111,9 @@ export const Text: UserComponent<Partial<TextProps>> = ({
 
 Text.craft = {
   name: "Text",
+  custom: {
+    type: "component",
+  },
   props: {
     text: "Text Area",
     spacing: Spacing.defaultValue,

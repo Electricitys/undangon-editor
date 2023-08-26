@@ -73,9 +73,9 @@ export const Typography = () => {
   return (
     <div className="px-1">
       <Form {...form}>
-        <div className="pb-2 pr-1">
+        <div className="pr-1">
           <FontPicker
-            className="w-full"
+            className="w-full border-transparent hover:border-gray-200"
             activeFontFamily={typography.fontFamily || ""}
             onChange={function (
               font: Pick<WebfontsFontResponse, "family" | "category">
@@ -89,6 +89,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Size</div>
           <CSSUnitInput
+            className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<FontSizeIcon />}
             initialValue={uncss.parse(typography.fontSize)}
@@ -111,6 +112,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Line Height</div>
           <CSSUnitInput
+            className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LineHeightIcon />}
             initialValue={uncss.parse(typography.lineHeight)}
@@ -133,6 +135,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Letter Spacing</div>
           <CSSUnitInput
+            className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LetterSpacingIcon />}
             initialValue={uncss.parse(typography.lineHeight)}
@@ -154,109 +157,117 @@ export const Typography = () => {
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm">Text Decoration</div>
-          <Toggle
-            pressed={typography.fontStyle === "italic"}
-            onPressedChange={(pressed) => {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.fontStyle",
-                  pressed ? "italic" : undefined
-                )
-              );
-            }}
-          >
-            <FontItalicIcon />
-          </Toggle>
-          <Toggle
-            pressed={typography.fontWeight === "bold"}
-            onPressedChange={(pressed) => {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.fontWeight",
-                  pressed ? "bold" : undefined
-                )
-              );
-            }}
-          >
-            <FontBoldIcon />
-          </Toggle>
-          <Toggle
-            pressed={typography.textDecoration === "underline"}
-            onPressedChange={(pressed) => {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.textDecoration",
-                  pressed ? "underline" : undefined
-                )
-              );
-            }}
-          >
-            <UnderlineIcon />
-          </Toggle>
+          <div className="flex border border-transparent hover:border-gray-200 rounded-md">
+            <Toggle
+              pressed={typography.fontStyle === "italic"}
+              onPressedChange={(pressed) => {
+                setProp((props: any) =>
+                  _set(
+                    props,
+                    "typography.fontStyle",
+                    pressed ? "italic" : undefined
+                  )
+                );
+              }}
+            >
+              <FontItalicIcon />
+            </Toggle>
+            <Toggle
+              pressed={typography.fontWeight === "bold"}
+              onPressedChange={(pressed) => {
+                setProp((props: any) =>
+                  _set(
+                    props,
+                    "typography.fontWeight",
+                    pressed ? "bold" : undefined
+                  )
+                );
+              }}
+            >
+              <FontBoldIcon />
+            </Toggle>
+            <Toggle
+              pressed={typography.textDecoration === "underline"}
+              onPressedChange={(pressed) => {
+                setProp((props: any) =>
+                  _set(
+                    props,
+                    "typography.textDecoration",
+                    pressed ? "underline" : undefined
+                  )
+                );
+              }}
+            >
+              <UnderlineIcon />
+            </Toggle>
+          </div>
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm">Aligment</div>
-          <ToggleGroup.Root
-            type="single"
-            value={_get(typography, "textAlign")}
-            onValueChange={(value) => {
-              setProp((props: any) =>
-                _set(props, "typography.textAlign", value)
-              );
-            }}
-          >
-            <ToggleGroup.Item asChild value="left">
-              <Toggle>
-                <TextAlignLeftIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value="center">
-              <Toggle>
-                <TextAlignCenterIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value={"right"}>
-              <Toggle>
-                <TextAlignRightIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value={"justify"}>
-              <Toggle>
-                <TextAlignJustifyIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-          </ToggleGroup.Root>
+
+          <div className="flex border border-transparent hover:border-gray-200 rounded-md">
+            <ToggleGroup.Root
+              type="single"
+              value={_get(typography, "textAlign")}
+              onValueChange={(value) => {
+                setProp((props: any) =>
+                  _set(props, "typography.textAlign", value)
+                );
+              }}
+            >
+              <ToggleGroup.Item asChild value="left">
+                <Toggle>
+                  <TextAlignLeftIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="center">
+                <Toggle>
+                  <TextAlignCenterIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value={"right"}>
+                <Toggle>
+                  <TextAlignRightIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value={"justify"}>
+                <Toggle>
+                  <TextAlignJustifyIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+            </ToggleGroup.Root>
+          </div>
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm">Case</div>
-          <ToggleGroup.Root
-            type="single"
-            value={_get(typography, "textTransform")}
-            onValueChange={(value) => {
-              setProp((props: any) =>
-                _set(props, "typography.textTransform", value)
-              );
-            }}
-          >
-            <ToggleGroup.Item asChild value="uppercase">
-              <Toggle>
-                <LetterCaseUppercaseIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value="lowercase">
-              <Toggle>
-                <LetterCaseLowercaseIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value="capitalize">
-              <Toggle>
-                <LetterCaseCapitalizeIcon />
-              </Toggle>
-            </ToggleGroup.Item>
-          </ToggleGroup.Root>
+
+          <div className="flex border border-transparent hover:border-gray-200 rounded-md">
+            <ToggleGroup.Root
+              type="single"
+              value={_get(typography, "textTransform")}
+              onValueChange={(value) => {
+                setProp((props: any) =>
+                  _set(props, "typography.textTransform", value)
+                );
+              }}
+            >
+              <ToggleGroup.Item asChild value="uppercase">
+                <Toggle>
+                  <LetterCaseUppercaseIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="lowercase">
+                <Toggle>
+                  <LetterCaseLowercaseIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="capitalize">
+                <Toggle>
+                  <LetterCaseCapitalizeIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+            </ToggleGroup.Root>
+          </div>
         </div>
       </Form>
     </div>

@@ -18,6 +18,7 @@ interface SelectProps {
   disabled: boolean;
   value: string;
   options: Option[];
+  className?: string;
   onChange: (value: string, obj: Option) => void;
 }
 
@@ -27,6 +28,7 @@ export const Select: React.FC<SelectProps> = ({
   placeholder = "Select",
   disabled,
   options,
+  className,
   onChange,
 }) => {
   return (
@@ -37,7 +39,7 @@ export const Select: React.FC<SelectProps> = ({
         onChange(value, options.find(({ value: v }) => v === value) as Option)
       }
     >
-      <SelectTrigger>
+      <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
