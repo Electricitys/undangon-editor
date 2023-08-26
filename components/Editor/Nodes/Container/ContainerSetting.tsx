@@ -1,20 +1,23 @@
-import { CSSUnitInput } from "@/components/ui/css_unit_input";
+import { Select } from "@/components/component/Select";
+import { CSSUnitInput, uncss } from "@/components/ui/css_unit_input";
+import { useNode } from "@craftjs/core";
+import _pick from "lodash/pick";
+import _set from "lodash/set";
+import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
+import { Spacing } from "../../Settings/Spacing";
+import { ClassList } from "../../Settings/ClassList";
+import { PanelSection } from "../../Viewport/PanelSection";
 
 export const ContainerSettings = () => {
   return (
-    <div>
-      <CSSUnitInput
-        label={"Width"}
-        disabled={false}
-        icon={"M"}
-        onChange={function (value: any): void {
-          console.log(value);
-        }}
-        initialValue={{
-          value: undefined,
-          unit: undefined,
-        }}
-      />
-    </div>
+    <>
+      <PanelSection text="Box">
+        <BoxSizing />
+        <Spacing />
+      </PanelSection>
+      <PanelSection text="Class List" separator={false}>
+        <ClassList />
+      </PanelSection>
+    </>
   );
 };

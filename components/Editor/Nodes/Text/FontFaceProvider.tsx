@@ -1,9 +1,17 @@
 "use client";
 
+import { Item, WebfontsResponse } from "@/components/ui/font-picker";
 import React from "react";
 import { useDebounce, useList, useQueue } from "react-use";
 
-const FontFaceContext = React.createContext<any>(null);
+type FontFaceContextProps = {
+  loaded: string[];
+  load: (fontFamily: string) => void;
+};
+
+const FontFaceContext = React.createContext<FontFaceContextProps>({
+  loaded: [],
+} as any);
 
 type FontFaceProviderProps = {
   children: React.ReactNode;
@@ -15,7 +23,7 @@ export const FontFaceProvider: React.FC<FontFaceProviderProps> = ({
   const [list, { push }] = useList([]);
   const loadQueue = useQueue();
 
-  const loadFactory = async (fontFamily: any) => {
+  const loadFactory = async (fontFamily: string) => {
     try {
       const WebFont = await import("webfontloader");
       await WebFont.load({
@@ -29,7 +37,7 @@ export const FontFaceProvider: React.FC<FontFaceProviderProps> = ({
     }
   };
 
-  const loadFont = async (fontFamily: any) => {
+  const loadFont = async (fontFamily: string) => {
     let item = {
       family: fontFamily,
       call: () => loadFactory(fontFamily),

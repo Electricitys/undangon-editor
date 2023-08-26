@@ -209,18 +209,18 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
 
   return (
     <>
-      <div className="prevent-select" tabIndex={0}>
+      <div tabIndex={0}>
         <div className="fixed inset-0 bg-gray-200" />
-        <div className="page-container pt-16 mr-72 ml-72 min-h-screen">
-          <div
-            className="editor-renderer bg-gray-200"
-            ref={(ref) =>
-              connectors.select(
-                connectors.hover(ref as any, null as any),
-                null as any
-              )
-            }
-          >
+        <div
+          className="page-container pt-16 mr-72 ml-72 min-h-screen relative"
+          ref={(ref) =>
+            connectors.select(
+              connectors.hover(ref as any, null as any),
+              null as any
+            )
+          }
+        >
+          <div className="prevent-select editor-renderer bg-gray-200">
             <div className="py-4 px-2">
               <div
                 className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"

@@ -4,6 +4,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipProvider,
@@ -16,6 +17,7 @@ import {
   ChevronUpIcon,
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import React from "react";
 
 interface PanelSectionProps {
@@ -26,11 +28,13 @@ interface PanelSectionProps {
   description?: string;
   action?: React.ReactNode;
   lock?: boolean;
+  separator?: boolean;
 }
 
 export const PanelSection: React.FC<PanelSectionProps> = ({
   icon,
   lock = false,
+  separator = true,
   text,
   children,
   defaultOpen = true,
@@ -50,7 +54,7 @@ export const PanelSection: React.FC<PanelSectionProps> = ({
     >
       <CollapsibleTrigger asChild>
         <div
-          className={`flex w-full text-start items-center pl-4 pr-2 py-2 border-b border-gray-10 ${
+          className={`flex w-full text-start items-center pl-4 pr-2 py-2 ${
             lock ? "" : "cursor-pointer"
           }`}
         >
@@ -65,9 +69,11 @@ export const PanelSection: React.FC<PanelSectionProps> = ({
                       <InfoCircledIcon className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p>{description}</p>
-                  </TooltipContent>
+                  <TooltipPortal>
+                    <TooltipContent side="right">
+                      <p>{description}</p>
+                    </TooltipContent>
+                  </TooltipPortal>
                 </Tooltip>
               </TooltipProvider>
             )}
@@ -84,7 +90,10 @@ export const PanelSection: React.FC<PanelSectionProps> = ({
           {action}
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent>{children}</CollapsibleContent>
+      <CollapsibleContent>
+        <div className="pb-2">{children}</div>
+        {separator && <Separator />}
+      </CollapsibleContent>
     </Collapsible>
   );
 };

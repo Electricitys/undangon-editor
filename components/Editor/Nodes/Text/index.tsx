@@ -5,31 +5,31 @@ import { ReactNode, useEffect, useState } from "react";
 import ContentEditable from "react-contenteditable";
 import { useFontFace } from "./FontFaceProvider";
 import { TextSettings } from "./TextSettings";
+import { BoxSizingProps } from "../../Settings/BoxSizing";
+import { Spacing, SpacingProps } from "../../Settings/Spacing";
+import { ClassList, ClassListProps } from "../../Settings/ClassList";
+import { Typography, TypographyProps } from "../../Settings/Typogrphy";
+import { CSSProperties } from "react";
+import { cx } from "class-variance-authority";
 
 type TextProps = {
   children?: ReactNode;
-  lineHeight: number;
+
+  spacing: SpacingProps;
+  classList: ClassListProps;
+  typography: TypographyProps;
+
   text: string;
-  textAlign: string;
-  fontWeight: string;
-  fontSize: number;
-  fontFamily: string;
-  color: string;
-  margin: any;
-  textShadow: string;
 };
 
 export const Text: UserComponent<Partial<TextProps>> = ({
-  lineHeight,
-  text,
-  textAlign,
-  fontWeight,
-  fontSize,
-  fontFamily,
-  color,
-  margin,
-  textShadow,
   children,
+
+  spacing,
+  classList,
+  typography,
+
+  text,
 }) => {
   const {
     connectors: { connect },
@@ -44,28 +44,26 @@ export const Text: UserComponent<Partial<TextProps>> = ({
 
   const fontFace = useFontFace();
 
-  const style = {
-    lineHeight: lineHeight,
-    textAlign: textAlign,
-    fontWeight: fontWeight,
-    fontSize: fontSize,
-    fontFamily: fontFamily,
-    textShadow: textShadow,
-    color: color,
-    margin: margin.join(" "),
+  const style: CSSProperties = {
+    ...spacing,
+    ...typography,
   };
+
+  const className = cx(
+    (classList as ClassListProps).map(({ className }) => className)
+  );
 
   useEffect(() => {
     const load = async () => {
-      if (!fontFamily) return;
+      if (!typography?.fontFamily) return;
       try {
-        fontFace.load(fontFamily);
+        fontFace.load(typography.fontFamily);
       } catch (err) {
         console.error(err);
       }
     };
     load();
-  }, [fontFamily]);
+  }, [typography?.fontFamily]);
 
   if (children) {
     return (
@@ -87,6 +85,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
     <div
       ref={(ref) => connect(ref as any)}
       style={style as any}
+      className={className}
       onDoubleClick={() => {
         setIsEditable(true);
       }}
@@ -114,14 +113,9 @@ Text.craft = {
   name: "Text",
   props: {
     text: "Text Area",
-    textAlign: "left",
-    textShadow: undefined,
-    lineHeight: 1,
-    fontSize: 12,
-    fontWeight: "normal",
-    fontFamily: "Roboto",
-    color: "inherit",
-    margin: [0, 0, 0, 0],
+    spacing: Spacing.defaultValue,
+    typography: Typography.defaultValue,
+    classList: ClassList.defaultValue,
   },
   related: {
     settings: TextSettings,

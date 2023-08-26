@@ -5,7 +5,7 @@ import { LayerRenderer } from "./Layer";
 export const LayerPanel = () => {
   return (
     <PanelSection text="Layers">
-      <div className="editor-layer">
+      <div className="editor-layer pr-2">
         <Layers renderLayer={LayerRenderer} />
       </div>
     </PanelSection>

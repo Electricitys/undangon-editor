@@ -1,6 +1,6 @@
 import { useLayer } from "@craftjs/layers";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEditor } from "@craftjs/core";
@@ -19,11 +19,13 @@ export const LayerTrigger = () => {
 
   const { displayName, hidden, actions, hasChildCanvases, isHovered } =
     useEditor((state, query) => {
-      // console.log(id, query.node(id).get());
+      const node = query.node(id);
+      const nodeRaw = node.get();
+      // console.log(id, node.get());
 
       return {
-        isHovered: query.node(id).isHovered(),
-        hasChildCanvases: query.node(id).isTopLevelNode(),
+        isHovered: node.isHovered(),
+        hasChildCanvases: nodeRaw.data.nodes.length > 0,
         displayName:
           state.nodes[id] && state.nodes[id].data.custom.displayName
             ? state.nodes[id].data.custom.displayName
@@ -55,14 +57,14 @@ export const LayerTrigger = () => {
         >
           {hidden ? <EyeClosedIcon /> : <EyeOpenIcon />}
         </Button>
-        <div className="grow">{displayName}</div>
+        <div className="grow text-sm">{displayName}</div>
         {hasChildCanvases && (
           <CollapsibleTrigger asChild onClick={() => toggleLayer()}>
             <Button size={"sm"} variant={"ghost"} className="hover:bg-gray-200">
               {expanded ? (
                 <ChevronDown className="h-4 w-4" />
               ) : (
-                <ChevronUp className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" />
               )}
             </Button>
           </CollapsibleTrigger>

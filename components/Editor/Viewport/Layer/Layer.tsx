@@ -16,7 +16,7 @@ export const LayerRenderer: React.FC<{ children?: React.ReactNode }> = ({
   });
 
   return (
-    <Collapsible open={expanded} className="pl-4 pr-2">
+    <Collapsible open={expanded} className="pl-4">
       <LayerTrigger />
       <CollapsibleContent>{children}</CollapsibleContent>
     </Collapsible>

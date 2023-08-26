@@ -113,7 +113,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
                 style={{
                   left: pos.left,
                   top: pos.top,
-                  zIndex: 9999,
+                  zIndex: 40,
                 }}
               >
                 <div>{name}</div>
