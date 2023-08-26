@@ -121,6 +121,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                   style={{
                     boxShadow: "none",
                     outline: "!important none",
+                    paddingRight: 0,
                     paddingLeft: 0,
                     border: 0,
                   }}
