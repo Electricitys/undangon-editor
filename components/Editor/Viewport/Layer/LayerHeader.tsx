@@ -21,7 +21,7 @@ export const LayerTrigger = () => {
   const {
     id,
     expanded,
-    connectors: { drag, layer },
+    connectors: { drag, layerHeader },
     actions: { toggleLayer },
   } = useLayer((layer) => {
     return {
@@ -29,35 +29,43 @@ export const LayerTrigger = () => {
     };
   });
 
-  const { displayName, hidden, actions, hasChildCanvases, isHovered } =
-    useEditor((state, query) => {
-      const node = query.node(id);
-      const nodeRaw = node.get();
-      const sNode = state.nodes[id];
+  const {
+    displayName,
+    hidden,
+    actions,
+    hasChildCanvases,
+    isHovered,
+    selected,
+  } = useEditor((state, query) => {
+    const node = query.node(id);
+    const nodeRaw = node.get();
+    const sNode = state.nodes[id];
+    const selected = query.getEvent("selected").first() === id;
 
-      return {
-        isHovered: node.isHovered(),
-        hasChildCanvases: nodeRaw.data.nodes.length > 0,
-        displayName:
-          sNode.data.custom.name ||
-          (sNode && sNode.data.custom.displayName
-            ? sNode.data.custom.displayName
-            : sNode.data.displayName),
-        hidden: sNode && sNode.data.hidden,
-      };
-    });
+    return {
+      selected,
+      isHovered: node.isHovered(),
+      hasChildCanvases: nodeRaw.data.nodes.length > 0,
+      displayName:
+        sNode.data.custom.name ||
+        (sNode && sNode.data.custom.displayName
+          ? sNode.data.custom.displayName
+          : sNode.data.displayName),
+      hidden: sNode && sNode.data.hidden,
+    };
+  });
   return (
     <Button
       asChild
       variant={"ghost"}
-      className={`flex w-full text-start px-0 items-center ${
+      className={`flex w-full text-start px-0 items-center  ${
         isHovered ? "bg-accent" : ""
-      }`}
+      } ${selected ? "bg-blue-200 hover:bg-blue-300" : ""}`}
     >
       <div
-        ref={(ref) => {
-          layer(ref as any);
-          drag(ref as any);
+        ref={(ref: any) => {
+          drag(ref);
+          layerHeader(ref);
         }}
       >
         <Button
