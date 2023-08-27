@@ -30,7 +30,7 @@ import { Label } from "@/components/ui/label";
 import { uniqueId } from "lodash";
 import * as Components from "../../Nodes";
 
-const { NativeTag, ...RestComponents } = Components;
+const { NativeTag, Slot, ...RestComponents } = Components;
 
 type FormProps = {
   target: "before" | "after" | "child";
@@ -65,36 +65,33 @@ export const AddNodeAction = () => {
     { resetForm }
   ) => {
     console.log(values);
-    let freshNode: NodeTree;
+    let element: React.ReactElement;
 
     if (values.type === "tag") {
-      freshNode = query
-        .parseReactElement(
-          React.createElement(Element, {
-            is: NativeTag,
-            canvas: true,
-            custom: {
-              name: values.tag,
-            },
-          })
-        )
-        .toNodeTree();
+      element = React.createElement(Element, {
+        is: NativeTag,
+        canvas: true,
+        custom: {
+          name: values.tag,
+        },
+      });
+    } else if (values.type === "slot") {
+      element = React.createElement(Slot);
     } else {
       const SelectedComponent = (Components as any)[values.component];
       const props = values.props.reduce<{ [name: string]: string }>(
         (r, { name, value }) => ({ ...r, [name]: value }),
         {}
       );
-      freshNode = query
-        .parseReactElement(
-          React.createElement(Element, {
-            is: SelectedComponent,
-            canvas: true,
-            ...props,
-          })
-        )
-        .toNodeTree();
+      element = React.createElement(Element, {
+        is: SelectedComponent,
+        canvas: true,
+        ...props,
+      });
     }
+
+    let freshNode: NodeTree = query.parseReactElement(element).toNodeTree();
+
     const node = selected.get();
     console.log(freshNode);
     let parent: Node = {} as any;

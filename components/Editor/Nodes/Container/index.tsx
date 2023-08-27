@@ -26,7 +26,6 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
 }) => {
   const {
     connectors: { connect },
-    actions: { setProp },
   } = useNode((node) => ({
     isActive: node.events.selected,
   }));
