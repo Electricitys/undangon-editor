@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
-import { Element, Node, useEditor } from "@craftjs/core";
+import { Element, Node, NodeTree, useEditor } from "@craftjs/core";
 import { useLayer } from "@craftjs/layers";
 import {
   Dialog,
@@ -28,11 +28,13 @@ import {
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { uniqueId } from "lodash";
-import { NativeTag } from "../../Nodes";
+import * as Components from "../../Nodes";
+
+const { NativeTag, ...RestComponents } = Components;
 
 type FormProps = {
   target: "before" | "after" | "child";
-  type: string;
+  type: "tag" | "component" | "template" | "slot";
   component: string;
   tag: string;
   props: {
@@ -41,6 +43,12 @@ type FormProps = {
     value: string;
   }[];
 };
+const components = Object.entries(RestComponents).map(([key, value]) => {
+  return {
+    name: key,
+    component: value,
+  };
+});
 
 export const AddNodeAction = () => {
   const { id } = useLayer();
@@ -57,20 +65,38 @@ export const AddNodeAction = () => {
     { resetForm }
   ) => {
     console.log(values);
+    let freshNode: NodeTree;
 
-    const freshNode = query
-      .parseReactElement(
-        React.createElement(Element, {
-          is: NativeTag,
-          canvas: true,
-          custom: {
-            name: values.tag,
-          },
-        })
-      )
-      .toNodeTree();
-
+    if (values.type === "tag") {
+      freshNode = query
+        .parseReactElement(
+          React.createElement(Element, {
+            is: NativeTag,
+            canvas: true,
+            custom: {
+              name: values.tag,
+            },
+          })
+        )
+        .toNodeTree();
+    } else {
+      const SelectedComponent = (Components as any)[values.component];
+      const props = values.props.reduce<{ [name: string]: string }>(
+        (r, { name, value }) => ({ ...r, [name]: value }),
+        {}
+      );
+      freshNode = query
+        .parseReactElement(
+          React.createElement(Element, {
+            is: SelectedComponent,
+            canvas: true,
+            ...props,
+          })
+        )
+        .toNodeTree();
+    }
     const node = selected.get();
+    console.log(freshNode);
     let parent: Node = {} as any;
     let indexOf: number = 0;
     if (["before", "after"].indexOf(values.target) > -1) {
@@ -112,22 +138,6 @@ export const AddNodeAction = () => {
   });
 
   const handleAction = (type: "before" | "after" | "child") => {
-    // const freshNode = getCloneTree(query, id);
-    // const node = selected.get();
-    // const parent = query.node(node.data.parent as any).get();
-    // const indexOf = parent.data.nodes.indexOf(id);
-
-    // switch (type) {
-    //   case "before":
-    //     actions.addNodeTree(freshNode, parent.id, indexOf);
-    //     break;
-    //   case "after":
-    //     actions.addNodeTree(freshNode, parent.id, indexOf + 1);
-    //     break;
-    //   case "child":
-    //     actions.addNodeTree(freshNode, id);
-    //     break;
-    // }
     formik.setFieldValue("target", type);
     setIsDialogOpen(true);
   };
@@ -221,7 +231,11 @@ export const AddNodeAction = () => {
                         <SelectValue placeholder="Select component" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Coba">Coba</SelectItem>
+                        {components.map(({ name }) => (
+                          <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

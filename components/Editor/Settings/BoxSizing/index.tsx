@@ -2,7 +2,7 @@ import { Select } from "@/components/component/Select";
 import { CSSUnitInput, uncss } from "@/components/ui/css_unit_input";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useNode } from "@craftjs/core";
+import { useEditor, useNode } from "@craftjs/core";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,9 @@ const defaultValue: Partial<BoxSizingProps> = {
 
 export const BoxSizing = () => {
   const {
+    actions: { history },
+  } = useEditor();
+  const {
     actions: { setProp },
     values,
   } = useNode((node) => ({
@@ -40,12 +43,14 @@ export const BoxSizing = () => {
             disabled={false}
             icon={"W"}
             onChange={function (_value: any, raw): void {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "boxSizing.width",
-                  uncss.compile(raw.value, raw.unit)
-                )
+              setProp(
+                (props: any) =>
+                  _set(
+                    props,
+                    "boxSizing.width",
+                    uncss.compile(raw.value, raw.unit)
+                  ),
+                1000
               );
             }}
             initialValue={uncss.parse(boxSizing.width)}
@@ -64,7 +69,7 @@ export const BoxSizing = () => {
                   "boxSizing.height",
                   uncss.compile(raw.value, raw.unit)
                 );
-              });
+              }, 1000);
             }}
             initialValue={uncss.parse(boxSizing.height)}
           />

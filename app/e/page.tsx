@@ -63,6 +63,7 @@ export default function Page({ content, ...props }: EditorPageProps) {
       <Frame data={content}>
         <Element
           is={NativeTag}
+          canvas
           custom={{
             name: "div",
           }}
@@ -70,6 +71,7 @@ export default function Page({ content, ...props }: EditorPageProps) {
           <Element is={Text} text="contoh" />
           <Element
             is={NativeTag}
+            canvas
             custom={{
               name: "div",
             }}
