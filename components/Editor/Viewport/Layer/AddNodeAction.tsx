@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
-import { Element, useEditor } from "@craftjs/core";
+import { Element, Node, useEditor } from "@craftjs/core";
 import { useLayer } from "@craftjs/layers";
 import {
   Dialog,
@@ -69,9 +69,14 @@ export const AddNodeAction = () => {
         })
       )
       .toNodeTree();
+
     const node = selected.get();
-    const parent = query.node(node.data.parent as any).get();
-    const indexOf = parent.data.nodes.indexOf(id);
+    let parent: Node = {} as any;
+    let indexOf: number = 0;
+    if (["before", "after"].indexOf(values.target) > -1) {
+      parent = query.node(node.data.parent as any).get();
+      indexOf = parent.data.nodes.indexOf(id);
+    }
 
     switch (values.target) {
       case "before":
@@ -103,7 +108,7 @@ export const AddNodeAction = () => {
         },
       ],
     },
-    onSubmit: onSubmit.bind(editor),
+    onSubmit,
   });
 
   const handleAction = (type: "before" | "after" | "child") => {
@@ -171,11 +176,7 @@ export const AddNodeAction = () => {
           <DialogHeader>
             <DialogTitle>Add Node</DialogTitle>
           </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              formik.handleSubmit(e);
-            }}
-          >
+          <form onSubmit={formik.handleSubmit}>
             <Tabs
               defaultValue={formik.values.type}
               onValueChange={(value) => {
