@@ -62,12 +62,14 @@ export const Spacing = () => {
               icon={<PaddingLeftIcon />}
               initialValue={uncss.parse(spacing.marginLeft)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "spacing.marginLeft",
-                    uncss.compile(raw.value, raw.unit)
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.marginLeft",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
                 );
               }}
             />
@@ -79,13 +81,15 @@ export const Spacing = () => {
               disabled={false}
               icon={<PaddingTopIcon />}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) => {
-                  _set(
-                    props,
-                    "spacing.marginTop",
-                    uncss.compile(raw.value, raw.unit)
-                  );
-                });
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.marginTop",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
+                );
               }}
               initialValue={uncss.parse(spacing.marginTop)}
             />
@@ -100,12 +104,14 @@ export const Spacing = () => {
               icon={<PaddingRightIcon />}
               initialValue={uncss.parse(spacing.marginRight)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "spacing.marginRight",
-                    uncss.compile(raw.value, raw.unit)
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.marginRight",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
                 );
               }}
             />
@@ -118,13 +124,15 @@ export const Spacing = () => {
               icon={<PaddingBottomIcon />}
               initialValue={uncss.parse(spacing.marginBottom)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) => {
-                  _set(
-                    props,
-                    "spacing.marginBottom",
-                    uncss.compile(raw.value, raw.unit)
-                  );
-                });
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.marginBottom",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
+                );
               }}
             />
           </div>
@@ -148,12 +156,14 @@ export const Spacing = () => {
               icon={<PaddingLeftIcon />}
               initialValue={uncss.parse(spacing.paddingLeft)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "spacing.paddingLeft",
-                    uncss.compile(raw.value, raw.unit)
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.paddingLeft",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
                 );
               }}
             />
@@ -170,7 +180,8 @@ export const Spacing = () => {
                     props,
                     "spacing.paddingTop",
                     uncss.compile(raw.value, raw.unit)
-                  );
+                  ),
+                    1000;
                 });
               }}
               initialValue={uncss.parse(spacing.paddingTop)}
@@ -186,12 +197,14 @@ export const Spacing = () => {
               icon={<PaddingRightIcon />}
               initialValue={uncss.parse(spacing.paddingRight)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "spacing.paddingRight",
-                    uncss.compile(raw.value, raw.unit)
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.paddingRight",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
                 );
               }}
             />
@@ -204,13 +217,15 @@ export const Spacing = () => {
               icon={<PaddingBottomIcon />}
               initialValue={uncss.parse(spacing.paddingBottom)}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) => {
-                  _set(
-                    props,
-                    "spacing.paddingBottom",
-                    uncss.compile(raw.value, raw.unit)
-                  );
-                });
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "spacing.paddingBottom",
+                      uncss.compile(raw.value, raw.unit)
+                    ),
+                  1000
+                );
               }}
             />
           </div>

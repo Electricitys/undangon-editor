@@ -79,8 +79,10 @@ export const Typography = () => {
             onChange={function (
               font: Pick<WebfontsFontResponse, "family" | "category">
             ): void {
-              setProp((props: any) =>
-                _set(props, "typography.fontFamily", font.family)
+              setProp(
+                (props: any) =>
+                  _set(props, "typography.fontFamily", font.family),
+                1000
               );
             }}
           />
@@ -98,12 +100,14 @@ export const Typography = () => {
             }}
             unitOptions={["px"]}
             onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.fontSize",
-                  uncss.compile(raw.value, raw.unit)
-                )
+              setProp(
+                (props: any) =>
+                  _set(
+                    props,
+                    "typography.fontSize",
+                    uncss.compile(raw.value, raw.unit)
+                  ),
+                1000
               );
             }}
           />
@@ -121,12 +125,14 @@ export const Typography = () => {
             }}
             unitOptions={["", "px"]}
             onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.lineHeight",
-                  uncss.compile(raw.value, raw.unit)
-                )
+              setProp(
+                (props: any) =>
+                  _set(
+                    props,
+                    "typography.lineHeight",
+                    uncss.compile(raw.value, raw.unit)
+                  ),
+                1000
               );
             }}
           />
@@ -146,12 +152,14 @@ export const Typography = () => {
             }}
             unitOptions={["px"]}
             onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp((props: any) =>
-                _set(
-                  props,
-                  "typography.letterSpacing",
-                  uncss.compile(raw.value, raw.unit)
-                )
+              setProp(
+                (props: any) =>
+                  _set(
+                    props,
+                    "typography.letterSpacing",
+                    uncss.compile(raw.value, raw.unit)
+                  ),
+                1000
               );
             }}
           />
@@ -162,12 +170,14 @@ export const Typography = () => {
             <Toggle
               pressed={typography.fontStyle === "italic"}
               onPressedChange={(pressed) => {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "typography.fontStyle",
-                    pressed ? "italic" : undefined
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "typography.fontStyle",
+                      pressed ? "italic" : undefined
+                    ),
+                  1000
                 );
               }}
             >
@@ -176,12 +186,14 @@ export const Typography = () => {
             <Toggle
               pressed={typography.fontWeight === "bold"}
               onPressedChange={(pressed) => {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "typography.fontWeight",
-                    pressed ? "bold" : undefined
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "typography.fontWeight",
+                      pressed ? "bold" : undefined
+                    ),
+                  1000
                 );
               }}
             >
@@ -190,12 +202,14 @@ export const Typography = () => {
             <Toggle
               pressed={typography.textDecoration === "underline"}
               onPressedChange={(pressed) => {
-                setProp((props: any) =>
-                  _set(
-                    props,
-                    "typography.textDecoration",
-                    pressed ? "underline" : undefined
-                  )
+                setProp(
+                  (props: any) =>
+                    _set(
+                      props,
+                      "typography.textDecoration",
+                      pressed ? "underline" : undefined
+                    ),
+                  1000
                 );
               }}
             >
@@ -211,8 +225,9 @@ export const Typography = () => {
               type="single"
               value={_get(typography, "textAlign")}
               onValueChange={(value) => {
-                setProp((props: any) =>
-                  _set(props, "typography.textAlign", value)
+                setProp(
+                  (props: any) => _set(props, "typography.textAlign", value),
+                  1000
                 );
               }}
             >
@@ -247,8 +262,10 @@ export const Typography = () => {
               type="single"
               value={_get(typography, "textTransform")}
               onValueChange={(value) => {
-                setProp((props: any) =>
-                  _set(props, "typography.textTransform", value)
+                setProp(
+                  (props: any) =>
+                    _set(props, "typography.textTransform", value),
+                  1000
                 );
               }}
             >
