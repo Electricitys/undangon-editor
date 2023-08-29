@@ -21,6 +21,7 @@ import { Toolbar } from "./Toolbar";
 import { Properties } from "./Properties";
 import { LayerPanel } from "./Layer";
 import { SettingPanel } from "./Settings";
+import { TemplatesPanel } from "./Templates";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -238,7 +239,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           </div>
         </div>
         <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
-          <Properties properties={[]} />
+          <TemplatesPanel />
+          <Properties />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>

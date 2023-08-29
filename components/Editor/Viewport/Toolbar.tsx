@@ -32,7 +32,7 @@ export const Toolbar = () => {
 
   const previewUrl = React.useMemo(() => {
     try {
-      return handler.constructPreviewUrl();
+      return handler.constructPreviewUrl?.();
     } catch (err) {
       return null;
     }
@@ -87,7 +87,7 @@ export const Toolbar = () => {
           {({ state: isLoading, setState: setLoading }) => (
             <Button
               onClick={() =>
-                handler.onPublish(query, { isLoading, setLoading })
+                handler.onPublish?.(query, { isLoading, setLoading })
               }
             >
               Publish
@@ -101,12 +101,14 @@ export const Toolbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <a href={previewUrl} target="_blank">
-                <EyeOpenIcon className="mr-2 h-4 w-4" />
-                <span>Preview</span>
-              </a>
-            </DropdownMenuItem>
+            {!!previewUrl && (
+              <DropdownMenuItem asChild>
+                <a href={previewUrl} target="_blank">
+                  <EyeOpenIcon className="mr-2 h-4 w-4" />
+                  <span>Preview</span>
+                </a>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>
               <Share2Icon className="mr-2 h-4 w-4" />
               <span>Export</span>

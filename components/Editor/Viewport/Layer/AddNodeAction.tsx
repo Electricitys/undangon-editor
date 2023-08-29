@@ -29,13 +29,16 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { uniqueId } from "lodash";
 import * as Components from "../../Nodes";
+import { TemplateProps } from "../Templates";
+import { useViewport } from "../useViewport";
 
-const { NativeTag, Slot, ...RestComponents } = Components;
+const { NativeTag, Slot, Template, ...RestComponents } = Components;
 
 type FormProps = {
   target: "before" | "after" | "child";
   type: "tag" | "component" | "template" | "slot";
   component: string;
+  template: string;
   tag: string;
   props: {
     id: string;
@@ -58,13 +61,14 @@ export const AddNodeAction = () => {
   }));
   const { actions, query, selected } = editor;
 
+  const { templates } = useViewport();
+
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const onSubmit: FormikConfig<FormProps>["onSubmit"] = (
     values,
     { resetForm }
   ) => {
-    console.log(values);
     let element: React.ReactElement;
 
     if (values.type === "tag") {
@@ -77,6 +81,15 @@ export const AddNodeAction = () => {
       });
     } else if (values.type === "slot") {
       element = React.createElement(Slot);
+    } else if (values.type === "template") {
+      let template = templates.find(({ id }) => id === values.template);
+      element = React.createElement(Element, {
+        is: Template,
+        nodeTree: template?.nodeTree,
+        custom: {
+          name: template?.name,
+        },
+      });
     } else {
       const SelectedComponent = (Components as any)[values.component];
       const props = values.props.reduce<{ [name: string]: string }>(
@@ -93,7 +106,6 @@ export const AddNodeAction = () => {
     let freshNode: NodeTree = query.parseReactElement(element).toNodeTree();
 
     const node = selected.get();
-    console.log(freshNode);
     let parent: Node = {} as any;
     let indexOf: number = 0;
     if (["before", "after"].indexOf(values.target) > -1) {
@@ -122,6 +134,7 @@ export const AddNodeAction = () => {
       target: "child",
       type: "tag",
       component: "",
+      template: null as any,
       tag: "div",
       props: [
         {
@@ -193,9 +206,10 @@ export const AddNodeAction = () => {
               <div className="flex items-center mb-4">
                 <Label className="w-1/4">Type</Label>
                 <div style={{ width: "75%", marginTop: 0 }}>
-                  <TabsList className="!mt-0" onChange={(e) => console.log(e)}>
+                  <TabsList className="!mt-0">
                     <TabsTrigger value="tag">Tag</TabsTrigger>
                     <TabsTrigger value="component">Component</TabsTrigger>
+                    <TabsTrigger value="template">Template</TabsTrigger>
                     <TabsTrigger value="slot">Slot</TabsTrigger>
                   </TabsList>
                 </div>
@@ -230,6 +244,30 @@ export const AddNodeAction = () => {
                       <SelectContent>
                         {components.map(({ name }) => (
                           <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <PropsField formik={formik} />
+              </TabsContent>
+              <TabsContent value={"template"} tabIndex={-1}>
+                <div className="flex items-center mb-4">
+                  <Label className="w-1/4">Template</Label>
+                  <div style={{ width: "75%", marginTop: 0 }}>
+                    <Select
+                      onValueChange={(value) => {
+                        formik.setFieldValue("template", value);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select template" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {templates.map(({ id, name }) => (
+                          <SelectItem key={id} value={id}>
                             {name}
                           </SelectItem>
                         ))}

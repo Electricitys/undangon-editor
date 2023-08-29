@@ -87,7 +87,7 @@ export const PanelSection: React.FC<PanelSectionProps> = ({
               </Button>
             )}
           </div>
-          {action}
+          {isOpen && action}
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>

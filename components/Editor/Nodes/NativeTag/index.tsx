@@ -14,6 +14,8 @@ interface NativeTagProps<T = any> {
   spacing: SpacingProps;
   classList: ClassListProps;
   typography: TypographyProps;
+
+  as: string;
 }
 
 export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
@@ -22,6 +24,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   classList,
   typography,
 
+  as,
   children,
 }) => {
   const {
@@ -42,7 +45,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   );
 
   return React.createElement(
-    tag || "div",
+    as || tag || "div",
     { style, className, ref: (ref: any) => connect(ref as any) },
     children
   );
@@ -55,6 +58,7 @@ NativeTag.craft = {
     type: "tag",
   },
   props: {
+    as: undefined,
     boxSizing: BoxSizing.defaultValue,
     spacing: Spacing.defaultValue,
     typography: Typography.defaultValue,

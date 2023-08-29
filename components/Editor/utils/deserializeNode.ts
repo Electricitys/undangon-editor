@@ -1,8 +1,11 @@
-import { ERROR_DESERIALIZE_COMPONENT_NOT_IN_RESOLVER, ERROR_NOT_IN_RESOLVER } from "@craftjs/utils";
+import {
+  ERROR_DESERIALIZE_COMPONENT_NOT_IN_RESOLVER,
+  ERROR_NOT_IN_RESOLVER,
+} from "@craftjs/utils";
 import React from "react";
 import invariant from "tiny-invariant";
 import { resolveComponent } from "./resolveComponent";
-import { Canvas } from "@craftjs/core";
+import { Canvas, NodeData, Resolver, SerializedNode } from "@craftjs/core";
 
 const restoreType = (type: any, resolver: any) =>
   typeof type === "object" && type.resolvedName
@@ -62,12 +65,15 @@ const toNode = (data: any) => {
   return {};
 };
 
-export const deserializeNode = (data: any, resolver: any) => {
+export const deserializeNode = (
+  data: SerializedNode,
+  resolver: Resolver
+): Omit<NodeData, "event"> => {
   const { type: Comp, props: Props, ...nodeData } = data;
 
   const isCompAnHtmlElement = Comp !== undefined && typeof Comp === "string";
   const isCompAUserComponent =
-    Comp !== undefined && Comp.resolvedName !== undefined;
+    Comp !== undefined && (Comp as any).resolvedName !== undefined;
 
   invariant(
     isCompAnHtmlElement || isCompAUserComponent,
@@ -98,6 +104,5 @@ export const deserializeNode = (data: any, resolver: any) => {
 
   return {
     ...result,
-    toNode: toNode(result),
   };
 };

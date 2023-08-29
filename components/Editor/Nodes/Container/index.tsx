@@ -1,6 +1,6 @@
 "use client";
 
-import { UserComponent, useNode } from "@craftjs/core";
+import { Element, UserComponent, useNode } from "@craftjs/core";
 import { CSSProperties, ReactNode } from "react";
 import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
 import { ContainerSettings } from "./ContainerSetting";
@@ -8,6 +8,8 @@ import { TypographyProps } from "../../Settings/Typogrphy";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
 import { cx } from "class-variance-authority";
+import { Text } from "../Text";
+import { generateId } from "@/components/utils/generateId";
 
 type ContainerProps = {
   children?: ReactNode;

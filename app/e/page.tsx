@@ -10,9 +10,12 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useClient } from "@/components/client";
-import { Text } from "@/components/Editor/Nodes";
-import { Container } from "@/components/Editor/Nodes/Container";
-import { NativeTag } from "@/components/Editor/Nodes/NativeTag";
+import {
+  Text,
+  Template,
+  Container,
+  NativeTag,
+} from "@/components/Editor/Nodes";
 
 export interface EditorPageProps {
   id: string;
@@ -69,6 +72,7 @@ export default function Page({ content, ...props }: EditorPageProps) {
           }}
         >
           <Element is={Text} text="contoh" />
+          <Element is={Template} nodeTree={templateDummy} />
           <Element
             is={NativeTag}
             canvas
@@ -85,3 +89,95 @@ export default function Page({ content, ...props }: EditorPageProps) {
     </Viewport>
   );
 }
+
+const templateDummy = {
+  rootNodeId: "bgwe9jqn_we9jqnyn",
+  nodes: {
+    tk3y72fd_3y72fdv3: {
+      type: {
+        resolvedName: "Text",
+      },
+      isCanvas: false,
+      props: {
+        text: "TAIMENG",
+        spacing: {},
+        typography: {
+          textAlign: "left",
+          lineHeight: "12px",
+          letterSpacing: 1,
+          fontSize: "12px",
+          fontWeight: "normal",
+          fontFamily: "Roboto",
+          color: "inherit",
+        },
+        classList: [],
+      },
+      displayName: "Text",
+      custom: {
+        type: "component",
+      },
+      parent: "alnluute_nluuteq9",
+      hidden: false,
+      nodes: [],
+      linkedNodes: {},
+    },
+    alnluute_nluuteq9: {
+      type: {
+        resolvedName: "Container",
+      },
+      isCanvas: true,
+      props: {
+        boxSizing: {
+          width: "auto",
+          height: "auto",
+          h_sizing: "hug",
+          v_sizing: "hug",
+        },
+        spacing: {},
+        classList: [],
+      },
+      displayName: "Container",
+      custom: {
+        type: "component",
+      },
+      parent: "bgwe9jqn_we9jqnyn",
+      hidden: false,
+      nodes: ["tk3y72fd_3y72fdv3"],
+      linkedNodes: {},
+    },
+    bgwe9jqn_we9jqnyn: {
+      type: {
+        resolvedName: "NativeTag",
+      },
+      isCanvas: true,
+      props: {
+        boxSizing: {
+          width: "auto",
+          height: "auto",
+          h_sizing: "hug",
+          v_sizing: "hug",
+        },
+        spacing: {},
+        typography: {
+          textAlign: "left",
+          lineHeight: "12px",
+          letterSpacing: 1,
+          fontSize: "12px",
+          fontWeight: "normal",
+          fontFamily: "Roboto",
+          color: "inherit",
+        },
+        classList: [],
+      },
+      displayName: "NativeTag",
+      custom: {
+        name: "div",
+        type: "tag",
+      },
+      parent: "ROOT",
+      hidden: false,
+      nodes: ["alnluute_nluuteq9"],
+      linkedNodes: {},
+    },
+  },
+};

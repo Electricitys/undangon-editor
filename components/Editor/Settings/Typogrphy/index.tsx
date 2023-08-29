@@ -49,7 +49,7 @@ const defaultValue: Partial<TypographyProps> = {
   textAlign: "left",
   textShadow: undefined,
   textDecoration: undefined,
-  lineHeight: "12px",
+  lineHeight: 1,
   letterSpacing: "0px",
   fontSize: "12px",
   fontStyle: undefined,

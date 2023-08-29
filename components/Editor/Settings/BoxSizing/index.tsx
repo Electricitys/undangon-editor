@@ -82,7 +82,6 @@ export const BoxSizing = () => {
             label={"Horizontal Resizing"}
             disabled={false}
             onChange={function (value: any): void {
-              // console.log(value);
               setProp((props: any) => _set(props, "boxSizing.h_sizing", value));
             }}
             options={resizingOptions}

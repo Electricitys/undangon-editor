@@ -4,8 +4,32 @@ import { generateId } from "@/components/utils/generateId";
 import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInternalEditor";
 import { Delete } from "@craftjs/utils";
 import React from "react";
+import { useList } from "react-use";
+import { TemplateProps } from "./Templates";
+import { ListActions } from "react-use/lib/useList";
 
-const ViewportContext = React.createContext<any>(null);
+const ViewportContext = React.createContext<ViewportValueProps>(null as any);
+
+type MediaProps = {
+  setMedia: (name: "desktop" | "mobile") => void;
+  currentMedia: {
+    name: string;
+    height: number;
+    width: number;
+  };
+  availableMedia: {
+    desktop: {
+      name: string;
+      height: number;
+      width: number;
+    };
+    mobile: {
+      name: string;
+      height: number;
+      width: number;
+    };
+  };
+};
 
 export type ViewportProviderProps = {
   children: React.ReactNode;
@@ -18,6 +42,29 @@ export type ViewportProviderProps = {
   constructPreviewUrl?: () => void;
   id?: string;
 };
+
+interface ViewportValueProps
+  extends Pick<ViewportProviderProps, "isProduction" | "id"> {
+  media: MediaProps;
+  handler: {
+    onClose: (() => void) | undefined;
+    onPublish:
+      | ((
+          query: Delete<
+            useInternalEditorReturnType<any>["query"],
+            "deserialize"
+          >,
+          loadingState: {
+            isLoading: boolean;
+            setLoading: (value: boolean) => void;
+          }
+        ) => void)
+      | undefined;
+    constructPreviewUrl: (() => void) | undefined;
+  };
+  templates: TemplateProps[];
+  templatesHelper: ListActions<TemplateProps>;
+}
 
 interface IViewportProviderProp
   extends Omit<ViewportProviderProps, "onPublish"> {
@@ -46,7 +93,10 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
       width: 375,
     },
   };
-  let [currentMedia, setCurrentMedia] = React.useState(availableMedia["mobile"]);
+  let [currentMedia, setCurrentMedia] = React.useState(
+    availableMedia["mobile"]
+  );
+  const [templates, templatesHelper] = useList<TemplateProps>([]);
 
   const setMedia = React.useCallback((name: "desktop" | "mobile") => {
     setCurrentMedia(availableMedia[name]);
@@ -71,6 +121,8 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
         media,
         handler,
         id,
+        templates,
+        templatesHelper,
       }}
     >
       {children}
@@ -78,7 +130,7 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   );
 };
 
-export const useViewport = () => {
+export const useViewport = (): ViewportValueProps => {
   const viewport = React.useContext(ViewportContext);
   return viewport;
 };

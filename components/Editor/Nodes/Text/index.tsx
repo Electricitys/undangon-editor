@@ -11,6 +11,7 @@ import { ClassList, ClassListProps } from "../../Settings/ClassList";
 import { Typography, TypographyProps } from "../../Settings/Typogrphy";
 import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
+import { isEmpty } from "lodash";
 
 type TextProps = {
   children?: ReactNode;
@@ -65,9 +66,13 @@ export const Text: UserComponent<Partial<TextProps>> = ({
     load();
   }, [typography?.fontFamily]);
 
-  if (children) {
+  if (!isEmpty(children)) {
     return (
-      <div ref={(ref) => connect(ref as any)} style={style as any}>
+      <div
+        ref={(ref) => connect(ref as any)}
+        style={style as any}
+        className={className}
+      >
         {children}
       </div>
     );
