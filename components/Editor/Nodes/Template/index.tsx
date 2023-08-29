@@ -100,7 +100,11 @@ function createReactElements(
 
   if (Component === NativeTag) props.as = custom.name;
 
-  return <Component {...props}>{childElements}</Component>;
+  return (
+    <Component key={nodeId} {...props}>
+      {childElements}
+    </Component>
+  );
 }
 
 Template.craft = {
