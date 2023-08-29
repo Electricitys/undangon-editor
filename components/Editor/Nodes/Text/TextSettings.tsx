@@ -22,7 +22,10 @@ export const TextSettings = () => {
           <Input
             value={values.text}
             onChange={(e) => {
-              setProp((props: any) => _set(props, "text", e.target.value));
+              setProp(
+                (props: any) => _set(props, "text", e.target.value),
+                2000
+              );
             }}
           />
         </div>

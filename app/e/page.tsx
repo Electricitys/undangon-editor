@@ -1,21 +1,12 @@
 "use client";
 
 import lz from "lzutf8";
-import { Viewport } from "@/components/Editor/Viewport";
+import { Viewport, ViewportFrame } from "@/components/Editor/Viewport";
 import { ViewportProviderProps } from "@/components/Editor/Viewport/useViewport";
-import { Button } from "@/components/ui/button";
-import { Element, Frame, useEditor } from "@craftjs/core";
-import IFrame, { FrameContextConsumer } from "react-frame-component";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useClient } from "@/components/client";
-import {
-  Text,
-  Template,
-  Container,
-  NativeTag,
-} from "@/components/Editor/Nodes";
 
 export interface EditorPageProps {
   id: string;
@@ -63,8 +54,10 @@ export default function Page({ content, ...props }: EditorPageProps) {
       onPublish={onPublish}
       constructPreviewUrl={constructPreviewUrl}
     >
-      <Frame data={content}>
-        <Element
+      <ViewportFrame
+        data={`{"ROOT":{"type":"div","isCanvas":false,"props":{"children":"COBA Sample"},"displayName":"div","custom":{},"hidden":false,"nodes":["NHaS7f17vf","YGRb97VJYC"],"linkedNodes":{}},"NHaS7f17vf":{"type":{"resolvedName":"NativeTag"},"isCanvas":true,"props":{"boxSizing":{"width":"auto","height":"auto","h_sizing":"hug","v_sizing":"hug"},"spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"NativeTag","custom":{"name":"div","type":"tag"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}},"YGRb97VJYC":{"type":{"resolvedName":"Text"},"isCanvas":true,"props":{"text":"asdkjn","spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"Text","custom":{"type":"component"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}}}`}
+      >
+        {/* <Element
           is={NativeTag}
           canvas
           custom={{
@@ -72,7 +65,6 @@ export default function Page({ content, ...props }: EditorPageProps) {
           }}
         >
           <Element is={Text} text="contoh" />
-          <Element is={Template} nodeTree={templateDummy} />
           <Element
             is={NativeTag}
             canvas
@@ -84,8 +76,9 @@ export default function Page({ content, ...props }: EditorPageProps) {
               <Element is={Text} text="CONTAINER" />
             </Element>
           </Element>
-        </Element>
-      </Frame>
+        </Element> */}
+        <div>COBA</div>
+      </ViewportFrame>
     </Viewport>
   );
 }
@@ -93,19 +86,19 @@ export default function Page({ content, ...props }: EditorPageProps) {
 const templateDummy = {
   rootNodeId: "bgwe9jqn_we9jqnyn",
   nodes: {
-    tk3y72fd_3y72fdv3: {
+    c1sdoi6n_sdoi6n0q: {
       type: {
         resolvedName: "Text",
       },
-      isCanvas: false,
+      isCanvas: true,
       props: {
-        text: "TAIMENG",
+        text: "OKEY!!!",
         spacing: {},
         typography: {
           textAlign: "left",
-          lineHeight: "12px",
-          letterSpacing: 1,
-          fontSize: "12px",
+          lineHeight: 1,
+          letterSpacing: "0px",
+          fontSize: "35px",
           fontWeight: "normal",
           fontFamily: "Roboto",
           color: "inherit",
@@ -116,12 +109,12 @@ const templateDummy = {
       custom: {
         type: "component",
       },
-      parent: "alnluute_nluuteq9",
+      parent: "euo9evvo_o9evvoch",
       hidden: false,
       nodes: [],
       linkedNodes: {},
     },
-    alnluute_nluuteq9: {
+    euo9evvo_o9evvoch: {
       type: {
         resolvedName: "Container",
       },
@@ -135,17 +128,18 @@ const templateDummy = {
         },
         spacing: {},
         classList: [],
+        "": "",
       },
       displayName: "Container",
       custom: {
         type: "component",
       },
-      parent: "bgwe9jqn_we9jqnyn",
+      parent: "ROOT",
       hidden: false,
-      nodes: ["tk3y72fd_3y72fdv3"],
+      nodes: ["c1sdoi6n_sdoi6n0q"],
       linkedNodes: {},
     },
-    bgwe9jqn_we9jqnyn: {
+    ROOT: {
       type: {
         resolvedName: "NativeTag",
       },
@@ -160,8 +154,8 @@ const templateDummy = {
         spacing: {},
         typography: {
           textAlign: "left",
-          lineHeight: "12px",
-          letterSpacing: 1,
+          lineHeight: 1,
+          letterSpacing: "0px",
           fontSize: "12px",
           fontWeight: "normal",
           fontFamily: "Roboto",
@@ -174,9 +168,8 @@ const templateDummy = {
         name: "div",
         type: "tag",
       },
-      parent: "ROOT",
       hidden: false,
-      nodes: ["alnluute_nluuteq9"],
+      nodes: ["euo9evvo_o9evvoch"],
       linkedNodes: {},
     },
   },

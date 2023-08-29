@@ -4,6 +4,7 @@ import {
   serializeNode,
   useEditor,
 } from "@craftjs/core";
+export { ViewportFrame } from "./Frames/Frame";
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { getCloneTree } from "../utils/getCloneTree";
@@ -22,6 +23,8 @@ import { Properties } from "./Properties";
 import { LayerPanel } from "./Layer";
 import { SettingPanel } from "./Settings";
 import { TemplatesPanel } from "./Templates";
+import { ViewportFrameProvider } from "./Frames/Frame";
+import { FramesPanel } from "./Frames";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -239,6 +242,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           </div>
         </div>
         <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+          <FramesPanel />
           <TemplatesPanel />
           <Properties />
           {/* <ComponentPanel /> */}
@@ -286,9 +290,11 @@ export const Viewport: FC<ViewportProps> = ({
     >
       <FontFaceProvider>
         <ViewportProvider {...props}>
-          <ViewportWrapper enableToolbar={enableToolbar}>
-            {children}
-          </ViewportWrapper>
+          <ViewportFrameProvider>
+            <ViewportWrapper enableToolbar={enableToolbar}>
+              {children}
+            </ViewportWrapper>
+          </ViewportFrameProvider>
         </ViewportProvider>
       </FontFaceProvider>
     </Editor>

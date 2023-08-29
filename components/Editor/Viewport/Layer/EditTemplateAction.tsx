@@ -5,16 +5,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEditor } from "@craftjs/core";
 import { useLayer } from "@craftjs/layers";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import { ChevronRight, TrashIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { useViewportFrame } from "../Frames/Frame";
+import { generateId } from "@/components/utils/generateId";
 
 export const EditTemplateAction = () => {
+  const { framePanel, frameHelper } = useViewportFrame();
+
   const { id } = useLayer((layer) => {
     return {
       expanded: layer.expanded,
     };
   });
+
+  const { node } = useEditor((state, query) => ({
+    node: query.node(id).get(),
+  }));
+
+  const handleEditTemplate = () => {
+    frameHelper.push({
+      id: generateId(),
+      name: node.data.custom.name,
+      content: JSON.stringify(node.data.props.nodeTree.nodes),
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -28,7 +45,7 @@ export const EditTemplateAction = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem color="red" onClick={() => console.log("Edit", id)}>
+        <DropdownMenuItem color="red" onClick={handleEditTemplate}>
           <span>Open Editor</span>
           <ChevronRight className="ml-2 h-4 w-4" />
         </DropdownMenuItem>

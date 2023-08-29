@@ -3,14 +3,12 @@ import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
 import { LayersIcon, PlusIcon } from "@radix-ui/react-icons";
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { useList } from "react-use";
 import { generateId } from "@/components/utils/generateId";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { getCloneTree } from "../../utils/getCloneTree";
 import * as ResolverNodes from "../../Nodes";
-import { deserializeNode } from "../../utils/deserializeNode";
 import { useViewport } from "../useViewport";
+import { AddTemplateDialog } from "./AddDialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export type TemplateProps = {
   id: string;
@@ -19,6 +17,7 @@ export type TemplateProps = {
 };
 
 export const TemplatesPanel = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const { query, selected, serializeNodeById } = useEditor((state) => {
     const [currentNodeId] = state.events.selected;
     const currentNode = state.nodes[currentNodeId];
@@ -57,56 +56,80 @@ export const TemplatesPanel = () => {
   });
   const { templates: items, templatesHelper: itemsHelper } = useViewport();
 
-  const handleAddTemplate = () => {
+  const handleAddTemplate = (name: string) => {
     if (!selected) return;
     const cloneNode = serializeNodeById(selected.id);
+    cloneNode.nodes[cloneNode.rootNodeId].parent = undefined;
+    const nodeTree = JSON.parse(
+      JSON.stringify(cloneNode).replaceAll(cloneNode.rootNodeId, "ROOT")
+    );
     itemsHelper.push({
       id: generateId(),
-      name: "New Template",
-      nodeTree: cloneNode,
+      name: name,
+      nodeTree,
     });
+    setIsOpen(false);
   };
 
   return (
-    <PanelSection
-      text="Templates"
-      // description="Input props that this component exposes"
-      action={
-        selected && (
-          <Button
-            disabled={selected.isTemplateNode}
-            size={"icon"}
-            variant={"ghost"}
-            className="h-6 w-6"
-            onClick={(e) => {
-              e.preventDefault();
-              handleAddTemplate();
-            }}
-          >
-            <PlusIcon className="h-4 w-4" />
-          </Button>
-        )
-      }
-    >
-      <div className="pl-4 pr-2">
-        {items.length === 0 && (
-          <div className="text-gray-400 text-sm mb-4">
-            No template available yet
+    <>
+      <PanelSection
+        text="Templates"
+        // description="Input props that this component exposes"
+        action={
+          selected && (
+            <>
+              <Button
+                disabled={selected!.isTemplateNode}
+                size={"icon"}
+                variant={"ghost"}
+                className="h-6 w-6"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(true);
+                }}
+              >
+                <PlusIcon className="h-4 w-4" />
+              </Button>
+            </>
+          )
+        }
+      >
+        <div className="pl-4 pr-2">
+          {items.length === 0 && (
+            <div className="text-gray-400 text-sm mb-4">
+              No template available yet
+            </div>
+          )}
+          <div style={{ marginTop: 0 }}>
+            {items.map((field, index: number) => {
+              return (
+                <div key={field.id} className={`flex mb-2`}>
+                  <Button variant={"ghost"} className="w-full justify-start">
+                    <LayersIcon className="mr-2 h-4 w-4" />
+                    <span>{field.name}</span>
+                  </Button>
+                </div>
+              );
+            })}
           </div>
-        )}
-        <div style={{ marginTop: 0 }}>
-          {items.map((field, index: number) => {
-            return (
-              <div key={field.id} className={`flex mb-2`}>
-                <Button variant={"ghost"} className="w-full justify-start">
-                  <LayersIcon className="mr-2 h-4 w-4" />
-                  <span>{field.name}</span>
-                </Button>
-              </div>
-            );
-          })}
         </div>
-      </div>
-    </PanelSection>
+      </PanelSection>
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+        }}
+      >
+        <DialogContent
+          tabIndex={-1}
+          onFocus={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <AddTemplateDialog onSubmit={handleAddTemplate} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
