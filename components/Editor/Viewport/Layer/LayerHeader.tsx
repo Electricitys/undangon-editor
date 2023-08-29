@@ -1,10 +1,5 @@
 import { useLayer } from "@craftjs/layers";
-import {
-  EyeClosedIcon,
-  EyeOpenIcon,
-  PlusIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeOpenIcon, TrashIcon } from "@radix-ui/react-icons";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -16,6 +11,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { AddNodeAction } from "./AddNodeAction";
+import { EditTemplateAction } from "./EditTemplateAction";
+import { Template } from "../../Nodes";
 
 export const LayerTrigger = () => {
   const {
@@ -36,6 +33,7 @@ export const LayerTrigger = () => {
     hasChildCanvases,
     isHovered,
     selected,
+    isTemplateNode,
   } = useEditor((state, query) => {
     const node = query.node(id);
     const nodeRaw = node.get();
@@ -44,6 +42,7 @@ export const LayerTrigger = () => {
 
     return {
       selected,
+      isTemplateNode: nodeRaw.data.type === Template,
       isHovered: node.isHovered(),
       hasChildCanvases: nodeRaw.data.nodes.length > 0,
       displayName:
@@ -54,6 +53,7 @@ export const LayerTrigger = () => {
       hidden: sNode && sNode.data.hidden,
     };
   });
+
   return (
     <Button
       asChild
@@ -96,7 +96,7 @@ export const LayerTrigger = () => {
             </CollapsibleTrigger>
           )}
         </div>
-
+        {isTemplateNode && <EditTemplateAction />}
         <AddNodeAction />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

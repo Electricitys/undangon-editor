@@ -30,6 +30,7 @@ export const TemplatesPanel = () => {
         props: currentNode.data.props,
         type: currentNode.data.custom.type,
         node: currentNode,
+        isTemplateNode: currentNode.data.type === ResolverNodes.Template,
       };
     }
     return {
@@ -73,17 +74,13 @@ export const TemplatesPanel = () => {
       action={
         selected && (
           <Button
+            disabled={selected.isTemplateNode}
             size={"icon"}
             variant={"ghost"}
             className="h-6 w-6"
             onClick={(e) => {
               e.preventDefault();
               handleAddTemplate();
-              // itemsHelper.push({
-              //   id: generateId(),
-              //   name: "",
-              //   content: "",
-              // });
             }}
           >
             <PlusIcon className="h-4 w-4" />
