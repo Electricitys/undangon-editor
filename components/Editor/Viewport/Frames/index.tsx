@@ -1,7 +1,7 @@
 import { useEditor } from "@craftjs/core";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon, HomeIcon } from "@radix-ui/react-icons";
 import React from "react";
 import * as ResolverNodes from "../../Nodes";
 import { useViewportFrame } from "./Frame";
@@ -47,6 +47,8 @@ export const FramesPanel = () => {
     });
   }, [frames]);
 
+  if (!frame) return null;
+
   return (
     <PanelSection
       text="Detail"
@@ -54,7 +56,7 @@ export const FramesPanel = () => {
     >
       <div className="pl-2 pr-2">
         <div className="flex items-center">
-          {framePanel[0].length > 1 && (
+          {framePanel[0].length > 1 ? (
             <Button
               size={"icon"}
               onClick={() => {
@@ -63,6 +65,10 @@ export const FramesPanel = () => {
               variant={"ghost"}
             >
               <ArrowLeftIcon />
+            </Button>
+          ) : (
+            <Button size={"icon"} disabled={true} variant={"ghost"}>
+              <HomeIcon />
             </Button>
           )}
           <div className="pl-2">{frame.name}</div>

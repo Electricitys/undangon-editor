@@ -32,7 +32,7 @@ export const AddTemplateDialog: React.FC<{
     }
     return { selected };
   });
-  const { handleSubmit, handleChange, values, resetForm } = useFormik({
+  const { handleSubmit, handleChange, values } = useFormik({
     initialValues: { name: "" },
     onSubmit: (values, { resetForm }) => {
       onSubmit(values.name);

@@ -1,4 +1,11 @@
-import { NodeTree, serializeNode, useEditor } from "@craftjs/core";
+import {
+  Node,
+  NodeId,
+  NodeTree,
+  SerializedNodes,
+  serializeNode,
+  useEditor,
+} from "@craftjs/core";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
 import { LayersIcon, PlusIcon } from "@radix-ui/react-icons";
@@ -10,10 +17,16 @@ import { useViewport } from "../useViewport";
 import { AddTemplateDialog } from "./AddDialog";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
+export type SerializedNodeWithTemplates = {
+  rootNodeId: NodeId;
+  nodes: SerializedNodes;
+  templates: TemplateProps[];
+};
+
 export type TemplateProps = {
   id: string;
   name: string;
-  nodeTree: NodeTree;
+  nodeTree: SerializedNodeWithTemplates;
 };
 
 export const TemplatesPanel = () => {
@@ -37,9 +50,10 @@ export const TemplatesPanel = () => {
       resolver: state.options.resolver,
       serializeNodeById: (id: string) => {
         const nodeTree = getCloneTree(query, id);
-        const serialized: any = {
+        const serialized: SerializedNodeWithTemplates = {
           rootNodeId: nodeTree.rootNodeId,
           nodes: {},
+          templates: [],
         };
         for (const node in nodeTree.nodes) {
           serialized.nodes[node] = serializeNode(
@@ -47,6 +61,7 @@ export const TemplatesPanel = () => {
             state.options.resolver
           );
         }
+        console.log(serialized);
         // Object.setPrototypeOf(serialized, {
         //   toJSON: () => JSON.stringify(serialized),
         // });
@@ -59,10 +74,11 @@ export const TemplatesPanel = () => {
   const handleAddTemplate = (name: string) => {
     if (!selected) return;
     const cloneNode = serializeNodeById(selected.id);
-    cloneNode.nodes[cloneNode.rootNodeId].parent = undefined;
+    cloneNode.nodes[cloneNode.rootNodeId].parent = null;
     const nodeTree = JSON.parse(
       JSON.stringify(cloneNode).replaceAll(cloneNode.rootNodeId, "ROOT")
     );
+    console.log(nodeTree);
     itemsHelper.push({
       id: generateId(),
       name: name,

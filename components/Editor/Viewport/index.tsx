@@ -19,12 +19,13 @@ import { RenderNode } from "../Nodes/RenderNode";
 
 import * as ResolverNodes from "../Nodes";
 import { Toolbar } from "./Toolbar";
-import { Properties } from "./Properties";
+import { AdditionalPanel } from "./Additional";
 import { LayerPanel } from "./Layer";
 import { SettingPanel } from "./Settings";
 import { TemplatesPanel } from "./Templates";
 import { ViewportFrameProvider } from "./Frames/Frame";
 import { FramesPanel } from "./Frames";
+import { PropertiesPanel } from "./PropertiesPanel";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -208,7 +209,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   });
 
   if (!enableToolbar) {
-    return <>{children}</>;
+    return children;
   }
 
   return (
@@ -244,7 +245,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
           <FramesPanel />
           <TemplatesPanel />
-          <Properties />
+          <AdditionalPanel />
+          <PropertiesPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>

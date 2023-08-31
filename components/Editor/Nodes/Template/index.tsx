@@ -16,18 +16,21 @@ import { deserializeNode } from "../../utils/deserializeNode";
 import _sortBy from "lodash/sortBy";
 import _get from "lodash/get";
 import _set from "lodash/set";
-import { fromEntries } from "../../utils/formEntries";
-import { DEPRECATED_ROOT_NODE, ROOT_NODE } from "@craftjs/utils";
 import { NativeTag } from "../NativeTag";
-import { Native } from "@stitches/react/types/css-util";
+import { TemplateSettings } from "./TemplateSetting";
+import { PropsProps } from "../../Settings/Properties";
+import { TemplateAdditional } from "./TemplateAdditional";
+import { PropertiesPanel } from "../../Viewport/PropertiesPanel";
+import { generateId } from "@/components/utils/generateId";
 
-type TemplateProps = {
-  children?: React.ReactNode;
+type TemplateProps = React.PropsWithChildren & {
   nodeTree: { rootNodeId: NodeId; nodes: { [nodeId: NodeId]: SerializedNode } };
+  props: PropsProps[];
 };
 
 export const Template: UserComponent<Partial<TemplateProps>> = ({
   children,
+  props,
   nodeTree,
 }) => {
   const { query, actions, deserialize } = useEditor((state) => ({
@@ -46,19 +49,6 @@ export const Template: UserComponent<Partial<TemplateProps>> = ({
   } = useNode((node) => ({
     isActive: node.events.selected,
   }));
-  const resolvedNodes = React.useMemo<NodeTree>(() => {
-    const nodes: { [nodeId: NodeId]: Node } = {};
-    for (const id in nodeTree?.nodes) {
-      let node = nodeTree?.nodes[id];
-      nodes[id] = query
-        .parseFreshNode({ id, data: deserialize(node as any) })
-        .toNode();
-    }
-    return {
-      nodes,
-      rootNodeId: nodeTree?.rootNodeId as string,
-    };
-  }, [nodeTree, id]);
 
   const dezerializedNodes = React.useMemo<{
     rootNodeId: NodeId;
@@ -84,10 +74,29 @@ export const Template: UserComponent<Partial<TemplateProps>> = ({
   return <span ref={(ref) => connect(ref as any)}>{"Some child"}</span>;
 };
 
+Template.craft = {
+  name: "Template",
+  custom: {
+    unique: generateId(),
+    name: "Template",
+    type: "template",
+  },
+  isCanvas: true,
+  props: {
+    nodeTree: undefined,
+    props: [],
+  },
+  related: {
+    settings: TemplateSettings,
+    properties: PropertiesPanel,
+  },
+};
+
 function createReactElements(
   nodeId: string,
   nodes: Record<string, Omit<NodeData, "event">>
 ): React.ReactNode {
+  if (!nodeId) return null;
   const node = nodes[nodeId];
   const { type: Component, nodes: childNodeIds, custom } = node;
   const childElements = (childNodeIds || []).map((childNodeId) =>
@@ -106,15 +115,3 @@ function createReactElements(
     </Component>
   );
 }
-
-Template.craft = {
-  name: "Template",
-  custom: {
-    name: "Template",
-    type: "template",
-  },
-  props: {
-    nodeTree: undefined,
-  },
-  related: {},
-};

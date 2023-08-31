@@ -40,9 +40,12 @@ export const LayerTrigger = () => {
     const sNode = state.nodes[id];
     const selected = query.getEvent("selected").first() === id;
 
+    let isTemplateNode = false;
+    if (nodeRaw && nodeRaw.data) isTemplateNode = nodeRaw.data.type === Template;
+
     return {
       selected,
-      isTemplateNode: nodeRaw.data.type === Template,
+      isTemplateNode,
       isHovered: node.isHovered(),
       hasChildCanvases: nodeRaw.data.nodes.length > 0,
       displayName:
