@@ -78,7 +78,6 @@ export const TemplatesPanel = () => {
     const nodeTree = JSON.parse(
       JSON.stringify(cloneNode).replaceAll(cloneNode.rootNodeId, "ROOT")
     );
-    console.log(nodeTree);
     itemsHelper.push({
       id: generateId(),
       name: name,

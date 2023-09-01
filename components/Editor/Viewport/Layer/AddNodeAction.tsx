@@ -88,6 +88,7 @@ export const AddNodeAction = () => {
         nodeTree: template?.nodeTree,
         custom: {
           name: template?.name,
+          uniqueId: template?.id,
         },
       });
     } else {

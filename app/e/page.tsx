@@ -178,7 +178,7 @@ const templateDummy = {
       type: {
         resolvedName: "Template",
       },
-      isCanvas: false,
+      isCanvas: true,
       props: {
         nodeTree: {
           rootNodeId: "ROOT",

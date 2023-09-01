@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useEditor } from "@craftjs/core";
-import { Formik, FormikHelpers, useFormik } from "formik";
+import { useFormik } from "formik";
 import React from "react";
 import { Template } from "../../Nodes";
 import { Label } from "@/components/ui/label";
