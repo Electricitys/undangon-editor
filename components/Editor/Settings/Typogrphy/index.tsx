@@ -90,6 +90,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Size</div>
           <CSSUnitInput
+            id="typography.fontSize"
             className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<FontSizeIcon />}
@@ -115,6 +116,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Line Height</div>
           <CSSUnitInput
+            id="typography.lineHeight"
             className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LineHeightIcon />}
@@ -140,6 +142,7 @@ export const Typography = () => {
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Letter Spacing</div>
           <CSSUnitInput
+            id="typography.letterSpacing"
             className="border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LetterSpacingIcon />}
@@ -168,6 +171,7 @@ export const Typography = () => {
           <div className="grow text-sm">Text Decoration</div>
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <Toggle
+              id="typography.fontStyle"
               pressed={typography.fontStyle === "italic"}
               onPressedChange={(pressed) => {
                 setProp(
@@ -184,6 +188,7 @@ export const Typography = () => {
               <FontItalicIcon />
             </Toggle>
             <Toggle
+              id="typography.fontWeight"
               pressed={typography.fontWeight === "bold"}
               onPressedChange={(pressed) => {
                 setProp(
@@ -200,6 +205,7 @@ export const Typography = () => {
               <FontBoldIcon />
             </Toggle>
             <Toggle
+              id="typography.textDecoration"
               pressed={typography.textDecoration === "underline"}
               onPressedChange={(pressed) => {
                 setProp(
@@ -222,6 +228,7 @@ export const Typography = () => {
 
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <ToggleGroup.Root
+              id="typography.textAlign"
               type="single"
               value={_get(typography, "textAlign")}
               onValueChange={(value) => {
@@ -259,6 +266,7 @@ export const Typography = () => {
 
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <ToggleGroup.Root
+              id="typography.textTransform"
               type="single"
               value={_get(typography, "textTransform")}
               onValueChange={(value) => {

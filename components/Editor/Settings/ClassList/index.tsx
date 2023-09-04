@@ -82,6 +82,7 @@ export const ClassList = () => {
                 <FormControl>
                   <div className="flex">
                     <Input
+                      id="className"
                       placeholder="Type classname here"
                       className="mr-2"
                       {...field}

@@ -19,9 +19,8 @@ import _set from "lodash/set";
 import { NativeTag } from "../NativeTag";
 import { TemplateSettings } from "./TemplateSetting";
 import { PropsProps } from "../../Settings/Properties";
-import { TemplateAdditional } from "./TemplateAdditional";
 import { PropertiesPanel } from "../../Viewport/PropertiesPanel";
-import { generateId } from "@/components/utils/generateId";
+import { TemplateRenderer } from "./TemplateRenderer";
 
 type TemplateProps = React.PropsWithChildren & {
   nodeTree: { rootNodeId: NodeId; nodes: { [nodeId: NodeId]: SerializedNode } };
@@ -67,7 +66,12 @@ export const Template: UserComponent<Partial<TemplateProps>> = ({
 
   const elements = React.useMemo<React.ReactNode>(() => {
     const rootNodeId = dezerializedNodes.rootNodeId;
-    return createReactElements(rootNodeId, dezerializedNodes.nodes);
+    const node = query.node(id).toSerializedNode();
+    return createReactElements(
+      rootNodeId,
+      dezerializedNodes.nodes,
+      node.custom.unique
+    );
   }, [dezerializedNodes]);
 
   if (elements) return <div ref={(ref) => connect(ref as any)}>{elements}</div>;
@@ -77,7 +81,6 @@ export const Template: UserComponent<Partial<TemplateProps>> = ({
 Template.craft = {
   name: "Template",
   custom: {
-    unique: generateId(),
     name: "Template",
     type: "template",
   },
@@ -94,13 +97,14 @@ Template.craft = {
 
 function createReactElements(
   nodeId: string,
-  nodes: Record<string, Omit<NodeData, "event">>
+  nodes: Record<string, Omit<NodeData, "event">>,
+  templateUniqueId: string
 ): React.ReactNode {
   if (!nodeId) return null;
   const node = nodes[nodeId];
   const { type: Component, nodes: childNodeIds, custom } = node;
   const childElements = (childNodeIds || []).map((childNodeId) =>
-    createReactElements(childNodeId, nodes)
+    createReactElements(childNodeId, nodes, templateUniqueId)
   );
 
   const props = {
@@ -110,8 +114,13 @@ function createReactElements(
   if (Component === NativeTag) props.as = custom.name;
 
   return (
-    <Component key={nodeId} {...props}>
-      {childElements}
-    </Component>
+    <TemplateRenderer
+      key={nodeId}
+      asChild
+      templateId={templateUniqueId}
+      {...props}
+    >
+      <Component>{childElements}</Component>
+    </TemplateRenderer>
   );
 }

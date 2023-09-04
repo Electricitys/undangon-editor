@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { generateId } from "@/components/utils/generateId";
 import { Select } from "@/components/component/Select";
+import { ExpressionInput } from "@/components/ui/expression-input";
 
 export type PropsProps = {
   id: string;
@@ -55,23 +56,27 @@ export const Properties: React.FC<PropertiesProps> = ({
       )}
       <div style={{ marginTop: 0 }}>
         {value.map((field, index: number) => {
-          const className = !disableTrash ? `rounded-none border-x-0` : "rounded-s-none border-l-0";
+          const className = !disableTrash
+            ? `rounded-none border-x-0`
+            : "rounded-e-none border-r-0";
           return (
             <div key={field.id} className={`flex mb-2`}>
               <div style={{ width: "30%" }}>
-                <Input
-                  id={`props.${index}.name`}
-                  name={`props.${index}.name`}
-                  placeholder="name"
-                  className="rounded-e-none"
-                  onChange={(e) =>
-                    updateAt(index, {
-                      ...field,
-                      name: e.target.value,
-                    })
-                  }
-                  defaultValue={field.name}
-                />
+                <div className={`border rounded-md ${className}`}>
+                  <Input
+                    id={`props.${index}.name`}
+                    name={`props.${index}.name`}
+                    placeholder="name"
+                    className={`border-none`}
+                    onChange={(e) =>
+                      updateAt(index, {
+                        ...field,
+                        name: e.target.value,
+                      })
+                    }
+                    defaultValue={field.name}
+                  />
+                </div>
               </div>
               {type ? (
                 <div style={{ width: "70%" }}>
@@ -103,16 +108,16 @@ export const Properties: React.FC<PropertiesProps> = ({
                   />
                 </div>
               ) : (
-                <div style={{ width: "70%" }}>
-                  <Input
+                <div style={{ width: "70%", position: "relative" }}>
+                  <ExpressionInput
                     id={`props.${index as any}.value`}
                     placeholder="value"
-                    className={className}
+                    className={"rounded-s-none"}
                     defaultValue={field.value}
-                    onChange={(e) =>
+                    onClose={(value) =>
                       updateAt(index, {
                         ...field,
-                        value: e.target.value,
+                        value: value || "",
                       })
                     }
                   />

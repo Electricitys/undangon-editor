@@ -26,6 +26,8 @@ export type CSSUnitValue = {
 };
 
 interface CSSUnitInputProps {
+  id?: string;
+  name?: string;
   label: string;
   disabled?: boolean;
   icon: React.ReactNode;
@@ -41,6 +43,8 @@ interface CSSUnitInputProps {
 }
 
 export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
+  id,
+  name,
   label,
   disabled = false,
   icon,
@@ -117,6 +121,8 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
             {unit !== "auto" && (
               <div className="grow">
                 <Input
+                  id={id}
+                  name={name}
                   disabled={disabled}
                   placeholder={placeholder}
                   style={{

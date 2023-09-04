@@ -87,6 +87,7 @@ export default function Page({ content, ...props }: EditorPageProps) {
 
 const templateDummy = {
   rootNodeId: "bgwe9jqn_we9jqnyn",
+  templates: {},
   nodes: {
     c1sdoi6n_sdoi6n0q: {
       type: {
@@ -239,12 +240,20 @@ const templateDummy = {
           },
           templates: [],
         },
-        props: [],
+        props: [
+          {
+            id: "3u4x_4xwe",
+            name: "text",
+            value: "",
+            type: "string",
+          },
+        ],
       },
       displayName: "Template",
       custom: {
         name: "asdasds",
         type: "template",
+        unique: "e7eeduy3_eeduy39k",
       },
       parent: "ROOT",
       hidden: false,

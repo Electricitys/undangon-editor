@@ -56,6 +56,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.marginLeft"
               className="border-transparent hover:border-gray-200"
               label={"Margin Left"}
               disabled={false}
@@ -76,6 +77,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.marginTop"
               className="border-transparent hover:border-gray-200"
               label={"Margin Top"}
               disabled={false}
@@ -98,6 +100,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.marginRight"
               className="border-transparent hover:border-gray-200"
               label={"Margin Right"}
               disabled={false}
@@ -118,6 +121,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.marginButton"
               className="border-transparent hover:border-gray-200"
               label={"Margin Bottom"}
               disabled={false}
@@ -150,6 +154,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.paddingLeft"
               className="border-transparent hover:border-gray-200"
               label={"Padding Left"}
               disabled={false}
@@ -170,6 +175,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.paddingTop"
               className="border-transparent hover:border-gray-200"
               label={"Padding Top"}
               disabled={false}
@@ -191,6 +197,7 @@ export const Spacing = () => {
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.paddingRight"
               className="border-transparent hover:border-gray-200"
               label={"Padding Right"}
               disabled={false}
@@ -211,6 +218,7 @@ export const Spacing = () => {
           </div>
           <div className="px-1 w-1/2">
             <CSSUnitInput
+              id="spacing.paddingBottom"
               className="border-transparent hover:border-gray-200"
               label={"Padding Bottom"}
               disabled={false}

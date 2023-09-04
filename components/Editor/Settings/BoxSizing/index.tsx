@@ -38,6 +38,7 @@ export const BoxSizing = () => {
       <div className="flex pb-2">
         <div className="px-1 w-1/2">
           <CSSUnitInput
+            id="boxSizing.width"
             className="border-transparent hover:border-gray-200"
             label={"Width"}
             disabled={false}
@@ -58,6 +59,7 @@ export const BoxSizing = () => {
         </div>
         <div className="px-1 w-1/2">
           <CSSUnitInput
+            id="boxSizing.height"
             className="border-transparent hover:border-gray-200"
             label={"Height"}
             disabled={false}
