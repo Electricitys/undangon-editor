@@ -6,7 +6,7 @@ import { generateId } from "@/components/utils/generateId";
 import { Select } from "@/components/component/Select";
 import { ExpressionInput } from "@/components/ui/expression-input";
 
-export type PropsProps = {
+export type Properties = {
   id: string;
   name: string;
   value: string;
@@ -14,21 +14,23 @@ export type PropsProps = {
 };
 
 interface PropertiesProps {
-  value: PropsProps[];
-  onChange: (value: PropsProps[]) => void;
+  value: Properties[];
+  onChange: (value: Properties[]) => void;
   addButton?: boolean;
   type?: boolean;
   disableTrash?: boolean;
+  availableVariables?: Properties[];
 }
 
-export const Properties: React.FC<PropertiesProps> = ({
+export const PropertiesInput: React.FC<PropertiesProps> = ({
   value,
   onChange,
   addButton = true,
   type = false,
   disableTrash = false,
+  availableVariables = [],
 }) => {
-  const updateAt: (index: number, updatedItem: PropsProps) => void = (
+  const updateAt: (index: number, updatedItem: Properties) => void = (
     index,
     updatedItem
   ) => {
@@ -41,7 +43,7 @@ export const Properties: React.FC<PropertiesProps> = ({
     updatedItems.splice(index, 1);
     onChange(updatedItems);
   };
-  const add = async (item: PropsProps) => {
+  const add = async (item: Properties) => {
     onChange([...value, item]);
   };
 
@@ -54,15 +56,15 @@ export const Properties: React.FC<PropertiesProps> = ({
       {value.length === 0 && (
         <div className="text-gray-400 text-sm mb-4">No props set</div>
       )}
-      <div style={{ marginTop: 0 }}>
+      <div className="mt-0">
         {value.map((field, index: number) => {
           const className = !disableTrash
             ? `rounded-none border-x-0`
-            : "rounded-e-none border-r-0";
+            : "rounded-e-none border-l-0";
           return (
             <div key={field.id} className={`flex mb-2`}>
               <div style={{ width: "30%" }}>
-                <div className={`border rounded-md ${className}`}>
+                <div className={`border rounded-md rounded-e-none border-r-0`}>
                   <Input
                     id={`props.${index}.name`}
                     name={`props.${index}.name`}
@@ -79,7 +81,7 @@ export const Properties: React.FC<PropertiesProps> = ({
                 </div>
               </div>
               {type ? (
-                <div style={{ width: "70%" }}>
+                <div style={{ width: "70%" }} className={`border border-r-0`}>
                   <Select
                     label="Type"
                     disabled={false}
@@ -98,7 +100,7 @@ export const Properties: React.FC<PropertiesProps> = ({
                         value: "file",
                       },
                     ]}
-                    className={className}
+                    className={"border-0 rounded-none"}
                     onChange={function (value): void {
                       updateAt(index, {
                         ...field,
@@ -114,27 +116,35 @@ export const Properties: React.FC<PropertiesProps> = ({
                     placeholder="value"
                     className={"rounded-s-none"}
                     defaultValue={field.value}
-                    onClose={(value) =>
+                    onChange={(value) =>
                       updateAt(index, {
                         ...field,
                         value: value || "",
                       })
                     }
+                    variables={availableVariables
+                      .map((v) => ({
+                        key: v.id,
+                        value: `$${v.name}`,
+                      }))
+                      .filter((v) => v.key !== field.id)}
                   />
                 </div>
               )}
               {!disableTrash && (
-                <Button
-                  // disabled={items.length === 1}
-                  variant={"outline"}
-                  className="rounded-s-none"
-                  size={"icon"}
-                  onClick={() => {
-                    removeAt(index);
-                  }}
-                >
-                  <Cross2Icon />
-                </Button>
+                <div className="rounded rounded-s-none border">
+                  <Button
+                    // disabled={items.length === 1}
+                    variant={"outline"}
+                    className="rounded-s-none border-0"
+                    size={"icon"}
+                    onClick={() => {
+                      removeAt(index);
+                    }}
+                  >
+                    <Cross2Icon />
+                  </Button>
+                </div>
               )}
             </div>
           );

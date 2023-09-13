@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AddNodeAction } from "./AddNodeAction";
 import { EditTemplateAction } from "./EditTemplateAction";
-import { Template } from "../../Nodes";
+import { TemplateNode } from "../../Nodes";
 
 export const LayerTrigger = () => {
   const {
@@ -41,7 +41,7 @@ export const LayerTrigger = () => {
     const selected = query.getEvent("selected").first() === id;
 
     let isTemplateNode = false;
-    if (nodeRaw && nodeRaw.data) isTemplateNode = nodeRaw.data.type === Template;
+    if (nodeRaw && nodeRaw.data) isTemplateNode = nodeRaw.data.type === TemplateNode;
 
     return {
       selected,

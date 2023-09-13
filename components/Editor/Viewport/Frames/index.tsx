@@ -5,11 +5,15 @@ import { ArrowLeftIcon, HomeIcon } from "@radix-ui/react-icons";
 import React from "react";
 import * as ResolverNodes from "../../Nodes";
 import { useViewportFrame } from "./Frame";
+import { Template } from "../Templates";
+import { Properties } from "../../Settings/Properties";
 
 export type FrameProps = {
   id: string;
   name: string;
   content: string;
+  templates: Template[];
+  properties: Properties[];
 };
 
 export const FramesPanel = () => {
@@ -24,7 +28,7 @@ export const FramesPanel = () => {
         props: currentNode.data.props,
         type: currentNode.data.custom.type,
         node: currentNode,
-        isTemplateNode: currentNode.data.type === ResolverNodes.Template,
+        isTemplateNode: currentNode.data.type === ResolverNodes.TemplateNode,
       };
     }
     return {
@@ -34,15 +38,12 @@ export const FramesPanel = () => {
   });
   const { frames, frame, frameHelper, framePanel } = useViewportFrame();
 
-  const handleAddFrame = () => {};
-
-  const items = React.useMemo<FrameProps[]>(() => {
+  const _items = React.useMemo<FrameProps[]>(() => {
     return Object.keys(frames).map((id) => {
       const frame = frames[id];
       return {
+        ...frame,
         id: id,
-        name: frame.name,
-        content: frame.content,
       };
     });
   }, [frames]);

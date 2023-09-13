@@ -5,8 +5,9 @@ import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInterna
 import { Delete } from "@craftjs/utils";
 import React from "react";
 import { useList } from "react-use";
-import { TemplateProps } from "./Templates";
+import { Template } from "./Templates";
 import { ListActions } from "react-use/lib/useList";
+import { FrameProps } from "./Frames";
 
 const ViewportContext = React.createContext<ViewportValueProps>(null as any);
 
@@ -36,6 +37,7 @@ export type ViewportProviderProps = {
   isProduction?: boolean;
   onClose?: () => void;
   onPublish: (
+    frame: FrameProps,
     query: Delete<useInternalEditorReturnType<any>["query"], "deserialize">,
     loadingState: { isLoading: boolean; setLoading: (value: boolean) => void }
   ) => void;
@@ -50,6 +52,7 @@ interface ViewportValueProps
     onClose: (() => void) | undefined;
     onPublish:
       | ((
+          frame: FrameProps,
           query: Delete<
             useInternalEditorReturnType<any>["query"],
             "deserialize"
@@ -62,8 +65,6 @@ interface ViewportValueProps
       | undefined;
     constructPreviewUrl: (() => void) | undefined;
   };
-  templates: TemplateProps[];
-  templatesHelper: ListActions<TemplateProps>;
 }
 
 interface IViewportProviderProp
@@ -96,7 +97,6 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   let [currentMedia, setCurrentMedia] = React.useState(
     availableMedia["mobile"]
   );
-  const [templates, templatesHelper] = useList<TemplateProps>([]);
 
   const setMedia = React.useCallback((name: "desktop" | "mobile") => {
     setCurrentMedia(availableMedia[name]);
@@ -121,8 +121,6 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
         media,
         handler,
         id,
-        templates,
-        templatesHelper,
       }}
     >
       {children}

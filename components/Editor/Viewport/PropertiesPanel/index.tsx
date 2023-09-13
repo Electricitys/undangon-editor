@@ -1,19 +1,41 @@
-import { useEditor } from "@craftjs/core";
-import { Properties, PropsProps } from "../../Settings/Properties";
+import { PropertiesInput } from "../../Settings/Properties";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@radix-ui/react-icons";
+import {
+  LockClosedIcon,
+  LockOpen1Icon,
+  LockOpen2Icon,
+  Pencil1Icon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { useViewportFrame } from "../Frames/Frame";
 import { generateId } from "@/components/utils/generateId";
+import { useState } from "react";
 
 export const PropertiesContent = () => {
   const { frame, frameHelper } = useViewportFrame();
+  const [editable, setEditable] = useState<boolean>(false);
   return (
     <PanelSection
       text="Props"
       description="Input props that this component exposes"
       action={
         <>
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            className="h-6 w-6"
+            onClick={(e) => {
+              e.preventDefault();
+              setEditable((s) => !s);
+            }}
+          >
+            {editable ? (
+              <LockOpen1Icon className="h-4 w-4" />
+            ) : (
+              <LockClosedIcon className="h-4 w-4" />
+            )}
+          </Button>
           <Button
             size={"icon"}
             variant={"ghost"}
@@ -38,9 +60,10 @@ export const PropertiesContent = () => {
         </>
       }
     >
-      <Properties
+      <PropertiesInput
         addButton={false}
-        type={true}
+        disableTrash={!editable}
+        type={editable}
         value={frame.properties || []}
         onChange={(p) => {
           frameHelper.updateFrameAt(frame.id, {

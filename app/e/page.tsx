@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useClient } from "@/components/client";
+import { FrameProps } from "@/components/Editor/Viewport/Frames";
+import { defaultFrameData } from "./frameData";
 
 export interface EditorPageProps {
   id: string;
@@ -19,22 +21,22 @@ export default function Page({ content, ...props }: EditorPageProps) {
   const router = useRouter();
 
   const onPublish = useCallback<ViewportProviderProps["onPublish"]>(
-    async (query, { setLoading }) => {
+    async (frame, query, { setLoading }) => {
       setLoading(true);
-      const json = query.serialize();
-      console.log(JSON.parse(json));
+      const json = frame.content;
+      console.log(frame);
       const content = lz.encodeBase64(lz.compress(json));
-      try {
-        await client.service("invitations").patch(props.id, { content });
-        toast({
-          description: "Project is saved.",
-        });
-      } catch (err) {
-        toast({
-          description: "Error while saving the project.",
-        });
-        console.error(err);
-      }
+      // try {
+      //   await client.service("invitations").patch(props.id, { content });
+      //   toast({
+      //     description: "Project is saved.",
+      //   });
+      // } catch (err) {
+      //   toast({
+      //     description: "Error while saving the project.",
+      //   });
+      //   console.error(err);
+      // }
       setLoading(false);
     },
     [props]
@@ -57,7 +59,9 @@ export default function Page({ content, ...props }: EditorPageProps) {
     >
       <ViewportFrame
         // data={`{"ROOT":{"type":"div","isCanvas":false,"props":{"children":"COBA Sample"},"displayName":"div","custom":{},"hidden":false,"nodes":["NHaS7f17vf","YGRb97VJYC"],"linkedNodes":{}},"NHaS7f17vf":{"type":{"resolvedName":"NativeTag"},"isCanvas":true,"props":{"boxSizing":{"width":"auto","height":"auto","h_sizing":"hug","v_sizing":"hug"},"spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"NativeTag","custom":{"name":"div","type":"tag"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}},"YGRb97VJYC":{"type":{"resolvedName":"Text"},"isCanvas":true,"props":{"text":"asdkjn","spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"Text","custom":{"type":"component"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}}}`}
-        data={JSON.stringify(templateDummy.nodes)}
+        data={defaultFrameData.content}
+        templates={defaultFrameData.templates}
+        properties={defaultFrameData.properties}
       >
         {/* <Element
           is={NativeTag}
@@ -84,181 +88,3 @@ export default function Page({ content, ...props }: EditorPageProps) {
     </Viewport>
   );
 }
-
-const templateDummy = {
-  rootNodeId: "bgwe9jqn_we9jqnyn",
-  templates: {},
-  nodes: {
-    c1sdoi6n_sdoi6n0q: {
-      type: {
-        resolvedName: "Text",
-      },
-      isCanvas: true,
-      props: {
-        text: "OKEY!!!",
-        spacing: {},
-        typography: {
-          textAlign: "left",
-          lineHeight: 1,
-          letterSpacing: "0px",
-          fontSize: "35px",
-          fontWeight: "normal",
-          fontFamily: "Roboto",
-          color: "inherit",
-        },
-        classList: [],
-      },
-      displayName: "Text",
-      custom: {
-        type: "component",
-      },
-      parent: "euo9evvo_o9evvoch",
-      hidden: false,
-      nodes: [],
-      linkedNodes: {},
-    },
-    euo9evvo_o9evvoch: {
-      type: {
-        resolvedName: "Container",
-      },
-      isCanvas: true,
-      props: {
-        boxSizing: {
-          width: "auto",
-          height: "auto",
-          h_sizing: "hug",
-          v_sizing: "hug",
-        },
-        spacing: {},
-        classList: [],
-        "": "",
-      },
-      displayName: "Container",
-      custom: {
-        type: "component",
-      },
-      parent: "ROOT",
-      hidden: false,
-      nodes: ["c1sdoi6n_sdoi6n0q"],
-      linkedNodes: {},
-    },
-    ROOT: {
-      type: {
-        resolvedName: "NativeTag",
-      },
-      isCanvas: true,
-      props: {
-        boxSizing: {
-          width: "auto",
-          height: "auto",
-          h_sizing: "hug",
-          v_sizing: "hug",
-        },
-        spacing: {},
-        typography: {
-          textAlign: "left",
-          lineHeight: 1,
-          letterSpacing: "0px",
-          fontSize: "12px",
-          fontWeight: "normal",
-          fontFamily: "Roboto",
-          color: "inherit",
-        },
-        classList: [],
-      },
-      displayName: "NativeTag",
-      custom: {
-        name: "div",
-        type: "tag",
-      },
-      hidden: false,
-      nodes: ["euo9evvo_o9evvoch", "L47Fl6Cege"],
-      linkedNodes: {},
-    },
-    L47Fl6Cege: {
-      type: {
-        resolvedName: "Template",
-      },
-      isCanvas: true,
-      props: {
-        nodeTree: {
-          rootNodeId: "ROOT",
-          nodes: {
-            v5eeduy3_eeduy39k: {
-              type: {
-                resolvedName: "Text",
-              },
-              isCanvas: true,
-              props: {
-                text: "OKEY!!!",
-                spacing: {},
-                typography: {
-                  textAlign: "left",
-                  lineHeight: 1,
-                  letterSpacing: "0px",
-                  fontSize: "35px",
-                  fontWeight: "normal",
-                  fontFamily: "Roboto",
-                  color: "inherit",
-                },
-                classList: [],
-              },
-              displayName: "Text",
-              custom: {
-                type: "component",
-              },
-              parent: "ROOT",
-              hidden: false,
-              nodes: [],
-              linkedNodes: {},
-            },
-            ROOT: {
-              type: {
-                resolvedName: "Container",
-              },
-              isCanvas: true,
-              props: {
-                boxSizing: {
-                  width: "auto",
-                  height: "auto",
-                  h_sizing: "hug",
-                  v_sizing: "hug",
-                },
-                spacing: {},
-                classList: [],
-                "": "",
-              },
-              displayName: "Container",
-              custom: {
-                type: "component",
-              },
-              parent: null,
-              hidden: false,
-              nodes: ["v5eeduy3_eeduy39k"],
-              linkedNodes: {},
-            },
-          },
-          templates: [],
-        },
-        props: [
-          {
-            id: "3u4x_4xwe",
-            name: "text",
-            value: "",
-            type: "string",
-          },
-        ],
-      },
-      displayName: "Template",
-      custom: {
-        name: "asdasds",
-        type: "template",
-        unique: "e7eeduy3_eeduy39k",
-      },
-      parent: "ROOT",
-      hidden: false,
-      nodes: [],
-      linkedNodes: {},
-    },
-  },
-};

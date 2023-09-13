@@ -1,19 +1,18 @@
-import { Frame, FrameProps, useEditor } from "@craftjs/core";
+import { Frame, FrameProps as CraftFrameProps, useEditor } from "@craftjs/core";
 import React from "react";
 import _omit from "lodash/omit";
 import { useDebounce, useEffectOnce, useList, usePrevious } from "react-use";
 import { ListActions } from "react-use/lib/useList";
 import { generateId } from "@/components/utils/generateId";
-import { PropsProps } from "../../Settings/Properties";
+import { Properties } from "../../Settings/Properties";
+import { FrameProps } from ".";
+import { Template } from "../Templates";
 
-export interface ViewportFrameProps extends Partial<FrameProps> {
+export interface ViewportFrameProps extends Partial<CraftFrameProps> {
   initialData?: string;
 }
-type IFrame = {
-  id: string;
-  name: string;
-  content: string;
-  properties?: PropsProps[];
+type IFrame = FrameProps & {
+  properties?: Properties[];
   handler?: Partial<FrameHandlerProps>;
 };
 type FrameHandlerProps = {
@@ -152,14 +151,23 @@ export const ViewportFrameProvider: React.FC<
 };
 
 export const ViewportFrame: React.FC<
-  React.PropsWithChildren<Partial<FrameProps>>
+  React.PropsWithChildren<
+    Partial<
+      CraftFrameProps & {
+        templates: FrameProps["templates"];
+        properties: FrameProps["properties"];
+      }
+    >
+  >
 > = (props) => {
-  const { frame, frameHelper } = useViewportFrame();
+  const { frameHelper } = useViewportFrame();
   useEffectOnce(() => {
     frameHelper.push({
       id: generateId(),
       name: "App",
       content: props.data as string,
+      templates: props.templates || [],
+      properties: props.properties || [],
     });
   });
   return <Frame {...props} data={props.data} />;
@@ -168,4 +176,30 @@ export const ViewportFrame: React.FC<
 export const useViewportFrame = (): ViewportFrameValue => {
   const viewport = React.useContext(ViewportFrameContext);
   return viewport;
+};
+
+interface ViewportFrameTemplatesValue {
+  templates: Template[];
+  helper: {
+    get: (id: string) => Template | undefined;
+    push: (template: Template) => void;
+  };
+}
+
+export const useViewportFrameTemplates = (): ViewportFrameTemplatesValue => {
+  const { frame, frameHelper } = useViewportFrame();
+  const templates = frame?.templates || [];
+  return {
+    templates,
+    helper: {
+      get: (id) => {
+        return frame.templates.find((template) => template.id === id);
+      },
+      push: function (template: Template): void {
+        frameHelper.updateFrameAt(frame.id, {
+          templates: [...templates, template],
+        });
+      },
+    },
+  };
 };

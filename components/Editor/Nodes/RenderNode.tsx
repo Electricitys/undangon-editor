@@ -1,9 +1,15 @@
 "use client";
 
-import { useEditor, useNode } from "@craftjs/core";
+import { NodeElement, NodeId, useEditor, useNode } from "@craftjs/core";
 import { ROOT_NODE } from "@craftjs/utils";
-import { ReactElement, useCallback, useEffect, useMemo, useRef } from "react";
-import ReactDOM from "react-dom";
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import ReactDOM, { render } from "react-dom";
 import { getCloneTree } from "../utils/getCloneTree";
 import {
   ArrowUpIcon,
@@ -21,6 +27,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { styled } from "@stitches/react";
+import { TemplateNode } from "./Template";
+import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
 
 export const RenderNode = ({ render }: { render: ReactElement }) => {
   const { id } = useNode();
@@ -38,6 +46,10 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     deletable,
     connectors: { drag },
     parent,
+
+    props,
+    type,
+    nodes,
   } = useNode((node) => ({
     isHover: node.events.hovered,
     dom: node.dom,
@@ -49,7 +61,10 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     moveable: query.node(node.id).isDraggable(),
     deletable: query.node(node.id).isDeletable(),
     parent: node.data.parent,
+
     props: node.data.props,
+    type: node.data.type,
+    nodes: node.data.nodes,
   }));
 
   useEffect(() => {
@@ -104,6 +119,41 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
   const domDimension: DOMRect = dom
     ? dom?.getBoundingClientRect()
     : ({} as any);
+
+  const { setTemplate } = useTemplateNodeManager();
+
+  const ElementRender = React.useMemo(() => {
+    let children = props.children;
+    if (nodes && nodes.length > 0) {
+      children = (
+        <React.Fragment>
+          {nodes.map((id: NodeId) => (
+            <NodeElement id={id} key={id} />
+          ))}
+        </React.Fragment>
+      );
+    }
+    let render = React.createElement(type, props, children);
+    if (type === TemplateNode) {
+      let _node = {
+        id: id,
+        data: query.node(id).toSerializedNode(),
+        _hydrationTimestamp: query.node(id).get()._hydrationTimestamp,
+      };
+      console.log("RERENDER");
+      setTemplate(id, _node);
+      render = React.createElement(
+        type,
+        {
+          ...props,
+          _node,
+        },
+        children
+      );
+    }
+
+    return render;
+  }, [type, props, nodes]);
 
   return (
     <>
@@ -209,7 +259,8 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
             document.querySelector(".page-container") as any
           )
         : null}
-      {render}
+      {ElementRender}
+      {/* {render} */}
     </>
   );
 };

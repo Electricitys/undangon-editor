@@ -26,6 +26,8 @@ import { TemplatesPanel } from "./Templates";
 import { ViewportFrameProvider } from "./Frames/Frame";
 import { FramesPanel } from "./Frames";
 import { PropertiesPanel } from "./PropertiesPanel";
+import { Toaster } from "@/components/ui/toaster";
+import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeManager";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -277,7 +279,13 @@ export const Viewport: FC<ViewportProps> = ({
         }}
       >
         <FontFaceProvider>
-          <ViewportProvider isProduction={true}>{children}</ViewportProvider>
+          <ViewportProvider isProduction={true}>
+            <ViewportFrameProvider>
+              <TemplateNodeManagerProvider>
+                {children}
+              </TemplateNodeManagerProvider>
+            </ViewportFrameProvider>
+          </ViewportProvider>
         </FontFaceProvider>
       </Editor>
     );
@@ -292,10 +300,13 @@ export const Viewport: FC<ViewportProps> = ({
     >
       <FontFaceProvider>
         <ViewportProvider {...props}>
+          <Toaster />
           <ViewportFrameProvider>
-            <ViewportWrapper enableToolbar={enableToolbar}>
-              {children}
-            </ViewportWrapper>
+            <TemplateNodeManagerProvider>
+              <ViewportWrapper enableToolbar={enableToolbar}>
+                {children}
+              </ViewportWrapper>
+            </TemplateNodeManagerProvider>
           </ViewportFrameProvider>
         </ViewportProvider>
       </FontFaceProvider>

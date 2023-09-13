@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useViewportFrame } from "./Frames/Frame";
 
 export const Toolbar = () => {
   const {
@@ -29,6 +30,8 @@ export const Toolbar = () => {
     canUndo: query.history.canUndo(),
     canRedo: query.history.canRedo(),
   }));
+
+  const { frame } = useViewportFrame();
 
   const previewUrl = React.useMemo(() => {
     try {
@@ -87,7 +90,7 @@ export const Toolbar = () => {
           {({ state: isLoading, setState: setLoading }) => (
             <Button
               onClick={() =>
-                handler.onPublish?.(query, { isLoading, setLoading })
+                handler.onPublish?.(frame, query, { isLoading, setLoading })
               }
             >
               Publish

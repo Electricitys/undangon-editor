@@ -29,10 +29,10 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { uniqueId } from "lodash";
 import * as Components from "../../Nodes";
-import { TemplateProps } from "../Templates";
 import { useViewport } from "../useViewport";
+import { useViewportFrameTemplates } from "../Frames/Frame";
 
-const { NativeTag, Slot, Template, ...RestComponents } = Components;
+const { NativeTag, Slot, TemplateNode, ...RestComponents } = Components;
 
 type FormProps = {
   target: "before" | "after" | "child";
@@ -61,7 +61,7 @@ export const AddNodeAction = () => {
   }));
   const { actions, query, selected } = editor;
 
-  const { templates } = useViewport();
+  const { templates } = useViewportFrameTemplates();
 
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
@@ -83,8 +83,9 @@ export const AddNodeAction = () => {
       element = React.createElement(Slot);
     } else if (values.type === "template") {
       let template = templates.find(({ id }) => id === values.template);
+      console.log(template);
       element = React.createElement(Element, {
-        is: Template,
+        is: TemplateNode,
         nodeTree: template?.nodeTree,
         custom: {
           name: template?.name,

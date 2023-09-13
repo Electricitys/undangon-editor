@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useEditor } from "@craftjs/core";
 import { useFormik } from "formik";
 import React from "react";
-import { Template } from "../../Nodes";
+import { TemplateNode } from "../../Nodes";
 import { Label } from "@/components/ui/label";
 
 export const AddTemplateDialog: React.FC<{
@@ -27,7 +27,7 @@ export const AddTemplateDialog: React.FC<{
         props: currentNode.data.props,
         type: currentNode.data.custom.type,
         node: currentNode,
-        isTemplateNode: currentNode.data.type === Template,
+        isTemplateNode: currentNode.data.type === TemplateNode,
       };
     }
     return { selected };

@@ -3,10 +3,15 @@ import { Input } from "./input";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Badge } from "./badge";
-import { EnterFullScreenIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import {
+  EnterFullScreenIcon,
+  ExitFullScreenIcon,
+  InfoCircledIcon,
+} from "@radix-ui/react-icons";
 import { useClickAway } from "react-use";
-import { Slot } from "@radix-ui/react-slot";
+import { Portal } from "@radix-ui/react-portal";
 import { useCodemirror } from "./useCodemirror";
+import Editor, { EditorProps, useMonaco } from "@monaco-editor/react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,6 +19,18 @@ import {
   TooltipTrigger,
 } from "./tooltip";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
+import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import jexl from "jexl";
+import { useViewportFrame } from "../Editor/Viewport/Frames/Frame";
+import { Properties } from "../Editor/Settings/Properties";
 
 export interface ExpressionInputProps
   extends Omit<
@@ -23,6 +40,7 @@ export interface ExpressionInputProps
   defaultValue?: string;
   onChange?: (value: string) => void;
   onClose?: (value: string | undefined) => void;
+  variables: { key: string; value: string }[];
 }
 
 export const ExpressionInput: React.FC<ExpressionInputProps> = ({
@@ -30,17 +48,12 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
   defaultValue,
   onChange = () => {},
   onClose = () => {},
+  variables,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [value, setValue] = useState(defaultValue);
-
-  const { ref: CodeMirrorRef } = useCodemirror({
-    initialValue: value,
-    onChange: (v) => {
-      setValue(v);
-    },
-  });
 
   const inputRef = useRef(null);
 
@@ -50,85 +63,168 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
   });
 
   React.useEffect(() => {
-    if (isOpen === false) {
-    }
-  }, [isOpen]);
+    onChange(value as string);
+  }, [value]);
+
+  const [editorHeight, setEditorHeight] = useState(100);
 
   return (
-    <div
-      className={cn(
-        "static rounded-md border border-input bg-background items-baseline",
-        className
-      )}
-    >
-      <label
-        htmlFor={props.id}
-        className="block px-3 py-2 text-sm leading-6 cursor-pointer"
-        onClick={() => {
-          setIsOpen(true);
-        }}
+    <RadixDropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
+      <div
+        className={cn(
+          "static rounded-md border border-input bg-background items-baseline",
+          className
+        )}
       >
-        <span className="line-clamp-1">
-          {(value || "").replace(/\n/g, " ") || props.placeholder}
-        </span>
-      </label>
-      {isOpen && (
-        <div
-          ref={inputRef}
-          className="absolute top-0 -left-px -right-px bg-background border"
+        <label
+          className="block px-3 py-2 text-sm leading-6 cursor-pointer relative"
+          onClick={() => {
+            setIsOpen(true);
+          }}
         >
-          <div id={props.id} ref={CodeMirrorRef} className="w-full" />
-          <div className="px-1 py-1 flex items-center">
-            <TooltipProvider>
-              <Badge variant={"outline"}>
-                <span className="font-normal">Expressions</span>
+          <RadixDropdownMenu.Trigger asChild>
+            <div className="absolute -inset-px bottom-auto" />
+          </RadixDropdownMenu.Trigger>
+          <span className={`${!value && "text-gray-400"} line-clamp-1`}>
+            {(value || "").replace(/\n/g, " ") || props.placeholder}
+          </span>
+        </label>
+        <RadixDropdownMenu.Portal>
+          <RadixDropdownMenu.Content align="start">
+            <div ref={inputRef as any} className={`bg-background border w-64`}>
+              <div style={{ height: editorHeight }} className="my-2">
+                <Editor
+                  defaultLanguage="javascript"
+                  // defaultValue={defaultValue}
+                  value={value}
+                  className="w-full"
+                  onChange={(v) => {
+                    setValue(v);
+                  }}
+                  onMount={(editor) => {
+                    editor.onDidContentSizeChange(() => {
+                      setEditorHeight(
+                        Math.min(1000, editor.getContentHeight())
+                      );
+                      editor.layout();
+                    });
+                    editor.focus();
+                  }}
+                  beforeMount={(monaco) => {
+                    console.log(variables);
+                    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                      variables.reduce<string>((p, c) => {
+                        return `${p}\nconst ${c.value}: any;`;
+                      }, ""),
+                      "global.d.ts"
+                    );
+                  }}
+                  options={{
+                    scrollBeyondLastLine: false,
+                    glyphMargin: false,
+                    folding: false,
+                    minimap: { enabled: false },
+                    wordWrap: "on",
+                    // lineNumbers: "off",
+                    // lineDecorationsWidth: 0,
+                    lineNumbersMinChars: 2,
+                  }}
+                />
+              </div>
+              <div className="px-1 py-1 flex items-center">
+                <TooltipProvider>
+                  <Badge variant={"outline"}>
+                    <span className="font-normal">Expressions</span>
 
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="h-auto w-auto ml-1"
-                      size={"icon"}
-                      variant={"ghost"}
-                    >
-                      <InfoCircledIcon />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipPortal>
-                    <TooltipContent side="bottom">
-                      <p>This is the Expression</p>
-                    </TooltipContent>
-                  </TooltipPortal>
-                </Tooltip>
-              </Badge>
-              <Button
-                className="h-5 w-5 ml-1 font-normal text-xs"
-                size={"icon"}
-                variant={"outline"}
-              >
-                {`{x}`}
-              </Button>
-              <div className="grow" />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          className="h-auto w-auto ml-1"
+                          size={"icon"}
+                          variant={"ghost"}
+                        >
+                          <InfoCircledIcon />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipPortal>
+                        <TooltipContent side="bottom">
+                          <p>This is the Expression</p>
+                        </TooltipContent>
+                      </TooltipPortal>
+                    </Tooltip>
+                  </Badge>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        className="h-5 w-5 ml-1 font-normal text-xs"
+                        size={"icon"}
+                        variant={"outline"}
+                      >
+                        {`{x}`}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Available Variables</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {variables.map(({ key: k, value: v }) => (
+                        <DropdownMenuItem key={k} color="red">
+                          {v}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <div className="grow" />
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="h-5 w-5 ml-1 font-normal text-xs"
-                    size={"icon"}
-                    variant={"outline"}
-                  >
-                    <EnterFullScreenIcon />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent side="bottom">
-                    <p>Enter fullscreen</p>
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-      )}
-    </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="h-5 w-5 ml-1 font-normal text-xs"
+                        size={"icon"}
+                        variant={"outline"}
+                      >
+                        <EnterFullScreenIcon />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipPortal>
+                      <TooltipContent side="bottom">
+                        <p>Enter fullscreen</p>
+                      </TooltipContent>
+                    </TooltipPortal>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          </RadixDropdownMenu.Content>
+        </RadixDropdownMenu.Portal>
+      </div>
+    </RadixDropdownMenu.Root>
   );
+};
+
+export const useCompileExpressionInsideFrameAndTemplate = (value: string) => {
+  let properties: Properties[] = [];
+  const frame = useViewportFrame();
+  const parentProperties: never[] = [];
+
+  if (frame?.frame) {
+    properties = [...frame.frame.properties];
+  }
+  if (parentProperties) {
+    properties = [...parentProperties];
+  }
+
+  const context = properties.reduce((p, c) => {
+    return { ...p, [`$${c.name}`]: c.value };
+  }, {});
+  let result = value || "null";
+  const expr = jexl.createExpression(result);
+  try {
+    result = expr.evalSync(context);
+  } catch (err: any) {
+    result = JSON.stringify({
+      message: err.message,
+    });
+  }
+  console.log(result);
+  return result;
 };

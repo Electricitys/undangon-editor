@@ -5,13 +5,14 @@ import { ReactNode, useEffect, useState } from "react";
 import ContentEditable from "react-contenteditable";
 import { useFontFace } from "./FontFaceProvider";
 import { TextSettings } from "./TextSettings";
-import { BoxSizingProps } from "../../Settings/BoxSizing";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
 import { Typography, TypographyProps } from "../../Settings/Typogrphy";
 import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";
+import { useViewportFrame } from "../../Viewport/Frames/Frame";
+import { useCompileExpressionInsideFrameAndTemplate } from "@/components/ui/expression-input";
 
 type TextProps = {
   children?: ReactNode;
@@ -30,7 +31,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   classList,
   typography,
 
-  text,
+  text = "Some Text",
 }) => {
   const {
     connectors: { connect },
@@ -41,7 +42,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   const { editorEnabled } = useEditor((state) => ({
     editorEnabled: state.options.enabled,
   }));
-  const [isEditable, setIsEditable] = useState(false);
+  // const [isEditable, setIsEditable] = useState(false);
 
   const fontFace = useFontFace();
 
@@ -91,25 +92,19 @@ export const Text: UserComponent<Partial<TextProps>> = ({
       ref={(ref) => connect(ref as any)}
       style={style as any}
       className={className}
-      onDoubleClick={() => {
-        setIsEditable(true);
-      }}
-      onBlur={() => {
-        setIsEditable(false);
-      }}
+      // onDoubleClick={() => {
+      //   setIsEditable(true);
+      // }}
+      // onBlur={() => {
+      //   setIsEditable(false);
+      // }}
     >
       {children}
-      {!isEditable ? (
-        <div dangerouslySetInnerHTML={{ __html: text as string }} />
-      ) : (
-        <ContentEditable
-          disabled={false}
-          html={text as string}
-          onChange={(e: any) => {
-            setProp((prop: any) => (prop.text = e.target.value), 500);
-          }}
-        />
-      )}
+      <div
+        dangerouslySetInnerHTML={{
+          __html: (text || "Some text") as string,
+        }}
+      />
     </div>
   );
 };
@@ -118,6 +113,8 @@ Text.craft = {
   name: "Text",
   custom: {
     type: "component",
+    strictProps: ["spacing", "typography", "classList"],
+    functionProps: ["text"],
   },
   props: {
     text: "Text Area",

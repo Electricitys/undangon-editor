@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { PanelSection } from "../../Viewport/PanelSection";
 import { generateId } from "@/components/utils/generateId";
 import { useList } from "react-use";
-import { Properties, PropsProps } from "../../Settings/Properties";
+import { Properties, PropertiesInput } from "../../Settings/Properties";
 import React from "react";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 export const TemplateAdditional = () => {
-  const [items, itemsHelper] = useList<PropsProps>([]);
+  const [items, itemsHelper] = useList<Properties>([]);
 
   React.useEffect(() => {
     // if (onChange) onChange(items);
@@ -38,7 +38,7 @@ export const TemplateAdditional = () => {
         </>
       }
     >
-      <Properties
+      <PropertiesInput
         value={items}
         onChange={(e) => {
           itemsHelper.set(e);

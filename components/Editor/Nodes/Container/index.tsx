@@ -53,6 +53,7 @@ Container.craft = {
   name: "Container",
   custom: {
     type: "component",
+    strictProps: ["spacing", "boxSizing", "classList"],
   },
   props: {
     boxSizing: BoxSizing.defaultValue,

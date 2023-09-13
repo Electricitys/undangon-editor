@@ -16,17 +16,20 @@ import * as ResolverNodes from "../../Nodes";
 import { useViewport } from "../useViewport";
 import { AddTemplateDialog } from "./AddDialog";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Properties } from "../../Settings/Properties";
+import { useViewportFrame, useViewportFrameTemplates } from "../Frames/Frame";
 
 export type SerializedNodeWithTemplates = {
   rootNodeId: NodeId;
   nodes: SerializedNodes;
-  templates: TemplateProps[];
+  templates: Template[];
 };
 
-export type TemplateProps = {
+export type Template = {
   id: string;
   name: string;
   nodeTree: SerializedNodeWithTemplates;
+  properties: Properties[];
 };
 
 export const TemplatesPanel = () => {
@@ -42,7 +45,7 @@ export const TemplatesPanel = () => {
         props: currentNode.data.props,
         type: currentNode.data.custom.type,
         node: currentNode,
-        isTemplateNode: currentNode.data.type === ResolverNodes.Template,
+        isTemplateNode: currentNode.data.type === ResolverNodes.TemplateNode,
       };
     }
     return {
@@ -69,7 +72,7 @@ export const TemplatesPanel = () => {
       },
     };
   });
-  const { templates: items, templatesHelper: itemsHelper } = useViewport();
+  const { templates: items, helper: itemsHelper } = useViewportFrameTemplates();
 
   const handleAddTemplate = (name: string) => {
     if (!selected) return;
@@ -78,11 +81,14 @@ export const TemplatesPanel = () => {
     const nodeTree = JSON.parse(
       JSON.stringify(cloneNode).replaceAll(cloneNode.rootNodeId, "ROOT")
     );
-    itemsHelper.push({
+    const newTemplate = {
       id: generateId(),
       name: name,
       nodeTree,
-    });
+      properties: [],
+    };
+    itemsHelper.push(newTemplate);
+    console.log(newTemplate);
     setIsOpen(false);
   };
 
