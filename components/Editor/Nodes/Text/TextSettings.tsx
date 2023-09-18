@@ -2,13 +2,11 @@ import { PanelSection } from "../../Viewport/PanelSection";
 import { Spacing } from "../../Settings/Spacing";
 import { ClassList } from "../../Settings/ClassList";
 import { Typography } from "../../Settings/Typogrphy";
-import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
 import { ExpressionInput } from "@/components/ui/expression-input";
 import { useViewportFrame } from "../../Viewport/Frames/Frame";
-import { useParentTemplate } from "../Template";
 
 export const TextSettings = () => {
   const {

@@ -4,21 +4,21 @@ import lz from "lzutf8";
 import { Viewport, ViewportFrame } from "@/components/Editor/Viewport";
 import { ViewportProviderProps } from "@/components/Editor/Viewport/useViewport";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-import { toast } from "@/components/ui/use-toast";
+import React, { useCallback } from "react";
 import { useClient } from "@/components/client";
-import { FrameProps } from "@/components/Editor/Viewport/Frames";
 import { defaultFrameData } from "./frameData";
+import { useToast } from "@/components/ui/use-toast";
 
-export interface EditorPageProps {
+interface EditorPageProps {
   id: string;
   slug: string;
   content: string;
 }
 
-export default function Page({ content, ...props }: EditorPageProps) {
+const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
   const client = useClient();
   const router = useRouter();
+  const { toast } = useToast();
 
   const onPublish = useCallback<ViewportProviderProps["onPublish"]>(
     async (frame, query, { setLoading }) => {
@@ -26,20 +26,22 @@ export default function Page({ content, ...props }: EditorPageProps) {
       const json = frame.content;
       console.log(frame);
       const content = lz.encodeBase64(lz.compress(json));
-      // try {
-      //   await client.service("invitations").patch(props.id, { content });
-      //   toast({
-      //     description: "Project is saved.",
-      //   });
-      // } catch (err) {
-      //   toast({
-      //     description: "Error while saving the project.",
-      //   });
-      //   console.error(err);
-      // }
+      try {
+        await client.service("invitations").patch(props.id, { content });
+        toast({
+          title: "Publish",
+          description: "Project is saved.",
+        });
+      } catch (err) {
+        toast({
+          title: "Publish",
+          description: "Error while saving the project.",
+        });
+        console.error(err);
+      }
       setLoading(false);
     },
-    [props]
+    []
   );
 
   const onClose = useCallback(() => {
@@ -87,4 +89,6 @@ export default function Page({ content, ...props }: EditorPageProps) {
       </ViewportFrame>
     </Viewport>
   );
-}
+};
+
+export default Body;

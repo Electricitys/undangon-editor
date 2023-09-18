@@ -24,4 +24,6 @@ export const PaddingLeftIcon = React.forwardRef<SVGSVGElement, IconProps>(
   }
 );
 
+PaddingLeftIcon.displayName = "PaddingLeftIcon";
+
 export default PaddingLeftIcon;

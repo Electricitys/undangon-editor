@@ -24,4 +24,6 @@ export const PaddingHorizontalIcon = React.forwardRef<SVGSVGElement, IconProps>(
   }
 );
 
+PaddingHorizontalIcon.displayName = "PaddingHorizontalIcon";
+
 export default PaddingHorizontalIcon;

@@ -36,27 +36,29 @@ export const PropertiesContent = () => {
               <LockClosedIcon className="h-4 w-4" />
             )}
           </Button>
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="h-6 w-6"
-            onClick={(e) => {
-              e.preventDefault();
-              frameHelper.updateFrameAt(frame.id, {
-                properties: [
-                  ...(frame.properties || []),
-                  {
-                    id: generateId(),
-                    name: "",
-                    value: "",
-                    type: "string",
-                  },
-                ],
-              });
-            }}
-          >
-            <PlusIcon className="h-4 w-4" />
-          </Button>
+          {editable && (
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="h-6 w-6"
+              onClick={(e) => {
+                e.preventDefault();
+                frameHelper.updateFrameAt(frame.id, {
+                  properties: [
+                    ...(frame.properties || []),
+                    {
+                      id: generateId(),
+                      name: "",
+                      value: "",
+                      type: "string",
+                    },
+                  ],
+                });
+              }}
+            >
+              <PlusIcon className="h-4 w-4" />
+            </Button>
+          )}
         </>
       }
     >

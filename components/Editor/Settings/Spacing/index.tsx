@@ -3,12 +3,17 @@ import PaddingLeftIcon from "@/components/Icons/PaddingLeftIcon";
 import PaddingRightIcon from "@/components/Icons/PaddingRightIcon";
 import PaddingTopIcon from "@/components/Icons/PaddingTopIcon";
 import { Button } from "@/components/ui/button";
-import { CSSUnitInput, uncss } from "@/components/ui/css_unit_input";
+import {
+  CSSUnitValue,
+  CSSUnitInput,
+  uncss,
+} from "@/components/ui/css_unit_input";
 import { useNode } from "@craftjs/core";
 import { MarginIcon, PaddingIcon } from "@radix-ui/react-icons";
 import { OnlyStringNumeric } from "@stitches/react/types/css";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
+import React from "react";
 
 export interface SpacingProps {
   marginTop: "auto" | OnlyStringNumeric;
@@ -42,6 +47,24 @@ export const Spacing = () => {
 
   const spacing: SpacingProps = values.spacing;
 
+  const _setProps = React.useCallback(
+    (path: string, raw: CSSUnitValue) => {
+      console.log(path, uncss.compile(raw.value, raw.unit));
+      setProp(
+        (props: any) =>
+          _set(
+            props,
+            path,
+            raw.value === undefined
+              ? undefined
+              : uncss.compile(raw.value, raw.unit)
+          ),
+        1000
+      );
+    },
+    [setProp]
+  );
+
   return (
     <>
       <div className="px-2 pt-1">
@@ -63,15 +86,7 @@ export const Spacing = () => {
               icon={<PaddingLeftIcon />}
               initialValue={uncss.parse(spacing.marginLeft)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.marginLeft",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.marginLeft", raw);
               }}
             />
           </div>
@@ -83,15 +98,7 @@ export const Spacing = () => {
               disabled={false}
               icon={<PaddingTopIcon />}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.marginTop",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.marginTop", raw);
               }}
               initialValue={uncss.parse(spacing.marginTop)}
             />
@@ -107,15 +114,7 @@ export const Spacing = () => {
               icon={<PaddingRightIcon />}
               initialValue={uncss.parse(spacing.marginRight)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.marginRight",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.marginRight", raw);
               }}
             />
           </div>
@@ -128,15 +127,7 @@ export const Spacing = () => {
               icon={<PaddingBottomIcon />}
               initialValue={uncss.parse(spacing.marginBottom)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.marginBottom",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.marginBottom", raw);
               }}
             />
           </div>
@@ -161,15 +152,7 @@ export const Spacing = () => {
               icon={<PaddingLeftIcon />}
               initialValue={uncss.parse(spacing.paddingLeft)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.paddingLeft",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.paddingLeft", raw);
               }}
             />
           </div>
@@ -181,14 +164,7 @@ export const Spacing = () => {
               disabled={false}
               icon={<PaddingTopIcon />}
               onChange={function (_value: any, raw): void {
-                setProp((props: any) => {
-                  _set(
-                    props,
-                    "spacing.paddingTop",
-                    uncss.compile(raw.value, raw.unit)
-                  ),
-                    1000;
-                });
+                _setProps("spacing.paddingTop", raw);
               }}
               initialValue={uncss.parse(spacing.paddingTop)}
             />
@@ -204,15 +180,7 @@ export const Spacing = () => {
               icon={<PaddingRightIcon />}
               initialValue={uncss.parse(spacing.paddingRight)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.paddingRight",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.paddingRight", raw);
               }}
             />
           </div>
@@ -225,15 +193,7 @@ export const Spacing = () => {
               icon={<PaddingBottomIcon />}
               initialValue={uncss.parse(spacing.paddingBottom)}
               onChange={function (_value: any, raw): void {
-                setProp(
-                  (props: any) =>
-                    _set(
-                      props,
-                      "spacing.paddingBottom",
-                      uncss.compile(raw.value, raw.unit)
-                    ),
-                  1000
-                );
+                _setProps("spacing.paddingBottom", raw);
               }}
             />
           </div>

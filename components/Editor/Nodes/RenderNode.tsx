@@ -29,6 +29,16 @@ import {
 import { styled } from "@stitches/react";
 import { TemplateNode } from "./Template";
 import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
+import { Properties } from "../Settings/Properties";
+import { Context } from "jexl/Expression";
+import jexl from "jexl";
+import { isString } from "@/components/utils/isString";
+import { useViewportFrame } from "../Viewport/Frames/Frame";
+import _debounce from "lodash/debounce";
+
+const debounceFunction = _debounce((fn: () => void) => {
+  return fn();
+}, 100);
 
 export const RenderNode = ({ render }: { render: ReactElement }) => {
   const { id } = useNode();
@@ -121,6 +131,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     : ({} as any);
 
   const { setTemplate } = useTemplateNodeManager();
+  const { frame } = useViewportFrame();
 
   const ElementRender = React.useMemo(() => {
     let children = props.children;
@@ -133,26 +144,45 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
         </React.Fragment>
       );
     }
-    let render = React.createElement(type, props, children);
+
+    const SerializedNode = query.node(id).toSerializedNode();
+
+    let renderProps: any = props;
     if (type === TemplateNode) {
       let _node = {
         id: id,
-        data: query.node(id).toSerializedNode(),
+        data: SerializedNode,
         _hydrationTimestamp: query.node(id).get()._hydrationTimestamp,
       };
-      console.log("RERENDER");
-      setTemplate(id, _node);
-      render = React.createElement(
-        type,
-        {
-          ...props,
-          _node,
-        },
-        children
-      );
+      debounceFunction(() => {
+        setTemplate(id, _node);
+      });
+
+      renderProps = {
+        ...props,
+        _node,
+      };
+    } else {
+      if (SerializedNode.custom?.functionProps) {
+        for (let p of SerializedNode.custom.functionProps) {
+          renderProps = {
+            ...renderProps,
+            [p]: compileProps(
+              renderProps[p],
+              frame.properties.reduce(
+                (p, c) => ({
+                  ...p,
+                  [`$${c.name}`]: compileProps(c.value),
+                }),
+                {}
+              )
+            ),
+          };
+        }
+      }
     }
 
-    return render;
+    return React.createElement(type, renderProps, children);
   }, [type, props, nodes]);
 
   return (
@@ -285,3 +315,12 @@ const IndicatorBorderDiv = styled("div", {
   border: "1px dashed red",
   pointerEvents: "none",
 });
+
+const compileProps = (value: string, context: Context = {}) => {
+  let result = value || "null";
+  const expr = jexl.createExpression(result);
+  try {
+    result = expr.evalSync(context);
+  } catch (err) {}
+  return result;
+};

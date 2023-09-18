@@ -25,6 +25,7 @@ export const Toolbar = () => {
     media: { setMedia, currentMedia },
     handler,
   } = useViewport();
+
   const { canUndo, canRedo, actions, query } = useEditor((state, query) => ({
     enabled: state.options.enabled,
     canUndo: query.history.canUndo(),
@@ -89,6 +90,8 @@ export const Toolbar = () => {
         <State defaultValue={false}>
           {({ state: isLoading, setState: setLoading }) => (
             <Button
+              disabled={frame?.name !== "App"}
+              loading={isLoading}
               onClick={() =>
                 handler.onPublish?.(frame, query, { isLoading, setLoading })
               }

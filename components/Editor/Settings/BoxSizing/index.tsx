@@ -1,11 +1,13 @@
 import { Select } from "@/components/component/Select";
-import { CSSUnitInput, uncss } from "@/components/ui/css_unit_input";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  CSSUnitValue,
+  CSSUnitInput,
+  uncss,
+} from "@/components/ui/css_unit_input";
 import { useEditor, useNode } from "@craftjs/core";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
-import { useForm } from "react-hook-form";
+import React from "react";
 
 export interface BoxSizingProps {
   width: string;
@@ -33,6 +35,25 @@ export const BoxSizing = () => {
   }));
 
   const boxSizing: BoxSizingProps = values.boxSizing;
+
+  const _setProps = React.useCallback(
+    (path: string, raw: CSSUnitValue) => {
+      console.log(path, uncss.compile(raw.value, raw.unit));
+      setProp(
+        (props: any) =>
+          _set(
+            props,
+            path,
+            raw.value === undefined
+              ? undefined
+              : uncss.compile(raw.value, raw.unit)
+          ),
+        1000
+      );
+    },
+    [setProp]
+  );
+
   return (
     <div className="px-2">
       <div className="flex pb-2">
@@ -44,15 +65,7 @@ export const BoxSizing = () => {
             disabled={false}
             icon={"W"}
             onChange={function (_value: any, raw): void {
-              setProp(
-                (props: any) =>
-                  _set(
-                    props,
-                    "boxSizing.width",
-                    uncss.compile(raw.value, raw.unit)
-                  ),
-                1000
-              );
+              _setProps("boxSizing.width", raw);
             }}
             initialValue={uncss.parse(boxSizing.width)}
           />
@@ -65,13 +78,7 @@ export const BoxSizing = () => {
             disabled={false}
             icon={"H"}
             onChange={function (_value: any, raw): void {
-              setProp((props: any) => {
-                _set(
-                  props,
-                  "boxSizing.height",
-                  uncss.compile(raw.value, raw.unit)
-                );
-              }, 1000);
+              _setProps("boxSizing.height", raw);
             }}
             initialValue={uncss.parse(boxSizing.height)}
           />

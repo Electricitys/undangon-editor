@@ -10,10 +10,9 @@ import { useLayer } from "@craftjs/layers";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { ChevronRight } from "lucide-react";
 import { useViewportFrame } from "../Frames/Frame";
-import { generateId } from "@/components/utils/generateId";
 
 export const EditTemplateAction = () => {
-  const { frames, frameHelper } = useViewportFrame();
+  const {frameHelper } = useViewportFrame();
 
   const { id } = useLayer((layer) => {
     return {
@@ -27,7 +26,6 @@ export const EditTemplateAction = () => {
 
   const handleEditTemplate = () => {
     let frameId = id;
-    console.log(node.data.props);
     frameHelper.push({
       id: frameId,
       name: node.data.custom.name,
@@ -53,10 +51,10 @@ export const EditTemplateAction = () => {
               },
             },
           };
-          console.log(newContent);
           await helper.update(target, await JSON.stringify(newContent));
         },
       },
+      templates: []
     });
   };
 

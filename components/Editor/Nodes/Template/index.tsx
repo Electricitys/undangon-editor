@@ -32,6 +32,7 @@ import {
   InternalTemplateProvider,
   useInternalTemplate,
 } from "./useInternalTemplate";
+import { Slot } from "../Slot";
 
 export type Template = React.PropsWithChildren & {
   nodeTree: { rootNodeId: NodeId; nodes: { [nodeId: NodeId]: SerializedNode } };
@@ -114,17 +115,19 @@ export const TemplateWrapper: UserComponent<
     };
   }, [nodeTree]);
 
-  const elements = React.useMemo<React.ReactNode>(() => {
+  const elements = React.useMemo<React.ReactNode | null>(() => {
     const rootNodeId = dezerializedNodes.rootNodeId;
-    return createReactElements(
+    const El = createReactElements(
       _node.id,
       _node.data,
       rootNodeId,
       dezerializedNodes.nodes,
       _properties,
-      nodeResolver
+      nodeResolver,
+      children
     );
-  }, [_node, dezerializedNodes]);
+    return El;
+  }, [_node, dezerializedNodes, children]);
 
   if (elements) return <div ref={(ref) => connect(ref as any)}>{elements}</div>;
   return <span ref={(ref) => connect(ref as any)}>{"Some child"}</span>;
@@ -153,8 +156,9 @@ function createReactElements(
   nodeId: string,
   nodes: Record<string, Omit<NodeData, "event">>,
   properties: Properties[],
-  resolver: Resolver
-): React.ReactNode {
+  resolver: Resolver,
+  children: React.ReactNode
+) {
   if (!nodeId) return null;
   const node = nodes[nodeId];
   const { type: Component, nodes: childNodeIds, custom } = node;
@@ -166,7 +170,8 @@ function createReactElements(
       childNodeId,
       nodes,
       properties,
-      resolver
+      resolver,
+      children
     );
   });
 
@@ -183,6 +188,8 @@ function createReactElements(
   }
 
   if (Component === NativeTag) props.as = custom.name;
+
+  if (Component === Slot) return children;
 
   return (
     <TemplateRenderer

@@ -24,4 +24,6 @@ export const PaddingTopIcon = React.forwardRef<SVGSVGElement, IconProps>(
   }
 );
 
+PaddingTopIcon.displayName = "PaddingTopIcon";
+
 export default PaddingTopIcon;

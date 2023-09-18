@@ -31,6 +31,7 @@ import {
 import jexl from "jexl";
 import { useViewportFrame } from "../Editor/Viewport/Frames/Frame";
 import { Properties } from "../Editor/Settings/Properties";
+import { Separator } from "./separator";
 
 export interface ExpressionInputProps
   extends Omit<
@@ -132,7 +133,7 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                 />
               </div>
               <div className="px-1 py-1 flex items-center">
-                <TooltipProvider>
+                <TooltipProvider delayDuration={0}>
                   <Badge variant={"outline"}>
                     <span className="font-normal">Expressions</span>
 
@@ -153,8 +154,8 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                       </TooltipPortal>
                     </Tooltip>
                   </Badge>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
                       <Button
                         className="h-5 w-5 ml-1 font-normal text-xs"
                         size={"icon"}
@@ -162,17 +163,25 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                       >
                         {`{x}`}
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Available Variables</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {variables.map(({ key: k, value: v }) => (
-                        <DropdownMenuItem key={k} color="red">
-                          {v}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </TooltipTrigger>
+                    <TooltipContent className="p-0" side="bottom">
+                      {variables.length === 0 ? (
+                        <div className="p-2">Empty</div>
+                      ) : (
+                        <>
+                          <div className="p-2 font-semibold">
+                            Available Variables
+                          </div>
+                          <Separator />
+                          {variables.map(({ key: k, value: v }) => (
+                            <div key={k} color="red" className="p-2">
+                              {v}
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </TooltipContent>
+                  </Tooltip>
                   <div className="grow" />
 
                   <Tooltip>
@@ -181,6 +190,9 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                         className="h-5 w-5 ml-1 font-normal text-xs"
                         size={"icon"}
                         variant={"outline"}
+                        onClick={() => {
+                          setIsOpenDialog(true);
+                        }}
                       >
                         <EnterFullScreenIcon />
                       </Button>

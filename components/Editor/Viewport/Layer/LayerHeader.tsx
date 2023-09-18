@@ -41,7 +41,8 @@ export const LayerTrigger = () => {
     const selected = query.getEvent("selected").first() === id;
 
     let isTemplateNode = false;
-    if (nodeRaw && nodeRaw.data) isTemplateNode = nodeRaw.data.type === TemplateNode;
+    if (nodeRaw && nodeRaw.data)
+      isTemplateNode = nodeRaw.data.type === TemplateNode;
 
     return {
       selected,
@@ -60,17 +61,16 @@ export const LayerTrigger = () => {
   return (
     <Button
       asChild
+      ref={(ref: any) => {
+        drag(ref);
+        layerHeader(ref);
+      }}
       variant={"ghost"}
       className={`flex w-full text-start px-0 items-center  ${
         isHovered ? "bg-accent" : ""
       } ${selected ? "bg-blue-200 hover:bg-blue-300" : ""}`}
     >
-      <div
-        ref={(ref: any) => {
-          drag(ref);
-          layerHeader(ref);
-        }}
-      >
+      <div>
         <Button
           size={"sm"}
           variant={"ghost"}

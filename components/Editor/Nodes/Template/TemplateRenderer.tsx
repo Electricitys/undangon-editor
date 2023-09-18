@@ -25,47 +25,41 @@ export const TemplateRenderer: React.FC<
   const { parentProperties } = useInternalTemplate();
 
   const context = React.useMemo<Context>(() => {
-    return parentProperties.reduce((p, c) => {
-      return { ...p, [`$${c.name}`]: c.value };
-    }, {});
+    let ctx: Context = {};
+    for (let p of parentProperties) {
+      ctx[`$${p.name}`] = p.value;
+    }
+    return ctx;
   }, [parentProperties]);
 
-  const safeProps = Object.keys(node.props)
-    .filter((name) => node.custom.functionProps?.indexOf(name) > -1)
-    .map<Properties>((name) => {
-      const value = node.props[name];
-      return {
-        id: generateId(),
-        name: name,
-        value: value,
-        type: "string",
-      };
-    });
+  const safeProps = React.useMemo(
+    () =>
+      Object.keys(node.props)
+        .filter((name) => node.custom.functionProps?.indexOf(name) > -1)
+        .map<Properties>((name) => {
+          const value = node.props[name];
+          return {
+            id: generateId(),
+            name: name,
+            value: value,
+            type: "string",
+          };
+        }),
+    [node.props]
+  );
 
-  const compiled = safeProps.reduce((p, c) => {
-    delete context[c.name];
-    let compiled = undefined;
-    try {
-      compiled = compileProps(c, context);
-    } catch (err: any) {}
-    return { ...p, [c.name]: compiled };
-  }, {});
-  // console.log(template.id);
-  // console.log("frame_CTX", frameContext);
-  // console.log("ctx", context);
-  // console.log("props", safeProps);
+  const compiled = React.useMemo(() => {
+    return safeProps.reduce((p, c) => {
+      delete context[c.name];
+      let compiled = undefined;
+      try {
+        compiled = compileProps(c, context);
+      } catch (err: any) {}
+      return { ...p, [c.name]: compiled };
+    }, {});
+  }, [safeProps, context]);
 
   return <Comp {...props} {...compiled} />;
-};
-
-const propsToContext = (properties: Properties[], context: Context = {}) => {
-  return properties.reduce((p, c) => {
-    let compiled = undefined;
-    try {
-      compiled = compileProps(c, context);
-    } catch (err: any) {}
-    return { ...p, [`$${c.name}`]: compiled };
-  }, {});
 };
 
 const compileProps = (props: Properties, context: Context = {}): any => {

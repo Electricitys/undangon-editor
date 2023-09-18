@@ -53,7 +53,7 @@ export const useCodemirror: (
     view.update([update]);
 
     return () => view.destroy();
-  }, [element]);
+  }, [element]); // ts-disable react-hook/exhaustive-deps
 
   return { ref };
 };
