@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { generateId } from "@/components/utils/generateId";
 import { Select } from "@/components/component/Select";
 import { ExpressionInput } from "@/components/ui/expression-input";
+import { StringField } from "./StringField";
+import { ColorField } from "./ColorField";
 
 export type Properties = {
   id: string;
   name: string;
   value: string;
-  type: "string" | "color" | "file";
+  type: "string" | "color" | "image";
 };
 
 interface PropertiesProps {
@@ -51,6 +53,40 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
   //   if (onChange) onChange(items);
   // }, [items]);
 
+  let Field = (index: number, field: Properties) => {
+    const restProps = {
+      id: `props.${index as any}.value`,
+      value: field.value,
+      onChange: (value: string) =>
+        updateAt(index, {
+          ...field,
+          value: value || "",
+        }),
+    };
+    switch (field.type) {
+      case "color":
+        return <ColorField {...restProps} />;
+      case "color":
+        return <ColorField {...restProps} />;
+      default:
+        return (
+          <StringField
+            id={restProps.id}
+            placeholder="value"
+            className={"rounded-s-none"}
+            defaultValue={restProps.value}
+            onChange={restProps.onChange}
+            variables={availableVariables
+              .map((v) => ({
+                key: v.id,
+                value: `$${v.name}`,
+              }))
+              .filter((v) => v.key !== field.id)}
+          />
+        );
+    }
+  };
+
   return (
     <div className="pl-4 pr-2">
       {value.length === 0 && (
@@ -58,14 +94,12 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
       )}
       <div className="mt-0">
         {value.map((field, index: number) => {
-          const className = !disableTrash
-            ? `rounded-none border-x-0`
-            : "rounded-e-none border-l-0";
           return (
             <div key={field.id} className={`flex mb-2`}>
               <div style={{ width: "30%" }}>
                 <div className={`border rounded-md rounded-e-none border-r-0`}>
                   <Input
+                    readOnly={!type}
                     id={`props.${index}.name`}
                     name={`props.${index}.name`}
                     placeholder="name"
@@ -96,8 +130,8 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
                         value: "color",
                       },
                       {
-                        label: "File",
-                        value: "file",
+                        label: "Image",
+                        value: "image",
                       },
                     ]}
                     className={"border-0 rounded-none"}
@@ -111,24 +145,7 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
                 </div>
               ) : (
                 <div style={{ width: "70%", position: "relative" }}>
-                  <ExpressionInput
-                    id={`props.${index as any}.value`}
-                    placeholder="value"
-                    className={"rounded-s-none"}
-                    defaultValue={field.value}
-                    onChange={(value) =>
-                      updateAt(index, {
-                        ...field,
-                        value: value || "",
-                      })
-                    }
-                    variables={availableVariables
-                      .map((v) => ({
-                        key: v.id,
-                        value: `$${v.name}`,
-                      }))
-                      .filter((v) => v.key !== field.id)}
-                  />
+                  {Field(index, field)}
                 </div>
               )}
               {!disableTrash && (
