@@ -13,20 +13,43 @@ import {
   Query,
   Service,
 } from "@feathersjs/feathers";
-import FeathersSocketIOClient from "@feathersjs/socketio-client";
 import React from "react";
-import io from "socket.io-client";
-import { CONSTANTS } from "../Constants";
+import rest from "@feathersjs/rest-client";
+import { host } from "./restClient";
+import axios from "axios";
+import nookies from "nookies";
 
-export const host = new URL(CONSTANTS.SERVER_URL);
+export const feathers = Feathers();
+const restClient = rest(host.origin);
 
-const socket = io(host.toString());
+export const axiosInstance = axios.create({
+  headers: {
+    "X-App-Client": "web-browser",
+  },
+});
 
-const feathers = Feathers();
-feathers.configure(FeathersSocketIOClient(socket));
+export const COOKIE_NAME = "undangon_client";
+
+class ServerStorage {
+  setItem(key: string, value: string): void {
+    nookies.set(null, key, value);
+  }
+  getItem(key: string): string | null {
+    const cookies = nookies.get(null);
+    return cookies[key];
+  }
+  removeItem(key: string): void {
+    nookies.destroy(null, key);
+  }
+}
+
+const serverStorage = new ServerStorage();
+
+feathers.configure(restClient.axios(axiosInstance));
 feathers.configure(
   FeathersAuth({
-    storageKey: "accessToken",
+    storage: serverStorage,
+    storageKey: "undangon_client",
   })
 );
 
@@ -37,7 +60,7 @@ type Services =
   | "packages"
   | "sharing_parties"
   | "sharing_party_email_address"
-  | "tempaltes";
+  | "templates";
 
 interface ClientProps {
   host: URL;
@@ -86,22 +109,22 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
     return account.type;
   }, [account]);
 
-  React.useEffect(() => {
-    const listener = [
-      () => {
-        setIsConnected(true);
-      },
-      () => {
-        setIsConnected(false);
-      },
-    ];
-    socket.on("connect", listener[0]);
-    socket.on("disconnect", listener[1]);
-    return () => {
-      socket.off("connect", listener[0]);
-      socket.off("disconnect", listener[1]);
-    };
-  }, []);
+  // React.useEffect(() => {
+  //   const listener = [
+  //     () => {
+  //       setIsConnected(true);
+  //     },
+  //     () => {
+  //       setIsConnected(false);
+  //     },
+  //   ];
+  //   socket.on("connect", listener[0]);
+  //   socket.on("disconnect", listener[1]);
+  //   return () => {
+  //     socket.off("connect", listener[0]);
+  //     socket.off("disconnect", listener[1]);
+  //   };
+  // }, []);
 
   const authenticate: ClientProps["authenticate"] = async (data, params) => {
     try {
@@ -158,7 +181,7 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
         return feathers.get(name);
       },
 
-      service: feathers.service,
+      service: (path) => feathers.service(path),
     };
   }, [isConnected, isAuthenticated, account, role]);
 

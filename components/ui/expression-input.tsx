@@ -237,6 +237,5 @@ export const useCompileExpressionInsideFrameAndTemplate = (value: string) => {
       message: err.message,
     });
   }
-  console.log(result);
   return result;
 };

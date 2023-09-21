@@ -7,6 +7,7 @@ import { Select } from "@/components/component/Select";
 import { ExpressionInput } from "@/components/ui/expression-input";
 import { StringField } from "./StringField";
 import { ColorField } from "./ColorField";
+import { ImagePickerField } from "./ImagePickerField";
 
 export type Properties = {
   id: string;
@@ -66,8 +67,8 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
     switch (field.type) {
       case "color":
         return <ColorField {...restProps} />;
-      case "color":
-        return <ColorField {...restProps} />;
+      case "image":
+        return <ImagePickerField {...restProps} />;
       default:
         return (
           <StringField

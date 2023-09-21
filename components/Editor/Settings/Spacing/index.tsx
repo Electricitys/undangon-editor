@@ -49,7 +49,6 @@ export const Spacing = () => {
 
   const _setProps = React.useCallback(
     (path: string, raw: CSSUnitValue) => {
-      console.log(path, uncss.compile(raw.value, raw.unit));
       setProp(
         (props: any) =>
           _set(

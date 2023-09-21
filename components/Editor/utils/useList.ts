@@ -28,7 +28,6 @@ const useList = function <Y = Item>(
   initialItems: Y[] = [],
   options: Options<Y> = {}
 ): HookReturnType<Y> {
-  console.log(initialItems);
   const { onListChange } = options;
 
   // Use controlledItems state if initialItems prop is provided.

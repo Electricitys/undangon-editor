@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import Body from "./[id]/Body";
 
 type Props = {

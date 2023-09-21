@@ -1,7 +1,8 @@
 import { QueryProvider } from "@/components/client/ReactQuery";
-import "./globals.css";
+import "../globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ClientProvider } from "@/components/client";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body tabIndex={0} className={inter.className}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <ClientProvider>{children}</ClientProvider>
+        </QueryProvider>
       </body>
     </html>
   );

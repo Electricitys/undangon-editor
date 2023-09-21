@@ -8,6 +8,7 @@ import React, { useCallback } from "react";
 import { useClient } from "@/components/client";
 import { defaultFrameData } from "./frameData";
 import { useToast } from "@/components/ui/use-toast";
+import { featherRestApp } from "@/components/client/restClient";
 
 interface EditorPageProps {
   id: string;
@@ -16,7 +17,6 @@ interface EditorPageProps {
 }
 
 const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
-  const client = useClient();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -27,7 +27,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
       console.log(frame);
       const content = lz.encodeBase64(lz.compress(json));
       try {
-        await client.service("invitations").patch(props.id, { content });
+        // await client.service("invitations").patch(props.id, { content });
         toast({
           title: "Publish",
           description: "Project is saved.",

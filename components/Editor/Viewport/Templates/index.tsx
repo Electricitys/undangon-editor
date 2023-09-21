@@ -64,7 +64,6 @@ export const TemplatesPanel = () => {
             state.options.resolver
           );
         }
-        console.log(serialized);
         // Object.setPrototypeOf(serialized, {
         //   toJSON: () => JSON.stringify(serialized),
         // });
@@ -88,7 +87,6 @@ export const TemplatesPanel = () => {
       properties: [],
     };
     itemsHelper.push(newTemplate);
-    console.log(newTemplate);
     setIsOpen(false);
   };
 

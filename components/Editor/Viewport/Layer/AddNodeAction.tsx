@@ -83,7 +83,6 @@ export const AddNodeAction = () => {
       element = React.createElement(Slot);
     } else if (values.type === "template") {
       let template = templates.find(({ id }) => id === values.template);
-      console.log(template);
       element = React.createElement(Element, {
         is: TemplateNode,
         nodeTree: template?.nodeTree,
