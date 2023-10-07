@@ -98,7 +98,7 @@ export const ViewportFrameProvider: React.FC<
     push: (frame) => {
       frameHelper.add(frame, true);
       framePanel[1].push(frame.id);
-      actions.deserialize(frame.content);
+      if (frame.content) actions.deserialize(frame.content);
     },
     back: backHandler,
     remove: async (id) => {

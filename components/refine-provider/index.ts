@@ -3,8 +3,8 @@ import {
   generateSort,
   // generateFilter
 } from "./utils";
-import { feathers } from "../client";
 import { host } from "../client/restClient";
+import { feathers } from "../client/feathers";
 
 // type MethodTypes = "get" | "delete" | "head" | "options";
 // type MethodTypesWithBody = "post" | "put" | "patch";

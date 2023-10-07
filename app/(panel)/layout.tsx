@@ -2,9 +2,7 @@
 
 import { Refine } from "@refinedev/core";
 import routerProvider from "@refinedev/nextjs-router/app";
-import {
-  DocumentTitleHandler,
-} from "@refinedev/nextjs-router";
+import { DocumentTitleHandler } from "@refinedev/nextjs-router";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
@@ -30,26 +28,17 @@ import {
 } from "@tabler/icons-react";
 import { dataProvider } from "@/components/refine-provider";
 import { authProvider } from "@/components/refine-provider/authProvider";
-import { SessionProvider } from "next-auth/react";
 import { canHandler } from "@/components/refine-provider/accessControl";
+import { AuthProvider } from "../(editor)/e/AuthProvider";
 
 export default function RootLayout(props: React.PropsWithChildren) {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: "mantine-color-scheme",
-    defaultValue: "light",
-    getInitialValueInEffect: true,
-  });
-
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-
   return (
-    <SessionProvider>
+    <AuthProvider>
       <html lang="en">
         <body>
           <RefineKbarProvider>
             <MantineProvider
-              theme={{ ...RefineThemes.Blue, colorScheme: colorScheme }}
+              theme={{ ...RefineThemes.Blue }}
               withNormalizeCSS
               withGlobalStyles
             >
@@ -137,6 +126,6 @@ export default function RootLayout(props: React.PropsWithChildren) {
           </RefineKbarProvider>
         </body>
       </html>
-    </SessionProvider>
+    </AuthProvider>
   );
 }

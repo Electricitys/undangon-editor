@@ -5,7 +5,7 @@ import { Text, Title } from "@mantine/core";
 import { useShow } from "@refinedev/core";
 import { Show } from "@refinedev/mantine";
 
-export const PackageShow: React.FC = () => {
+const PackageShow: React.FC = () => {
   const { queryResult } = useShow<PackageSchema>();
 
   const { data } = queryResult;

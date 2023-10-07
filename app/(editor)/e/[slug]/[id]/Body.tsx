@@ -6,28 +6,30 @@ import { ViewportProviderProps } from "@/components/Editor/Viewport/useViewport"
 import { useRouter } from "next/navigation";
 import React, { useCallback } from "react";
 import { useClient } from "@/components/client";
-import { defaultFrameData } from "./frameData";
 import { useToast } from "@/components/ui/use-toast";
-import { featherRestApp } from "@/components/client/restClient";
+import { FrameProps } from "@/components/Editor/Viewport/Frames";
+import { Element } from "@craftjs/core";
+import { Container, NativeTag, Text } from "@/components/Editor/Nodes";
+import { feathers } from "@/components/client/feathers";
 
 interface EditorPageProps {
   id: string;
   slug: string;
-  content: string;
+  content: FrameProps;
 }
 
 const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
+  const client = useClient();
   const router = useRouter();
   const { toast } = useToast();
 
   const onPublish = useCallback<ViewportProviderProps["onPublish"]>(
     async (frame, query, { setLoading }) => {
       setLoading(true);
-      const json = frame.content;
-      console.log(frame);
+      const json = JSON.stringify(frame);
       const content = lz.encodeBase64(lz.compress(json));
       try {
-        // await client.service("invitations").patch(props.id, { content });
+        await feathers.service("templates").patch(props.id, { content });
         toast({
           title: "Publish",
           description: "Project is saved.",
@@ -45,8 +47,8 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
   );
 
   const onClose = useCallback(() => {
-    router.replace("/manager/invitations");
-  }, []);
+    router.replace(`/template/edit/${props.id}`);
+  }, [props.id]);
 
   const constructPreviewUrl = useCallback(() => {
     return `/i/p/${props.slug}`;
@@ -61,11 +63,11 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
     >
       <ViewportFrame
         // data={`{"ROOT":{"type":"div","isCanvas":false,"props":{"children":"COBA Sample"},"displayName":"div","custom":{},"hidden":false,"nodes":["NHaS7f17vf","YGRb97VJYC"],"linkedNodes":{}},"NHaS7f17vf":{"type":{"resolvedName":"NativeTag"},"isCanvas":true,"props":{"boxSizing":{"width":"auto","height":"auto","h_sizing":"hug","v_sizing":"hug"},"spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"NativeTag","custom":{"name":"div","type":"tag"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}},"YGRb97VJYC":{"type":{"resolvedName":"Text"},"isCanvas":true,"props":{"text":"asdkjn","spacing":{},"typography":{"textAlign":"left","lineHeight":1,"letterSpacing":"0px","fontSize":"12px","fontWeight":"normal","fontFamily":"Roboto","color":"inherit"},"classList":[]},"displayName":"Text","custom":{"type":"component"},"parent":"ROOT","hidden":false,"nodes":[],"linkedNodes":{}}}`}
-        data={defaultFrameData.content}
-        templates={defaultFrameData.templates}
-        properties={defaultFrameData.properties}
+        data={content.content}
+        templates={content.templates}
+        properties={content.properties}
       >
-        {/* <Element
+        <Element
           is={NativeTag}
           canvas
           custom={{
@@ -84,8 +86,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
               <Element is={Text} text="CONTAINER" />
             </Element>
           </Element>
-        </Element> */}
-        <div>COBA</div>
+        </Element>
       </ViewportFrame>
     </Viewport>
   );

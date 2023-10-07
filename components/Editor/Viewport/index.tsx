@@ -30,6 +30,7 @@ import { FramesPanel } from "./Frames";
 import { PropertiesPanel } from "./PropertiesPanel";
 import { Toaster } from "@/components/ui/toaster";
 import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeManager";
+import { useClipboard } from "@mantine/hooks";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -86,6 +87,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   }, [selected]);
 
   const copyNode = useCallback(async () => {
+    if (typeof window === "undefined") return;
     const [selectedNodeId] = selected;
     if (!selectedNodeId) return;
     if (selectedNodeId === "ROOT") return;
@@ -99,7 +101,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
       }),
     ];
     try {
-      await navigator.clipboard.write(data);
+      await window.navigator.clipboard.write(data);
       toast({
         description: `Node ${selectedNodeId} was copied`,
         variant: "default",
@@ -114,9 +116,10 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
 
   const pasteNode = useCallback(
     async (e: any) => {
+      if (typeof window === "undefined") return;
       let [selectedNodeId] = selected;
       if (!selectedNodeId) selectedNodeId = "ROOT";
-      const items = await navigator.clipboard.read();
+      const items = await window.navigator.clipboard.read();
       let nodeTree = null;
       try {
         for (const item of items) {

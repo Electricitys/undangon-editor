@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+// import * as monaco from 'monaco-editor'
 import { Input } from "./input";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
@@ -11,7 +12,7 @@ import {
 import { useClickAway } from "react-use";
 import { Portal } from "@radix-ui/react-portal";
 import { useCodemirror } from "./useCodemirror";
-import Editor, { EditorProps, useMonaco } from "@monaco-editor/react";
+import Editor, { loader } from "@monaco-editor/react";
 import {
   Tooltip,
   TooltipContent,
@@ -20,14 +21,6 @@ import {
 } from "./tooltip";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
 import jexl from "jexl";
 import { useViewportFrame } from "../Editor/Viewport/Frames/Frame";
 import { Properties } from "../Editor/Settings/Properties";
@@ -41,7 +34,7 @@ export interface ExpressionInputProps
   defaultValue?: string;
   onChange?: (value: string) => void;
   onClose?: (value: string | undefined) => void;
-  variables: { key: string; value: string }[];
+  variables: { key: string; value: string, type?: string }[];
 }
 
 export const ExpressionInput: React.FC<ExpressionInputProps> = ({
@@ -66,6 +59,8 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
   React.useEffect(() => {
     onChange(value as string);
   }, [value]);
+
+  // loader.config({ monaco });
 
   const [editorHeight, setEditorHeight] = useState(100);
 
@@ -112,7 +107,6 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                     editor.focus();
                   }}
                   beforeMount={(monaco) => {
-                    console.log(variables);
                     monaco.languages.typescript.javascriptDefaults.addExtraLib(
                       variables.reduce<string>((p, c) => {
                         return `${p}\nconst ${c.value}: any;`;

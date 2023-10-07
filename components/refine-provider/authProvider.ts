@@ -2,12 +2,13 @@ import { AuthBindings } from "@refinedev/core";
 import {
   AuthActionResponse,
   CheckResponse,
+  IdentityResponse,
 } from "@refinedev/core/dist/interfaces";
-import { COOKIE_NAME, feathers } from "../client";
-import { AuthenticationResponse } from "../interfaces";
-import nookies from "nookies";
+import { feathers } from "../client/feathers";
 
-interface IAuthBindings extends AuthBindings {}
+interface IAuthBindings extends Omit<AuthBindings, "getIdentity"> {
+  getIdentity: (params?: any) => Promise<IdentityResponse>;
+}
 
 // It is a mock auth provider.
 export const authProvider: IAuthBindings = (() => {
@@ -17,9 +18,11 @@ export const authProvider: IAuthBindings = (() => {
       email,
       password,
       remember = false,
+      callbackUrl,
     }: {
       email: string;
       password: string;
+      callbackUrl: string;
       remember: boolean;
     }): Promise<AuthActionResponse> => {
       const result = await feathers.authenticate({
@@ -31,7 +34,7 @@ export const authProvider: IAuthBindings = (() => {
       if (result) {
         return {
           success: true,
-          redirectTo: "/",
+          redirectTo: callbackUrl || "/",
         };
       }
 
@@ -43,7 +46,7 @@ export const authProvider: IAuthBindings = (() => {
         },
       };
     },
-    check: async (context, force: boolean = false): Promise<CheckResponse> => {
+    check: async (force: boolean = false): Promise<CheckResponse> => {
       try {
         await feathers.reAuthenticate(force);
         return {

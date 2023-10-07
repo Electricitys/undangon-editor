@@ -1,10 +1,14 @@
 "use client";
 
-import { TemplateSchema } from "@/components/interfaces";
+import {
+  AuthenticationResponse,
+  TemplateSchema,
+} from "@/components/interfaces";
 import { Button, Select, TextInput } from "@mantine/core";
-import { HttpError } from "@refinedev/core";
+import { HttpError, useGetIdentity } from "@refinedev/core";
 import { Edit, useForm, useSelect } from "@refinedev/mantine";
 import { IconEdit } from "@tabler/icons-react";
+import React from "react";
 import slugify from "slugify";
 
 type TemplateData = Pick<
@@ -25,6 +29,8 @@ const TemplateEdit: React.FC = () => {
     },
   });
 
+  const { data } = useGetIdentity<AuthenticationResponse>();
+
   const templateData = queryResult?.data?.data;
 
   const { selectProps: categorySelectProps } = useSelect({
@@ -33,6 +39,13 @@ const TemplateEdit: React.FC = () => {
     optionLabel: "name",
   });
 
+  const templateUrl = React.useMemo(() => {
+    // const auth = feathers.get("authentication");
+    return `http://localhost:3001/e/${
+      templateData && slugify(templateData?.name)
+    }/${templateData?.id}`;
+  }, [queryResult, data]);
+
   return (
     <Edit
       saveButtonProps={saveButtonProps}
@@ -40,11 +53,8 @@ const TemplateEdit: React.FC = () => {
         <>
           {defaultButtons}
           <Button
-            target="_blank"
             component="a"
-            href={`http://localhost:3001/e/${
-              templateData && slugify(templateData?.name)
-            }/${templateData?.id}`}
+            href={templateUrl}
             variant="outline"
             size="sm"
             leftIcon={<IconEdit size={18} />}

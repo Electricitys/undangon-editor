@@ -10,10 +10,9 @@ import {
   UserComponent,
   serializeNode,
   useEditor,
-  useEditorReturnType,
   useNode,
 } from "@craftjs/core";
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { deserializeNode } from "../../utils/deserializeNode";
 import _sortBy from "lodash/sortBy";
 import _get from "lodash/get";
@@ -24,9 +23,6 @@ import { TemplateSettings } from "./TemplateSetting";
 import { Properties } from "../../Settings/Properties";
 import { PropertiesPanel } from "../../Viewport/PropertiesPanel";
 import { TemplateRenderer } from "./TemplateRenderer";
-import { useViewportFrame } from "../../Viewport/Frames/Frame";
-import { useList } from "react-use";
-import { ListActions } from "react-use/lib/useList";
 import { useTemplateNodeManager } from "./useTemplateNodeManager";
 import {
   InternalTemplateProvider,

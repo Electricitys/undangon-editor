@@ -21,21 +21,6 @@ export const PropertiesContent = () => {
       description="Input props that this component exposes"
       action={
         <>
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="h-6 w-6"
-            onClick={(e) => {
-              e.preventDefault();
-              setEditable((s) => !s);
-            }}
-          >
-            {editable ? (
-              <LockOpen1Icon className="h-4 w-4" />
-            ) : (
-              <LockClosedIcon className="h-4 w-4" />
-            )}
-          </Button>
           {editable && (
             <Button
               size={"icon"}
@@ -59,6 +44,22 @@ export const PropertiesContent = () => {
               <PlusIcon className="h-4 w-4" />
             </Button>
           )}
+
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            className="h-6 w-6"
+            onClick={(e) => {
+              e.preventDefault();
+              setEditable((s) => !s);
+            }}
+          >
+            {editable ? (
+              <LockOpen1Icon className="h-4 w-4" />
+            ) : (
+              <LockClosedIcon className="h-4 w-4" />
+            )}
+          </Button>
         </>
       }
     >

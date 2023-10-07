@@ -4,7 +4,6 @@ import {
   AuthenticationRequest,
   AuthenticationResult,
 } from "@feathersjs/authentication";
-import FeathersAuth from "@feathersjs/authentication-client";
 import {
   Application,
   feathers as Feathers,
@@ -13,45 +12,12 @@ import {
   Query,
   Service,
 } from "@feathersjs/feathers";
-import React from "react";
-import rest from "@feathersjs/rest-client";
-import { host } from "./restClient";
-import axios from "axios";
 import nookies from "nookies";
-
-export const feathers = Feathers();
-const restClient = rest(host.origin);
-
-export const axiosInstance = axios.create({
-  headers: {
-    "X-App-Client": "web-browser",
-  },
-});
-
-export const COOKIE_NAME = "undangon_client";
-
-class ServerStorage {
-  setItem(key: string, value: string): void {
-    nookies.set(null, key, value);
-  }
-  getItem(key: string): string | null {
-    const cookies = nookies.get(null);
-    return cookies[key];
-  }
-  removeItem(key: string): void {
-    nookies.destroy(null, key);
-  }
-}
-
-const serverStorage = new ServerStorage();
-
-feathers.configure(restClient.axios(axiosInstance));
-feathers.configure(
-  FeathersAuth({
-    storage: serverStorage,
-    storageKey: "undangon_client",
-  })
-);
+import React from "react";
+import { host } from "./restClient";
+import { COOKIE_NAME, feathers } from "./feathers";
+import { redirect } from "next/navigation";
+import { UserSchema } from "../interfaces";
 
 type Services =
   | "users"
@@ -95,9 +61,7 @@ interface ClientProviderProps {
   children: React.ReactNode;
 }
 
-interface Account {
-  type: string;
-}
+interface Account extends UserSchema {}
 
 export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const [account, setAccount] = React.useState<Account | null>(null);
@@ -106,25 +70,32 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
 
   const role = React.useMemo<ClientProps["role"]>(() => {
     if (account === null) return null;
-    return account.type;
+    return account.role;
   }, [account]);
 
-  // React.useEffect(() => {
-  //   const listener = [
-  //     () => {
-  //       setIsConnected(true);
-  //     },
-  //     () => {
-  //       setIsConnected(false);
-  //     },
-  //   ];
-  //   socket.on("connect", listener[0]);
-  //   socket.on("disconnect", listener[1]);
-  //   return () => {
-  //     socket.off("connect", listener[0]);
-  //     socket.off("disconnect", listener[1]);
-  //   };
-  // }, []);
+  React.useEffect(() => {
+    async function fetch() {
+      if (typeof window === "undefined") return;
+      await reAuthenticate(true);
+    }
+    fetch();
+    // if(COOKIES[COOKIE_NAME]) {
+    // }
+    // const listener = [
+    //   () => {
+    //     setIsConnected(true);
+    //   },
+    //   () => {
+    //     setIsConnected(false);
+    //   },
+    // ];
+    // socket.on("connect", listener[0]);
+    // socket.on("disconnect", listener[1]);
+    // return () => {
+    //   socket.off("connect", listener[0]);
+    //   socket.off("disconnect", listener[1]);
+    // };
+  }, []);
 
   const authenticate: ClientProps["authenticate"] = async (data, params) => {
     try {

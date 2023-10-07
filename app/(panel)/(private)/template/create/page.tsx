@@ -1,3 +1,5 @@
+"use client";
+
 import { CategorySchema, TemplateSchema } from "@/components/interfaces";
 import { Select, TextInput } from "@mantine/core";
 import { yupResolver } from "@mantine/form";
