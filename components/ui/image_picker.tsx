@@ -13,6 +13,10 @@ import { generateId } from "../utils/generateId";
 import { useList } from "react-use";
 import { Loader2Icon } from "lucide-react";
 import _groupBy from "lodash/groupBy";
+import { PanelSection } from "../Editor/Viewport/PanelSection";
+import { Badge } from "./badge";
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "./dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const defaultImages = [
   "https://images.unsplash.com/photo-1691200099282-16fd34790ade?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90",
@@ -21,9 +25,10 @@ const defaultImages = [
   "https://images.unsplash.com/photo-1691225850735-6e4e51834cad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90",
 ];
 
-type ImageProps = {
+export type ImageProps = {
   id: string;
   url: string;
+  filePath: string;
   preview: string;
   group: {
     name: string;
@@ -47,6 +52,8 @@ export const ImagePicker: React.FC<
     placeholder?: string;
     className?: string;
     maxFiles?: 1;
+
+    fileAction?: (image: ImageProps) => React.ReactNode;
   }
 > = ({
   loading,
@@ -58,11 +65,12 @@ export const ImagePicker: React.FC<
   images = [],
   maxFiles = 1,
   children,
+  fileAction,
 }) => {
   const group = _groupBy(images, (image) => image.group.name);
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
@@ -82,19 +90,23 @@ export const ImagePicker: React.FC<
             </div>
           </div>
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64">
+      </DialogTrigger>
+      <DialogContent className="w-64 px-0">
         <Droparea
-          // noClick={images.length > 0}
           maxFiles={maxFiles}
           onSave={(files, helper) => onFileSave(files, helper)}
         >
           {images.length > 0 && (
             <div onClick={(e) => e.stopPropagation()}>
               {Object.keys(group).map((name) => (
-                <React.Fragment key={name}>
-                  <div className="text-sm font-semibold">{name}</div>
-                  <div className="grid grid-cols-2 gap-1 mb-2">
+                <PanelSection
+                  key={name}
+                  text={name}
+                  action={
+                    <Badge variant={"outline"}>{group[name].length}</Badge>
+                  }
+                >
+                  <div className="max-h-96 overflow-auto px-3 grid grid-cols-3 gap-1 mb-2">
                     {group[name].map((s) => (
                       <div
                         key={s.id}
@@ -107,6 +119,11 @@ export const ImagePicker: React.FC<
                             onPick(s.url);
                           }}
                         />
+                        {!(s.url === value) && fileAction && (
+                          <div className="absolute top-0 right-0">
+                            {fileAction(s)}
+                          </div>
+                        )}
                         {s.url === value && (
                           <div className="absolute inset-0 bg-blue-400/50 flex justify-center items-center">
                             <CheckIcon width={25} height={25} color="white" />
@@ -115,7 +132,7 @@ export const ImagePicker: React.FC<
                       </div>
                     ))}
                   </div>
-                </React.Fragment>
+                </PanelSection>
               ))}
               {children}
             </div>
@@ -125,17 +142,25 @@ export const ImagePicker: React.FC<
               <ImageIcon className="h-12 w-12 inline-block" />
             </div>
           )}
-          <div className="text-xs cursor-pointer">
+          <div className="px-3 py-2 text-xs cursor-pointer">
             Drag image here or click to select files
           </div>
           {loading && (
-            <div className="absolute inset-0 bg-black/25 flex justify-center items-center">
-              <Loader2Icon className="animate-spin" color="white" />
+            <div
+              className="absolute inset-0 bg-black/25 flex justify-center items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Loader2Icon
+                width={74}
+                height={74}
+                className="animate-spin"
+                color="white"
+              />
             </div>
           )}
         </Droparea>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -195,9 +220,14 @@ const Droparea = (
                   {submitting !== null && (
                     <div className="absolute inset-0 flex justify-center items-center bg-black/25">
                       {submitting < 100 ? (
-                        <Loader2Icon className="animate-spin" color="white" />
+                        <Loader2Icon
+                          width={45}
+                          height={45}
+                          className="animate-spin"
+                          color="white"
+                        />
                       ) : (
-                        <CheckIcon width={30} height={30} color="white" />
+                        <CheckIcon width={45} height={45} color="white" />
                       )}
                     </div>
                   )}
@@ -222,22 +252,21 @@ const Droparea = (
             <Button
               onClick={(e) => {
                 e.preventDefault();
-                if (onSave)
-                  onSave(
-                    files.map(({ file }) => file),
-                    {
-                      submitting: files.map(({ submitting }) => submitting),
-                      setSubmitting: (index, state) => {
-                        filesAction.updateAt(index, {
-                          ...files[index],
-                          submitting: state,
-                        });
-                      },
-                      clear() {
-                        filesAction.clear();
-                      },
-                    }
-                  );
+                onSave?.(
+                  files.map(({ file }) => file),
+                  {
+                    submitting: files.map(({ submitting }) => submitting),
+                    setSubmitting: (index, state) => {
+                      filesAction.updateAt(index, {
+                        ...files[index],
+                        submitting: state,
+                      });
+                    },
+                    clear() {
+                      filesAction.clear();
+                    },
+                  }
+                );
               }}
             >
               Save

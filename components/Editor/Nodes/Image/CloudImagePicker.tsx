@@ -2,16 +2,21 @@
 
 import { axiosInstance } from "@/components/client/feathers";
 import { Button } from "@/components/ui/button";
-import { ImagePicker } from "@/components/ui/image_picker";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ImagePicker, ImageProps } from "@/components/ui/image_picker";
+import { Popover } from "@/components/ui/popover";
+import { useToast } from "@/components/ui/use-toast";
 import { generateId } from "@/components/utils/generateId";
 import { imagekit } from "@/components/utils/imagekit";
-import { usePagination } from "@mantine/hooks";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { CheckIcon, MoveIcon, TrashIcon } from "@radix-ui/react-icons";
+import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ImageKitOptions,
-  ListFileResponse,
-} from "imagekit/dist/libs/interfaces";
-import { Loader2Icon } from "lucide-react";
+import { ListFileResponse } from "imagekit/dist/libs/interfaces";
 import React from "react";
 
 export const CloudImagePicker: React.FC<{
@@ -23,6 +28,7 @@ export const CloudImagePicker: React.FC<{
   onChange,
   folders = [{ name: "Testing", folder: "testing" }],
 }) => {
+  const { toast } = useToast();
   const [filter, setFilter] = React.useState({
     skip: 0,
     limit: 10,
@@ -36,28 +42,20 @@ export const CloudImagePicker: React.FC<{
           async ({ folder }) => await axiosInstance.get(`/api/images/${folder}`)
         )
       );
-      console.log(res);
       return (
-        res.reduce((_p, c, idx) => {
+        res.reduce((p, c, idx) => {
           return [
+            ...p,
             ...(c.data as ListFileResponse[]).map((file) => ({
               id: file.fileId,
               url: file.url,
+              filePath: file.filePath,
               preview: file.thumbnail,
               group: folders[idx],
             })),
           ] as any;
         }, []) || []
       );
-    },
-  });
-
-  const pagination = usePagination({
-    total: imagesQuery.data?.length || 0,
-    onChange(page) {
-      setFilter((f) => {
-        return { ...f, skip: (page - 1) * f.limit, page };
-      });
     },
   });
 
@@ -72,7 +70,6 @@ export const CloudImagePicker: React.FC<{
     await Promise.all(
       files.map(async (file, idx) => {
         helper.setSubmitting(idx, 0);
-        console.log(file);
         const res = await imagekit.upload({
           file: file as any,
           fileName: generateId(),
@@ -85,7 +82,43 @@ export const CloudImagePicker: React.FC<{
     helper.clear();
     imagesQuery.refetch();
   };
+
+  const onDeleteFile = async (file: ImageProps) => {
+    try {
+      await axiosInstance.post(`/api/delete/image/${file.id}`);
+      toast({
+        title: "Delete image",
+        description: `Image \`${file.id}\` was deleted.`,
+      });
+      imagesQuery.refetch();
+    } catch (err: any) {
+      toast({
+        title: "Error: Delete image",
+        description: err.message,
+      });
+    }
+  };
+
+  const onMoveFile = async (file: ImageProps, to: string) => {
+    try {
+      await axiosInstance.post(
+        `/api/move/image/?from=${file.filePath}&to=${to}`
+      );
+      toast({
+        title: "Move image",
+        description: `Image \`${file.id}\` was moved to \`${to}\`.`,
+      });
+      imagesQuery.refetch();
+    } catch (err: any) {
+      toast({
+        title: "Error: Move image",
+        description: err.message,
+      });
+    }
+  };
+
   if (imagesQuery.isInitialLoading) return "Please wait...";
+
   return (
     <ImagePicker
       loading={imagesQuery.isFetching || imagesQuery.isLoading}
@@ -94,6 +127,40 @@ export const CloudImagePicker: React.FC<{
       value={value}
       onPick={onChange}
       onFileSave={onFileSave}
+      fileAction={(file) => {
+        return (
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="h-7 w-7 p-0">
+                  <MoveIcon width={18} height={18} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {folders.map(({ name, folder }) => (
+                  <DropdownMenuItem
+                    key={folder}
+                    disabled={name === file.group.name}
+                    onClick={() => onMoveFile(file, folder)}
+                  >
+                    <div className="h-6 w-6 p-1">
+                      {name === file.group.name && <CheckIcon />}
+                    </div>
+                    <span>{name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="destructive"
+              onClick={() => onDeleteFile(file)}
+              className="h-7 w-7 p-0"
+            >
+              <TrashIcon width={18} height={18} />
+            </Button>
+          </div>
+        );
+      }}
     ></ImagePicker>
   );
 };

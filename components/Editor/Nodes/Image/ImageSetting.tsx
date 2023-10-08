@@ -11,6 +11,7 @@ import React from "react";
 import { Sources } from ".";
 import { CloudImagePicker } from "./CloudImagePicker";
 import { useClient } from "@/components/client";
+import { useParams } from "next/navigation";
 
 export const ImageSettings = () => {
   const {
@@ -29,7 +30,7 @@ export const ImageSettings = () => {
   );
 
   const client = useClient();
-  console.log(client.account);
+  const params = useParams();
 
   return (
     <>
@@ -38,8 +39,12 @@ export const ImageSettings = () => {
           value={values["image"].value}
           folders={[
             {
+              name: "Template",
+              folder: `/templates/${params.id}`,
+            },
+            {
               name: "User",
-              folder: `user/${client.account?.id}`,
+              folder: `/user/${client.account?.id}`,
             },
           ]}
           onChange={(img) =>
