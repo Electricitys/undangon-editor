@@ -1,9 +1,12 @@
 "use client";
 
 import { InvitationSchema } from "@/components/interfaces";
-import { Select, TextInput } from "@mantine/core";
+import { Button, Select, TextInput } from "@mantine/core";
 import { HttpError } from "@refinedev/core";
 import { Edit, useForm, useSelect } from "@refinedev/mantine";
+import { IconEdit } from "@tabler/icons-react";
+import React from "react";
+import slugify from "slugify";
 
 type InvitationData = Pick<
   InvitationSchema,
@@ -37,8 +40,31 @@ const InvitationEdit: React.FC = () => {
     optionLabel: "name",
   });
 
+  const templateUrl = React.useMemo(() => {
+    // const auth = feathers.get("authentication");
+    return `/e/invitation/${
+      invitationData && slugify(invitationData?.name)
+    }/${invitationData?.id}`;
+  }, [queryResult]);
+
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Edit
+      saveButtonProps={saveButtonProps}
+      headerButtons={({ defaultButtons }) => (
+        <>
+          {defaultButtons}
+          <Button
+            component="a"
+            href={templateUrl}
+            variant="outline"
+            size="sm"
+            leftIcon={<IconEdit size={18} />}
+          >
+            Edit Invitation
+          </Button>
+        </>
+      )}
+    >
       <TextInput mt="sm" label="Name" {...getInputProps("name")} />
       <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
       <Select

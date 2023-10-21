@@ -14,6 +14,7 @@ export interface ViewportFrameProps extends Partial<CraftFrameProps> {
 type IFrame = FrameProps & {
   properties?: Properties[];
   handler?: Partial<FrameHandlerProps>;
+  _updatedAt: number;
 };
 type FrameHandlerProps = {
   onChange(value: string): void;
@@ -34,6 +35,11 @@ export interface ViewportFrameValue {
     add: (frame: IFrame, active?: boolean) => void;
     remove: (id: string) => void;
     updateFrameAt: (id: string, data: Partial<IFrame>) => void;
+    updatePropertyFrameAt: (
+      frameId: string,
+      propertyIndex: number,
+      data: Partial<Properties>
+    ) => void;
     update: (id: string, newData: string) => void;
     activeFrame: string;
     setActiveFrame: (id: string, rerender?: boolean) => void;
@@ -113,11 +119,30 @@ export const ViewportFrameProvider: React.FC<
         return { ...frame };
       });
     },
+    async updatePropertyFrameAt(frameId, id, data) {
+      await setFrame((frame) => {
+        const f = frame[frameId];
+        const lastProp = f.properties[id];
+        f.properties[id] = {
+          ...lastProp,
+          ...data,
+          _updatedAt: Date.now(),
+        };
+        return {
+          ...frame,
+          [frameId]: {
+            ...f,
+            _updatedAt: Date.now(),
+          },
+        };
+      });
+    },
     update: async (id, newData) => {
       await setFrame((frame) => {
         frame[id] = {
           ...frame[id],
           content: newData,
+          _updatedAt: Date.now(),
         };
         return { ...frame };
       });
@@ -168,6 +193,7 @@ export const ViewportFrame: React.FC<
       content: props.data as string,
       templates: props.templates || [],
       properties: props.properties || [],
+      _updatedAt: Date.now(),
     });
   });
   return <Frame {...props} data={props.data} />;

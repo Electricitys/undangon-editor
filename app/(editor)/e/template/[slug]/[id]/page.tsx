@@ -28,6 +28,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <Body
+      type="templates"
       id={params.id}
       slug={params.slug}
       content={

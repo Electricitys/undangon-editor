@@ -35,6 +35,8 @@ import jexl from "jexl";
 import { isString } from "@/components/utils/isString";
 import { useViewportFrame } from "../Viewport/Frames/Frame";
 import _debounce from "lodash/debounce";
+import { useDebounce } from "react-use";
+import { useDebouncedValue } from "@mantine/hooks";
 
 const debounceFunction = _debounce((fn: () => void) => {
   return fn();
@@ -133,6 +135,8 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
   const { setTemplate } = useTemplateNodeManager();
   const { frame } = useViewportFrame();
 
+  const [frameUpdatedAt] = useDebouncedValue(frame._updatedAt, 1000);
+
   const ElementRender = React.useMemo(() => {
     let children = props.children;
     if (nodes && nodes.length > 0) {
@@ -183,7 +187,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     }
 
     return React.createElement(type, renderProps, children);
-  }, [type, props, nodes]);
+  }, [type, props, nodes, frameUpdatedAt]);
 
   return (
     <>

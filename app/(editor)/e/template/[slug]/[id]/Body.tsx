@@ -16,9 +16,11 @@ interface EditorPageProps {
   id: string;
   slug: string;
   content: FrameProps;
+
+  type: "invitations" | "templates";
 }
 
-const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
+const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
   const client = useClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -29,7 +31,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
       const json = JSON.stringify(frame);
       const content = lz.encodeBase64(lz.compress(json));
       try {
-        await feathers.service("templates").patch(props.id, { content });
+        await feathers.service(type).patch(props.id, { content });
         toast({
           title: "Publish",
           description: "Project is saved.",
@@ -47,7 +49,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
   );
 
   const onClose = useCallback(() => {
-    router.replace(`/template/edit/${props.id}`);
+    router.replace(`/${type}/edit/${props.id}`);
   }, [props.id]);
 
   const constructPreviewUrl = useCallback(() => {
@@ -74,7 +76,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
             name: "div",
           }}
         >
-          <Element is={Text} text="contoh" />
+          <Element is={Text} text={`"contoh"`} />
           <Element
             is={NativeTag}
             canvas
@@ -83,7 +85,7 @@ const Body: React.FC<EditorPageProps> = ({ content, ...props }) => {
             }}
           >
             <Element is={Container} canvas>
-              <Element is={Text} text="CONTAINER" />
+              <Element is={Text} text={`"CONTAINER"`} />
             </Element>
           </Element>
         </Element>

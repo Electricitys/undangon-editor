@@ -36,6 +36,7 @@ export const PropertiesContent = () => {
                       name: "",
                       value: "",
                       type: "string",
+                      _updatedAt: Date.now(),
                     },
                   ],
                 });
@@ -68,11 +69,10 @@ export const PropertiesContent = () => {
         disableTrash={!editable}
         type={editable}
         value={frame.properties || []}
-        onChange={(p) => {
-          frameHelper.updateFrameAt(frame.id, {
-            properties: p,
-          });
+        onPropertyChange={(index, value) => {
+          frameHelper.updatePropertyFrameAt(frame.id, index, value);
         }}
+        onChange={(p) => {}}
       />
     </PanelSection>
   );

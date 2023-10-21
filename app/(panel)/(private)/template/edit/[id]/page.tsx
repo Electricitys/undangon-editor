@@ -41,10 +41,10 @@ const TemplateEdit: React.FC = () => {
 
   const templateUrl = React.useMemo(() => {
     // const auth = feathers.get("authentication");
-    return `http://localhost:3001/e/${
+    return `/e/template/${
       templateData && slugify(templateData?.name)
     }/${templateData?.id}`;
-  }, [queryResult, data]);
+  }, [queryResult]);
 
   return (
     <Edit

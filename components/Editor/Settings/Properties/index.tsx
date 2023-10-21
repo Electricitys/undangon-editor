@@ -4,7 +4,6 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { generateId } from "@/components/utils/generateId";
 import { Select } from "@/components/component/Select";
-import { ExpressionInput } from "@/components/ui/expression-input";
 import { StringField } from "./StringField";
 import { ColorField } from "./ColorField";
 import { ImagePickerField } from "./ImagePickerField";
@@ -14,11 +13,17 @@ export type Properties = {
   name: string;
   value: string;
   type: "string" | "color" | "image";
+  _updatedAt: number;
 };
 
 interface PropertiesProps {
   value: Properties[];
   onChange: (value: Properties[]) => void;
+  onPropertyChange: (
+    index: number,
+    value: Properties,
+    rest: Properties[]
+  ) => void;
   addButton?: boolean;
   type?: boolean;
   disableTrash?: boolean;
@@ -28,6 +33,7 @@ interface PropertiesProps {
 export const PropertiesInput: React.FC<PropertiesProps> = ({
   value,
   onChange,
+  onPropertyChange,
   addButton = true,
   type = false,
   disableTrash = false,
@@ -40,14 +46,15 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
     const updatedItems = [...value];
     updatedItems[index] = updatedItem;
     onChange(updatedItems);
+    onPropertyChange(index, updatedItem, updatedItems);
   };
   const removeAt: (index: number) => void = (index) => {
     const updatedItems = [...value];
     updatedItems.splice(index, 1);
     onChange(updatedItems);
   };
-  const add = async (item: Properties) => {
-    onChange([...value, item]);
+  const add = async (item: Omit<Properties, "_updatedAt">) => {
+    onChange([...value, { ...item, _updatedAt: Date.now() }]);
   };
 
   // React.useEffect(() => {
