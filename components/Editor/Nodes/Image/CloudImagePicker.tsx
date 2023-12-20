@@ -23,10 +23,12 @@ export const CloudImagePicker: React.FC<{
   value: string;
   onChange: (value: string) => void;
   folders?: { name: string; folder: string }[];
+  className?: string;
 }> = ({
   value,
   onChange,
   folders = [{ name: "Testing", folder: "testing" }],
+  className,
 }) => {
   const { toast } = useToast();
   const [filter, setFilter] = React.useState({
@@ -122,7 +124,7 @@ export const CloudImagePicker: React.FC<{
   return (
     <ImagePicker
       loading={imagesQuery.isFetching || imagesQuery.isLoading}
-      className="w-full rounded-s-none border-none px-3"
+      className={`w-full rounded-s-none border-none px-3 ${className}`}
       images={imagesQuery.data || []}
       value={value}
       onPick={onChange}

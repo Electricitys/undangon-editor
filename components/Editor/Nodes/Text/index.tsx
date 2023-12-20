@@ -81,9 +81,11 @@ export const Text: UserComponent<Partial<TextProps>> = ({
 
   if (!editorEnabled) {
     return (
-      <div ref={(ref) => connect(ref as any)} style={style as any}>
-        <div dangerouslySetInnerHTML={{ __html: text as string }} />
-      </div>
+      <div
+        ref={(ref) => connect(ref as any)}
+        style={style as any}
+        dangerouslySetInnerHTML={{ __html: text as string }}
+      />
     );
   }
 
@@ -98,13 +100,13 @@ export const Text: UserComponent<Partial<TextProps>> = ({
       // onBlur={() => {
       //   setIsEditable(false);
       // }}
+
+      dangerouslySetInnerHTML={{
+        __html: (text || "Some text") as string,
+      }}
     >
       {children}
-      <div
-        dangerouslySetInnerHTML={{
-          __html: (text || "Some text") as string,
-        }}
-      />
+      {/* <div /> */}
     </div>
   );
 };

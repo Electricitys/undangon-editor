@@ -308,14 +308,16 @@ export const defaultFrameData: FrameProps = {
     {
       id: "n8td_td99",
       name: "coba",
-      value: '"okey"',
-      type: "string",
+      value: "okey",
+      type: "text",
+      _updatedAt: Date.now(),
     },
     {
       id: "jhry_ryii",
       name: "asdas",
-      value: '"BASAS"',
-      type: "string",
+      value: "BASAS",
+      type: "text",
+      _updatedAt: Date.now(),
     },
   ],
 };

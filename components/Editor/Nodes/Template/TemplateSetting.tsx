@@ -34,6 +34,7 @@ export const TemplateSettings = () => {
             _set(props, "props", p);
           }, 2000);
         }}
+        onPropertyChange={() => {}}
       />
     </PanelSection>
   );

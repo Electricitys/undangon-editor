@@ -30,12 +30,13 @@ import { FramesPanel } from "./Frames";
 import { PropertiesPanel } from "./PropertiesPanel";
 import { Toaster } from "@/components/ui/toaster";
 import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeManager";
-import { useClipboard } from "@mantine/hooks";
+import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
   children: ReactNode;
   enableToolbar?: boolean;
+  mode?: "advanced" | "simple";
 };
 
 interface ViewportProps extends ViewportProviderProps, ViewportWrapperProps {}
@@ -43,6 +44,7 @@ interface ViewportProps extends ViewportProviderProps, ViewportWrapperProps {}
 export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   children,
   enableToolbar = true,
+  mode = "advanced",
 }) => {
   const { toast } = useToast();
   const { media } = useViewport();
@@ -50,33 +52,40 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
     connectors,
     actions,
     selected,
+    isSelected,
     parseSerializedNode,
     getSerializedNodeById,
     getNodeById,
     getParentNodeById,
     getCloneNodeById,
-  } = useEditor((state, query) => ({
-    selected: state.events.selected,
-    parseSerializedNode: (nodeId: string, serializedNode: SerializedNode) => {
-      return query
-        .parseSerializedNode(serializedNode)
-        .toNode((node) => (node.id = nodeId));
-    },
-    getSerializedNodeById: (nodeId: string) => {
-      const nodeTree = getCloneTree(query, nodeId);
-      const serialized: any = { rootNodeId: nodeTree.rootNodeId, nodes: {} };
-      for (const node in nodeTree.nodes) {
-        serialized.nodes[node] = serializeNode(
-          nodeTree.nodes[node].data,
-          state.options.resolver
-        );
-      }
-      return JSON.stringify(serialized);
-    },
-    getNodeById: (nodeId: string) => query.node(nodeId),
-    getParentNodeById: (nodeId: string) => query.node(nodeId).get().data.parent,
-    getCloneNodeById: (nodeId: string) => getCloneTree(query, nodeId),
-  }));
+  } = useEditor((state, query) => {
+    const selected = state.events.selected;
+    const [currentNodeId] = selected;
+    return {
+      selected,
+      isSelected: typeof currentNodeId === "string",
+      parseSerializedNode: (nodeId: string, serializedNode: SerializedNode) => {
+        return query
+          .parseSerializedNode(serializedNode)
+          .toNode((node) => (node.id = nodeId));
+      },
+      getSerializedNodeById: (nodeId: string) => {
+        const nodeTree = getCloneTree(query, nodeId);
+        const serialized: any = { rootNodeId: nodeTree.rootNodeId, nodes: {} };
+        for (const node in nodeTree.nodes) {
+          serialized.nodes[node] = serializeNode(
+            nodeTree.nodes[node].data,
+            state.options.resolver
+          );
+        }
+        return JSON.stringify(serialized);
+      },
+      getNodeById: (nodeId: string) => query.node(nodeId),
+      getParentNodeById: (nodeId: string) =>
+        query.node(nodeId).get().data.parent,
+      getCloneNodeById: (nodeId: string) => getCloneTree(query, nodeId),
+    };
+  });
 
   const duplicateNode = useCallback(() => {
     const [selectedNodeId] = selected;
@@ -141,66 +150,6 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
     [selected]
   );
 
-  const editorHotkeys = useMemo(
-    () => [
-      {
-        combo: "ctrl+c",
-        label: "Copy",
-        group: "Editor",
-        // preventDefault: true,
-        onKeyDown: copyNode,
-      },
-      {
-        combo: "ctrl+v",
-        label: "Paste",
-        group: "Editor",
-        // preventDefault: true,
-        onKeyDown: pasteNode,
-      },
-      {
-        combo: "del",
-        label: "Delete",
-        group: "Editor",
-        onKeyDown: (e: any) => {
-          const [selectedNodeId] = selected;
-          if (!selectedNodeId) return;
-          const node = getNodeById(selectedNodeId);
-          if (node.isDeletable()) {
-            actions.delete(selectedNodeId);
-          }
-        },
-      },
-      {
-        combo: "ctrl+d",
-        label: "Duplicate",
-        group: "Editor",
-        preventDefault: true,
-        onKeyDown: (e: any) => {
-          duplicateNode();
-        },
-      },
-      {
-        combo: "ctrl+shift+z",
-        label: "Redo",
-        group: "Editor",
-        onKeyDown: () => actions.history.redo(),
-      },
-      {
-        combo: "ctrl+z",
-        label: "Undo",
-        group: "Editor",
-        onKeyDown: () => actions.history.undo(),
-      },
-    ],
-    [
-      copyNode,
-      pasteNode,
-      duplicateNode,
-      actions.history.undo,
-      actions.history.redo,
-    ]
-  );
-
   useHotkeys("ctrl+c", copyNode);
   useHotkeys("ctrl+v", pasteNode);
   useHotkeys("ctrl+d", () => duplicateNode());
@@ -253,12 +202,18 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           <FramesPanel />
           <TemplatesPanel />
           <AdditionalPanel />
-          <PropertiesPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>
         <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white pb-32">
-          <SettingPanel />
+          {isSelected}
+          {isSelected ? (
+            <SettingPanel />
+          ) : mode === "advanced" ? (
+            <PropertiesPanel />
+          ) : (
+            <PropertiesPanelSimple />
+          )}
         </div>
         <div className="border-b border-gray-300 fixed right-0 left-0 top-0 bg-white">
           <Toolbar />
@@ -271,6 +226,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
 export const Viewport: FC<ViewportProps> = ({
   children,
   enableToolbar,
+  mode,
   ...props
 }) => {
   const { isProduction } = props;
@@ -308,7 +264,7 @@ export const Viewport: FC<ViewportProps> = ({
           <Toaster />
           <ViewportFrameProvider>
             <TemplateNodeManagerProvider>
-              <ViewportWrapper enableToolbar={enableToolbar}>
+              <ViewportWrapper mode={mode} enableToolbar={enableToolbar}>
                 {children}
               </ViewportWrapper>
             </TemplateNodeManagerProvider>

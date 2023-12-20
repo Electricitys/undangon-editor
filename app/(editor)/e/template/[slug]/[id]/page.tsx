@@ -5,9 +5,6 @@ import { FrameProps } from "@/components/Editor/Viewport/Frames";
 
 import lz from "lzutf8";
 import { generateId } from "@/components/utils/generateId";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 
 type Props = {
   params: {
@@ -17,18 +14,28 @@ type Props = {
   searchParams: {};
 };
 
+export async function generateMetadata({ params }: Props) {
+  const data: TemplateSchema = await featherRestApp
+    .service("templates")
+    .get(params.id);
+
+  return {
+    title: `Template Editor - ${data.name}`,
+  };
+}
+
 export default async function Page({ params }: Props) {
   const data: TemplateSchema = await featherRestApp
     .service("templates")
     .get(params.id);
 
-  const content: FrameProps = JSON.parse(
-    lz.decompress(lz.decodeBase64(data.content))
-  );
+  const content: FrameProps = data.content
+    ? JSON.parse(lz.decompress(lz.decodeBase64(data.content)))
+    : null;
 
   return (
     <Body
-      type="templates"
+      type="template"
       id={params.id}
       slug={params.slug}
       content={

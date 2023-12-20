@@ -7,12 +7,20 @@ import { Select } from "@/components/component/Select";
 import { StringField } from "./StringField";
 import { ColorField } from "./ColorField";
 import { ImagePickerField } from "./ImagePickerField";
+import { TextField } from "./TextField";
+
+export const PROPERTIES_TYPES = {
+  expression: "any",
+  text: "string",
+  color: "string",
+  image: "string",
+};
 
 export type Properties = {
   id: string;
   name: string;
   value: string;
-  type: "string" | "color" | "image";
+  type: "expression" | "text" | "color" | "image";
   _updatedAt: number;
 };
 
@@ -20,8 +28,8 @@ interface PropertiesProps {
   value: Properties[];
   onChange: (value: Properties[]) => void;
   onPropertyChange: (
-    index: number,
-    value: Properties,
+    index: number | null,
+    value: Properties | null,
     rest: Properties[]
   ) => void;
   addButton?: boolean;
@@ -51,15 +59,15 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
   const removeAt: (index: number) => void = (index) => {
     const updatedItems = [...value];
     updatedItems.splice(index, 1);
+    onPropertyChange(null, null, updatedItems);
     onChange(updatedItems);
   };
   const add = async (item: Omit<Properties, "_updatedAt">) => {
-    onChange([...value, { ...item, _updatedAt: Date.now() }]);
+    onPropertyChange(null, null, [
+      ...value,
+      { ...item, _updatedAt: Date.now() },
+    ]);
   };
-
-  // React.useEffect(() => {
-  //   if (onChange) onChange(items);
-  // }, [items]);
 
   let Field = (index: number, field: Properties) => {
     const restProps = {
@@ -72,6 +80,8 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
         }),
     };
     switch (field.type) {
+      case "text":
+        return <TextField {...restProps} />;
       case "color":
         return <ColorField {...restProps} />;
       case "image":
@@ -88,6 +98,7 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
               .map((v) => ({
                 key: v.id,
                 value: `$${v.name}`,
+                type: v.type,
               }))
               .filter((v) => v.key !== field.id)}
           />
@@ -130,8 +141,12 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
                     value={field.type}
                     options={[
                       {
-                        label: "String",
-                        value: "string",
+                        label: "Text",
+                        value: "text",
+                      },
+                      {
+                        label: "Expression",
+                        value: "expression",
                       },
                       {
                         label: "Color",
@@ -183,7 +198,7 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
                 id: generateId(),
                 name: "",
                 value: "",
-                type: "string",
+                type: "text",
               });
             }}
           >

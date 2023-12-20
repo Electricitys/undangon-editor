@@ -1,13 +1,7 @@
 import { PropertiesInput } from "../../Settings/Properties";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
-import {
-  LockClosedIcon,
-  LockOpen1Icon,
-  LockOpen2Icon,
-  Pencil1Icon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
+import { LockClosedIcon, LockOpen1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { useViewportFrame } from "../Frames/Frame";
 import { generateId } from "@/components/utils/generateId";
 import { useState } from "react";
@@ -18,6 +12,7 @@ export const PropertiesContent = () => {
   return (
     <PanelSection
       text="Props"
+      lock={true}
       description="Input props that this component exposes"
       action={
         <>
@@ -35,7 +30,7 @@ export const PropertiesContent = () => {
                       id: generateId(),
                       name: "",
                       value: "",
-                      type: "string",
+                      type: "text",
                       _updatedAt: Date.now(),
                     },
                   ],
@@ -69,8 +64,14 @@ export const PropertiesContent = () => {
         disableTrash={!editable}
         type={editable}
         value={frame.properties || []}
-        onPropertyChange={(index, value) => {
-          frameHelper.updatePropertyFrameAt(frame.id, index, value);
+        onPropertyChange={(index, value, properties) => {
+          if (index && value)
+            frameHelper.updatePropertyFrameAt(frame.id, index, value);
+          else
+            frameHelper.updateFrameAt(frame.id, {
+              ...frame,
+              properties: properties,
+            });
         }}
         onChange={(p) => {}}
       />

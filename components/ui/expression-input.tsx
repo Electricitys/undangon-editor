@@ -23,7 +23,7 @@ import { TooltipPortal } from "@radix-ui/react-tooltip";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import jexl from "jexl";
 import { useViewportFrame } from "../Editor/Viewport/Frames/Frame";
-import { Properties } from "../Editor/Settings/Properties";
+import { PROPERTIES_TYPES, Properties } from "../Editor/Settings/Properties";
 import { Separator } from "./separator";
 
 export interface ExpressionInputProps
@@ -34,7 +34,7 @@ export interface ExpressionInputProps
   defaultValue?: string;
   onChange?: (value: string) => void;
   onClose?: (value: string | undefined) => void;
-  variables: { key: string; value: string, type?: string }[];
+  variables: { key: string; value: string; type: Properties["type"] }[];
 }
 
 export const ExpressionInput: React.FC<ExpressionInputProps> = ({
@@ -109,7 +109,9 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
                   beforeMount={(monaco) => {
                     monaco.languages.typescript.javascriptDefaults.addExtraLib(
                       variables.reduce<string>((p, c) => {
-                        return `${p}\nconst ${c.value}: any;`;
+                        return `${p}\nconst ${c.value}: ${
+                          PROPERTIES_TYPES[c.type]
+                        };`;
                       }, ""),
                       "global.d.ts"
                     );

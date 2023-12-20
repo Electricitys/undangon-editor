@@ -42,7 +42,8 @@ export const TemplateRenderer: React.FC<
             id: generateId(),
             name: name,
             value: value,
-            type: "string",
+            type: "text",
+            _updatedAt: Date.now(),
           };
         }),
     [node.props]
@@ -64,7 +65,7 @@ export const TemplateRenderer: React.FC<
 
 const compileProps = (props: Properties, context: Context = {}): any => {
   let result = props.value || "null";
-  if (props.type === "string") {
+  if (props.type === "expression") {
     const expr = jexl.createExpression(result);
     result = expr.evalSync(context);
   }

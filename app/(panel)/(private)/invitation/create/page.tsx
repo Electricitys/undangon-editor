@@ -3,7 +3,7 @@
 import { InvitationSchema } from "@/components/interfaces";
 import { Select, TextInput } from "@mantine/core";
 import { HttpError } from "@refinedev/core";
-import { Edit, useForm, useSelect } from "@refinedev/mantine";
+import { Create, useForm, useSelect } from "@refinedev/mantine";
 
 type InvitationData = Pick<
   InvitationSchema,
@@ -35,7 +35,7 @@ const InvitationCreate: React.FC = () => {
   });
 
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Create saveButtonProps={saveButtonProps}>
       <TextInput mt="sm" label="Name" {...getInputProps("name")} />
       <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
       <Select
@@ -52,7 +52,7 @@ const InvitationCreate: React.FC = () => {
         {...packageSelectProps}
         filterDataOnExactSearchMatch={false}
       />
-    </Edit>
+    </Create>
   );
 };
 

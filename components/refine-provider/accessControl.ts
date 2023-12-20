@@ -47,7 +47,6 @@ export const canHandler: AccessControlProvider["can"] = async ({
   params,
   resource,
 }) => {
-  // console.log(action, params, resource);
   try {
     const identity = await authProvider.getIdentity?.();
     const grant = defineAbilityFor((identity as any).user).can(

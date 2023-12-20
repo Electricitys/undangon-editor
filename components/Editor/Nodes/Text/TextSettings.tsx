@@ -44,6 +44,7 @@ export const TextSettings = () => {
             variables={[...frameProperties].map((v) => ({
               key: v.id,
               value: `$${v.name}`,
+              type: v.type,
             }))}
           />
         </div>

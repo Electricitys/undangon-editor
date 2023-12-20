@@ -17,7 +17,6 @@ import {
   DragHandleDots2Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -29,13 +28,14 @@ import {
 import { styled } from "@stitches/react";
 import { TemplateNode } from "./Template";
 import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
-import { Properties } from "../Settings/Properties";
 import { Context } from "jexl/Expression";
 import jexl from "jexl";
-import { isString } from "@/components/utils/isString";
 import { useViewportFrame } from "../Viewport/Frames/Frame";
 import _debounce from "lodash/debounce";
-import { useDebounce } from "react-use";
+import _set from "lodash/set";
+import _fpset from "lodash/fp/set";
+import _merge from "lodash/merge";
+import _get from "lodash/get";
 import { useDebouncedValue } from "@mantine/hooks";
 
 const debounceFunction = _debounce((fn: () => void) => {
@@ -151,7 +151,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
 
     const SerializedNode = query.node(id).toSerializedNode();
 
-    let renderProps: any = props;
+    var renderProps: any = { ...props };
     if (type === TemplateNode) {
       let _node = {
         id: id,
@@ -168,20 +168,24 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
       };
     } else {
       if (SerializedNode.custom?.functionProps) {
-        for (let p of SerializedNode.custom.functionProps) {
-          renderProps = {
-            ...renderProps,
-            [p]: compileProps(
-              renderProps[p],
-              frame.properties.reduce(
-                (p, c) => ({
-                  ...p,
-                  [`$${c.name}`]: compileProps(c.value),
-                }),
-                {}
-              )
-            ),
-          };
+        for (let props of SerializedNode.custom.functionProps) {
+          const path = typeof props === "string" ? props : props.path;
+          let inputValue = _get(renderProps, path);
+          const compiledProps = compileProps(
+            inputValue,
+            frame.properties.reduce((p, c) => {
+              let value = c.value;
+              if (["text", "color", "image"].indexOf(c.type) > -1) {
+                value = `"${value}"`;
+              }
+              return {
+                ...p,
+                [`$${c.name}`]: compileProps(value),
+              };
+            }, {})
+          );
+
+          renderProps = _fpset(path, compiledProps, renderProps);
         }
       }
     }

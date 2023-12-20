@@ -12,7 +12,7 @@ import { ChevronRight } from "lucide-react";
 import { useViewportFrame } from "../Frames/Frame";
 
 export const EditTemplateAction = () => {
-  const {frameHelper } = useViewportFrame();
+  const { frameHelper } = useViewportFrame();
 
   const { id } = useLayer((layer) => {
     return {
@@ -54,7 +54,8 @@ export const EditTemplateAction = () => {
           await helper.update(target, await JSON.stringify(newContent));
         },
       },
-      templates: []
+      templates: [],
+      _updatedAt: Date.now(),
     });
   };
 

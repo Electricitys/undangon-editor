@@ -83,6 +83,7 @@ export const Toolbar = () => {
           variant="outline"
           size="icon"
         >
+          {currentMedia.name === "desktop"}
           <DesktopIcon />
         </Button>
       </div>

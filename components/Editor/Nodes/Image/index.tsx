@@ -79,17 +79,6 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
         />
       );
       break;
-    case "variable":
-      imageDOM = (
-        <div
-          style={{
-            ...style,
-            background: image.value,
-          }}
-          className={className}
-        />
-      );
-      break;
     default:
       imageDOM = <img style={style} src={image.value} className={className} />;
   }
@@ -106,6 +95,12 @@ Image.craft = {
   custom: {
     name: "Image",
     type: "component",
+    functionProps: [
+      {
+        name: "image",
+        path: "image.value",
+      },
+    ],
   },
   props: {
     boxSizing: BoxSizing.defaultValue,

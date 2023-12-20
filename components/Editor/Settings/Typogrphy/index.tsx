@@ -5,6 +5,7 @@ import _get from "lodash/get";
 import { Toggle } from "@/components/ui/toggle";
 import { useNode } from "@craftjs/core";
 import {
+  DividerHorizontalIcon,
   FontBoldIcon,
   FontItalicIcon,
   FontSizeIcon,
@@ -28,6 +29,7 @@ import {
   uncss,
 } from "@/components/ui/css_unit_input";
 import { FontPicker, WebfontsFontResponse } from "@/components/ui/font-picker";
+import { WrapTextIcon } from "lucide-react";
 
 export interface TypographyProps
   extends Pick<
@@ -43,19 +45,21 @@ export interface TypographyProps
     | "textTransform"
     | "lineHeight"
     | "letterSpacing"
+    | "whiteSpace"
   > {}
 
 const defaultValue: Partial<TypographyProps> = {
-  textAlign: "left",
-  textShadow: undefined,
-  textDecoration: undefined,
-  lineHeight: 1,
-  letterSpacing: "0px",
+  color: "inherit",
+  fontFamily: "Roboto",
   fontSize: "12px",
   fontStyle: undefined,
   fontWeight: "normal",
-  fontFamily: "Roboto",
-  color: "inherit",
+  letterSpacing: "0px",
+  lineHeight: 1,
+  textAlign: "left",
+  textShadow: undefined,
+  textDecoration: undefined,
+  whiteSpace: "pre-wrap",
 };
 
 export const Typography = () => {
@@ -290,6 +294,34 @@ export const Typography = () => {
               <ToggleGroup.Item asChild value="capitalize">
                 <Toggle>
                   <LetterCaseCapitalizeIcon />
+                </Toggle>
+              </ToggleGroup.Item>
+            </ToggleGroup.Root>
+          </div>
+        </div>
+        <div className="flex items-center pl-3 pr-1">
+          <div className="grow text-sm">Wrap</div>
+
+          <div className="flex border border-transparent hover:border-gray-200 rounded-md">
+            <ToggleGroup.Root
+              id="typography.whiteSpace"
+              type="single"
+              value={_get(typography, "whiteSpace")}
+              onValueChange={(value) => {
+                setProp(
+                  (props: any) => _set(props, "typography.whiteSpace", value),
+                  1000
+                );
+              }}
+            >
+              <ToggleGroup.Item asChild value="pre-wrap">
+                <Toggle>
+                  <WrapTextIcon size={15} />
+                </Toggle>
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="unset">
+                <Toggle>
+                  <DividerHorizontalIcon />
                 </Toggle>
               </ToggleGroup.Item>
             </ToggleGroup.Root>

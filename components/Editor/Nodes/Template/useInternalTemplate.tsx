@@ -67,7 +67,6 @@ const processProperties = (
     }, {});
     const props = curr.map((c) => {
       const value = compileProps(c, context);
-      // console.log(value);
       return {
         ...c,
         value: value.result,
@@ -80,7 +79,7 @@ const processProperties = (
 const compileProps = (props: Properties, context: Context = {}) => {
   let result = props.value || "null";
   const expr = jexl.createExpression(result);
-  if (props.type === "string") {
+  if (props.type === "expression") {
     try {
       result = expr.evalSync(context);
       if (isString(result)) {
