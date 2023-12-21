@@ -56,7 +56,7 @@ export const AddTemplateDialog: React.FC<{
           </div>
         </div>
         <DialogFooter>
-          <Button className="w-full" type="submit">
+          <Button className="w-full" type="submit" disabled={!values.name}>
             Create Template
           </Button>
         </DialogFooter>

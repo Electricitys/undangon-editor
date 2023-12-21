@@ -11,8 +11,6 @@ import { Typography, TypographyProps } from "../../Settings/Typogrphy";
 import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";
-import { useViewportFrame } from "../../Viewport/Frames/Frame";
-import { useCompileExpressionInsideFrameAndTemplate } from "@/components/ui/expression-input";
 
 type TextProps = {
   children?: ReactNode;
@@ -79,15 +77,15 @@ export const Text: UserComponent<Partial<TextProps>> = ({
     );
   }
 
-  if (!editorEnabled) {
-    return (
-      <div
-        ref={(ref) => connect(ref as any)}
-        style={style as any}
-        dangerouslySetInnerHTML={{ __html: text as string }}
-      />
-    );
-  }
+  // if (!editorEnabled) {
+  //   return (
+  //     <div
+  //       ref={(ref) => connect(ref as any)}
+  //       style={style as any}
+  //       dangerouslySetInnerHTML={{ __html: (text || "Some text") as string }}
+  //     />
+  //   );
+  // }
 
   return (
     <div
@@ -104,10 +102,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
       dangerouslySetInnerHTML={{
         __html: (text || "Some text") as string,
       }}
-    >
-      {children}
-      {/* <div /> */}
-    </div>
+    />
   );
 };
 

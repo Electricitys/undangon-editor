@@ -5,10 +5,13 @@ import { LockClosedIcon, LockOpen1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { useViewportFrame } from "../Frames/Frame";
 import { generateId } from "@/components/utils/generateId";
 import { useState } from "react";
+import { CircleDashedIcon, CircleDotIcon } from "lucide-react";
+import { useViewport } from "../useViewport";
 
 export const PropertiesContent = () => {
   const { frame, frameHelper } = useViewportFrame();
   const [editable, setEditable] = useState<boolean>(false);
+  const { mode } = useViewport();
   return (
     <PanelSection
       text="Props"
@@ -55,6 +58,18 @@ export const PropertiesContent = () => {
             ) : (
               <LockClosedIcon className="h-4 w-4" />
             )}
+          </Button>
+
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            className="h-6 w-6"
+            onClick={(e) => {
+              e.preventDefault();
+              mode.setMode("simple");
+            }}
+          >
+            <CircleDotIcon size={16} />
           </Button>
         </>
       }

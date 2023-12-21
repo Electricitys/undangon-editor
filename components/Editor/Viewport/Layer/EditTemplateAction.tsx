@@ -10,9 +10,12 @@ import { useLayer } from "@craftjs/layers";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { ChevronRight } from "lucide-react";
 import { useViewportFrame } from "../Frames/Frame";
+import { useViewport } from "../useViewport";
 
 export const EditTemplateAction = () => {
   const { frameHelper } = useViewportFrame();
+
+  const { mode } = useViewport();
 
   const { id } = useLayer((layer) => {
     return {
@@ -31,6 +34,7 @@ export const EditTemplateAction = () => {
       name: node.data.custom.name,
       content: JSON.stringify(node.data.props.nodeTree.nodes),
       properties: node.data.props.props,
+      defaultMode: "advanced",
       handler: {
         async onBack(target, value, helper) {
           const targetContent: Record<NodeId, NodeData> = await JSON.parse(

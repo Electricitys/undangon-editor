@@ -8,7 +8,7 @@ import {
 } from "@craftjs/core";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
-import { LayersIcon, PlusIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon, LayersIcon, PlusIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { generateId } from "@/components/utils/generateId";
 import { getCloneTree } from "../../utils/getCloneTree";
@@ -18,6 +18,12 @@ import { AddTemplateDialog } from "./AddDialog";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Properties } from "../../Settings/Properties";
 import { useViewportFrame, useViewportFrameTemplates } from "../Frames/Frame";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type SerializedNodeWithTemplates = {
   rootNodeId: NodeId;
@@ -28,6 +34,7 @@ export type SerializedNodeWithTemplates = {
 export type Template = {
   id: string;
   name: string;
+  thumbnail: string;
   nodeTree: SerializedNodeWithTemplates;
   properties: Properties[];
 };
@@ -80,11 +87,12 @@ export const TemplatesPanel = () => {
     const nodeTree = JSON.parse(
       JSON.stringify(cloneNode).replaceAll(cloneNode.rootNodeId, "ROOT")
     );
-    const newTemplate = {
+    const newTemplate: Template = {
       id: generateId(),
       name: name,
       nodeTree,
       properties: [],
+      thumbnail: "https://placehold.co/150x150/EEE/31343C",
     };
     itemsHelper.push(newTemplate);
     setIsOpen(false);
@@ -93,8 +101,8 @@ export const TemplatesPanel = () => {
   return (
     <>
       <PanelSection
-        text="Templates"
-        // description="Input props that this component exposes"
+        text="Presets"
+        description="Reusable preset to make your editing easier"
         action={
           selected && (
             <>
@@ -117,20 +125,38 @@ export const TemplatesPanel = () => {
         <div className="pl-4 pr-2">
           {items.length === 0 && (
             <div className="text-gray-400 text-sm mb-4">
-              No template available yet
+              No preset available yet
             </div>
           )}
           <div style={{ marginTop: 0 }}>
-            {items.map((field, index: number) => {
-              return (
-                <div key={field.id} className={`flex mb-2`}>
-                  <Button variant={"ghost"} className="w-full justify-start">
-                    <LayersIcon className="mr-2 h-4 w-4" />
-                    <span>{field.name}</span>
-                  </Button>
-                </div>
-              );
-            })}
+            <TooltipProvider delayDuration={200}>
+              {items.map((field, index: number) => {
+                return (
+                  <div key={field.id} className={`flex mb-2`}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={"ghost"}
+                          className="w-full justify-start flex"
+                        >
+                          <LayersIcon className="mr-2 h-4 w-4" />
+                          <div className="grow text-left">{field.name}</div>
+                          <ChevronRightIcon />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <img
+                          src={
+                            field.thumbnail ||
+                            "https://placehold.co/150x150/EEE/31343C"
+                          }
+                        />
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+            </TooltipProvider>
           </div>
         </div>
       </PanelSection>

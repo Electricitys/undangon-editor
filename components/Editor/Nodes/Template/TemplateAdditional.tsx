@@ -29,7 +29,8 @@ export const TemplateAdditional = () => {
                 id: generateId(),
                 name: "",
                 value: "",
-                type: "string",
+                type: "text",
+                _updatedAt: 0,
               });
             }}
           >
@@ -40,11 +41,12 @@ export const TemplateAdditional = () => {
     >
       <PropertiesInput
         value={items}
+        addButton={false}
+        type={true}
         onChange={(e) => {
           itemsHelper.set(e);
         }}
-        addButton={false}
-        type={true}
+        onPropertyChange={(index, value, rest) => {}}
       />
     </PanelSection>
   );

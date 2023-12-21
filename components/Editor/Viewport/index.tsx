@@ -36,7 +36,6 @@ import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
 type ViewportWrapperProps = {
   children: ReactNode;
   enableToolbar?: boolean;
-  mode?: "advanced" | "simple";
 };
 
 interface ViewportProps extends ViewportProviderProps, ViewportWrapperProps {}
@@ -44,10 +43,9 @@ interface ViewportProps extends ViewportProviderProps, ViewportWrapperProps {}
 export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   children,
   enableToolbar = true,
-  mode = "advanced",
 }) => {
   const { toast } = useToast();
-  const { media } = useViewport();
+  const { media, mode } = useViewport();
   const {
     connectors,
     actions,
@@ -206,10 +204,9 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           <LayerPanel />
         </div>
         <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white pb-32">
-          {isSelected}
           {isSelected ? (
             <SettingPanel />
-          ) : mode === "advanced" ? (
+          ) : mode.current === "advanced" ? (
             <PropertiesPanel />
           ) : (
             <PropertiesPanelSimple />
@@ -226,10 +223,9 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
 export const Viewport: FC<ViewportProps> = ({
   children,
   enableToolbar,
-  mode,
   ...props
 }) => {
-  const { isProduction } = props;
+  const { isProduction, defaultMode } = props;
   if (isProduction) {
     return (
       <Editor
@@ -240,7 +236,7 @@ export const Viewport: FC<ViewportProps> = ({
         }}
       >
         <FontFaceProvider>
-          <ViewportProvider isProduction={true}>
+          <ViewportProvider defaultMode={defaultMode} isProduction={true}>
             <ViewportFrameProvider>
               <TemplateNodeManagerProvider>
                 {children}
@@ -264,7 +260,7 @@ export const Viewport: FC<ViewportProps> = ({
           <Toaster />
           <ViewportFrameProvider>
             <TemplateNodeManagerProvider>
-              <ViewportWrapper mode={mode} enableToolbar={enableToolbar}>
+              <ViewportWrapper enableToolbar={enableToolbar}>
                 {children}
               </ViewportWrapper>
             </TemplateNodeManagerProvider>

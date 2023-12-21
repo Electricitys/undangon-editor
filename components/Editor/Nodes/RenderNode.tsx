@@ -135,7 +135,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
   const { setTemplate } = useTemplateNodeManager();
   const { frame } = useViewportFrame();
 
-  const [frameUpdatedAt] = useDebouncedValue(frame._updatedAt, 1000);
+  const [frameUpdatedAt] = useDebouncedValue(_get(frame, "_updatedAt"), 1000);
 
   const ElementRender = React.useMemo(() => {
     let children = props.children;

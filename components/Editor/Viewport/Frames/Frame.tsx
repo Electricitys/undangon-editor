@@ -1,5 +1,5 @@
 import { Frame, FrameProps as CraftFrameProps, useEditor } from "@craftjs/core";
-import React from "react";
+import React, { useState } from "react";
 import _omit from "lodash/omit";
 import { useDebounce, useEffectOnce, useList, usePrevious } from "react-use";
 import { ListActions } from "react-use/lib/useList";
@@ -7,6 +7,7 @@ import { generateId } from "@/components/utils/generateId";
 import { Properties } from "../../Settings/Properties";
 import { FrameProps } from ".";
 import { Template } from "../Templates";
+import _set from "lodash/set";
 
 export interface ViewportFrameProps extends Partial<CraftFrameProps> {
   initialData?: string;
@@ -14,6 +15,7 @@ export interface ViewportFrameProps extends Partial<CraftFrameProps> {
 type IFrame = FrameProps & {
   properties?: Properties[];
   handler?: Partial<FrameHandlerProps>;
+  defaultMode?: "advanced" | "simple";
   _updatedAt: number;
 };
 type FrameHandlerProps = {
@@ -121,13 +123,13 @@ export const ViewportFrameProvider: React.FC<
     },
     async updatePropertyFrameAt(frameId, id, data) {
       await setFrame((frame) => {
-        const f = frame[frameId];
+        const f = { ...frame[frameId] };
         const lastProp = f.properties[id];
-        f.properties[id] = {
+        _set(f, `properties[${id}]`, {
           ...lastProp,
           ...data,
           _updatedAt: Date.now(),
-        };
+        });
         return {
           ...frame,
           [frameId]: {
@@ -215,13 +217,24 @@ interface ViewportFrameTemplatesValue {
 export const useViewportFrameTemplates = (): ViewportFrameTemplatesValue => {
   const { frame, frameHelper } = useViewportFrame();
   const templates = frame?.templates || [];
+  const [localTemplates, setLocalTemplates] = useState<Template[]>([]);
+  useEffectOnce(() => {
+    const presetOnLocal = window.localStorage.getItem("manjo.presets");
+    if (!presetOnLocal) return;
+    setLocalTemplates(JSON.parse(presetOnLocal));
+  });
   return {
-    templates,
+    templates: localTemplates,
     helper: {
       get: (id) => {
         return frame.templates.find((template) => template.id === id);
       },
       push: function (template: Template): void {
+        window.localStorage.setItem(
+          "manjo.presets",
+          JSON.stringify([...templates, template])
+        );
+        setLocalTemplates([...templates, template]);
         frameHelper.updateFrameAt(frame.id, {
           templates: [...templates, template],
         });

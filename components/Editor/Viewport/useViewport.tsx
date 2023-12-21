@@ -4,9 +4,6 @@ import { generateId } from "@/components/utils/generateId";
 import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInternalEditor";
 import { Delete } from "@craftjs/utils";
 import React from "react";
-import { useList } from "react-use";
-import { Template } from "./Templates";
-import { ListActions } from "react-use/lib/useList";
 import { FrameProps } from "./Frames";
 
 const ViewportContext = React.createContext<ViewportValueProps>(null as any);
@@ -35,6 +32,7 @@ type MediaProps = {
 export type ViewportProviderProps = {
   children: React.ReactNode;
   isProduction?: boolean;
+  defaultMode?: "advanced" | "simple";
   onClose?: () => void;
   onPublish: (
     frame: FrameProps,
@@ -47,6 +45,10 @@ export type ViewportProviderProps = {
 
 interface ViewportValueProps
   extends Pick<ViewportProviderProps, "isProduction" | "id"> {
+  mode: {
+    current: ViewportProviderProps["defaultMode"];
+    setMode: (mode: ViewportProviderProps["defaultMode"]) => void;
+  };
   media: MediaProps;
   handler: {
     onClose: (() => void) | undefined;
@@ -75,6 +77,8 @@ interface IViewportProviderProp
 export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   isProduction = false,
 
+  defaultMode = "advanced",
+
   children,
   onClose,
   onPublish,
@@ -98,6 +102,8 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
     availableMedia["mobile"]
   );
 
+  let [mode, setMode] = React.useState<"advanced" | "simple">(defaultMode);
+
   const setMedia = React.useCallback((name: "desktop" | "mobile") => {
     setCurrentMedia(availableMedia[name]);
   }, []);
@@ -118,8 +124,12 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
     <ViewportContext.Provider
       value={{
         isProduction,
-        media,
         handler,
+        media,
+        mode: {
+          current: mode,
+          setMode: (mode) => setMode(mode as any),
+        },
         id,
       }}
     >

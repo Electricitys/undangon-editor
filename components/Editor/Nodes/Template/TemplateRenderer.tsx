@@ -6,6 +6,8 @@ import jexl from "jexl";
 import { Context } from "jexl/Expression";
 import { generateId } from "@/components/utils/generateId";
 import { useInternalTemplate } from "./useInternalTemplate";
+import _get from "lodash/get";
+import _fpset from "lodash/fp/set";
 
 interface TemplateRenderer {
   node: Omit<NodeData, "event">;
@@ -32,42 +34,30 @@ export const TemplateRenderer: React.FC<
     return ctx;
   }, [parentProperties]);
 
-  const safeProps = React.useMemo(
-    () =>
-      Object.keys(node.props)
-        .filter((name) => node.custom.functionProps?.indexOf(name) > -1)
-        .map<Properties>((name) => {
-          const value = node.props[name];
-          return {
-            id: generateId(),
-            name: name,
-            value: value,
-            type: "text",
-            _updatedAt: Date.now(),
-          };
-        }),
-    [node.props]
-  );
-
   const compiled = React.useMemo(() => {
-    return safeProps.reduce((p, c) => {
-      delete context[c.name];
-      let compiled = undefined;
-      try {
-        compiled = compileProps(c, context);
-      } catch (err: any) {}
-      return { ...p, [c.name]: compiled };
-    }, {});
-  }, [safeProps, context]);
+    let result: any = { ...node.props };
+    if (node.custom?.functionProps) {
+      for (let props of node.custom.functionProps) {
+        const path = typeof props === "string" ? props : props.path;
+        let inputValue = _get(result, path);
+        const compiledProps = compileProps(inputValue, context);
+        result = _fpset(path, compiledProps, result);
+      }
+    }
+
+    return result;
+  }, [node.props, context]);
 
   return <Comp {...props} {...compiled} />;
 };
 
-const compileProps = (props: Properties, context: Context = {}): any => {
-  let result = props.value || "null";
-  if (props.type === "expression") {
-    const expr = jexl.createExpression(result);
+const compileProps = (value: string, context: Context = {}) => {
+  let result = value || "null";
+  const expr = jexl.createExpression(result);
+  try {
     result = expr.evalSync(context);
+  } catch (err) {
+    console.error("Template Error Compiling Props:", err);
   }
   return result;
 };
