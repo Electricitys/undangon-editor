@@ -80,7 +80,8 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
       );
       break;
     default:
-      imageDOM = <img style={style} src={image.value} className={className} />;
+      // eslint-disable-next-line @next/next/no-img-element
+      imageDOM = <img style={style} src={image.value} className={className} alt="Gallery" />;
   }
 
   if (attributes?.zoomable && isProduction) {

@@ -80,9 +80,11 @@ export const ImagePicker: React.FC<
         >
           <div className="w-full items-center gap-2">
             {value && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 className="h-24 w-full rounded object-cover transition-all"
                 src={value}
+                alt={"Image Picker Placeholder"}
               />
             )}
             <div className="truncate flex-1">
@@ -112,9 +114,11 @@ export const ImagePicker: React.FC<
                         key={s.id}
                         className="relative border border-slate-400 rounded-md overflow-hidden"
                       >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={s.preview}
                           className="object-cover h-full w-full cursor-pointer active:scale-105"
+                          alt={name}
                           onClick={(e) => {
                             onPick(s.url);
                           }}
@@ -216,7 +220,8 @@ const Droparea = (
             {files.map(({ id, file, preview, submitting }, idx) => (
               <div key={id} className="relative">
                 <div className="relative rounded-md overflow-hidden">
-                  <img className="w-full" src={preview} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="w-full" src={preview} alt={"Preview Image"} />
                   {submitting !== null && (
                     <div className="absolute inset-0 flex justify-center items-center bg-black/25">
                       {submitting < 100 ? (

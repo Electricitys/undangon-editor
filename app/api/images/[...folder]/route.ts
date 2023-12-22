@@ -1,8 +1,8 @@
 import { imagekit } from "@/components/utils/imagekit";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextApiRequest,
+  req: NextRequest,
   { params }: { params: { folder: string[] } }
 ) {
   const { searchParams } = new URL(req.url || "");
@@ -12,5 +12,5 @@ export async function GET(
     limit: (searchParams.get("limit") as any) || undefined,
     path: folder,
   });
-  return Response.json(files);
+  return NextResponse.json(files);
 }

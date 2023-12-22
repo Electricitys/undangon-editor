@@ -178,11 +178,13 @@ export const TemplatesPanel = () => {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="right">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={
                             field.thumbnail ||
                             "https://placehold.co/150x150/EEE/31343C"
                           }
+                          alt={field.name}
                         />
                       </TooltipContent>
                     </Tooltip>
