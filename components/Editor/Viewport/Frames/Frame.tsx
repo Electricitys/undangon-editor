@@ -9,6 +9,7 @@ import { FrameProps } from ".";
 import { Template } from "../Templates";
 import _set from "lodash/set";
 import { useListState } from "@mantine/hooks";
+import { useViewport } from "../useViewport";
 
 export interface ViewportFrameProps extends Partial<CraftFrameProps> {
   initialData?: string;
@@ -57,6 +58,7 @@ export const ViewportFrameProvider: React.FC<
   const framePanel = useList<string>([]);
   const [frames, setFrame] = React.useState<Record<string, IFrame>>({});
   const [activeFrame, setActiveFrame] = React.useState<string>("");
+  const { saveStatus } = useViewport();
   const lastActiveFrame = usePrevious(activeFrame);
   const { store, actions, nodes, query } = useEditor((state, query) => {
     return {
@@ -164,6 +166,14 @@ export const ViewportFrameProvider: React.FC<
     [activeFrame, nodes, store.history.timeline]
   );
 
+  useDebounce(
+    () => {
+      saveStatus.setUnsave(true);
+    },
+    1000,
+    [store.history.timeline.length]
+  );
+
   return (
     <ViewportFrameContext.Provider
       value={{
@@ -225,7 +235,6 @@ export const useViewportFrameTemplates = (): ViewportFrameTemplatesValue => {
   useEffectOnce(() => {
     const presetOnLocal = window.localStorage.getItem("manjo.presets");
     if (!presetOnLocal) return;
-    console.log("UPDATE");
     frameHelper.updateFrameAt(frameId, {
       templates: JSON.parse(presetOnLocal),
       _updatedAt: Date.now(),

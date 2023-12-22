@@ -4,6 +4,7 @@ import { useEditor } from "@craftjs/core";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDownIcon,
+  CircleIcon,
   DesktopIcon,
   DotsHorizontalIcon,
   EyeOpenIcon,
@@ -19,10 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useViewportFrame } from "./Frames/Frame";
+import { CheckCircleIcon, CircleDashedIcon } from "lucide-react";
 
 export const Toolbar = () => {
   const {
     media: { setMedia, currentMedia },
+    saveStatus,
     handler,
   } = useViewport();
 
@@ -94,10 +97,22 @@ export const Toolbar = () => {
               disabled={frame?.name !== "App"}
               loading={isLoading}
               onClick={() =>
-                handler.onPublish?.(frame, query, { isLoading, setLoading })
+                handler.onPublish?.(frame, query, {
+                  isLoading,
+                  setLoading,
+                  isSaved: !saveStatus.unsave,
+                  setSaved(value) {
+                    saveStatus.setUnsave(!value);
+                  },
+                })
               }
             >
-              Publish
+              Publish{" "}
+              {saveStatus.unsave ? (
+                <CircleDashedIcon size={16} className="ml-2" />
+              ) : (
+                <CheckCircleIcon size={16} className="ml-2" />
+              )}
             </Button>
           )}
         </State>

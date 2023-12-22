@@ -111,6 +111,7 @@ export const TemplatesPanel = () => {
       <PanelSection
         text="Presets"
         description="Reusable preset to make your editing easier"
+        defaultOpen={false}
         action={
           selected && (
             <>

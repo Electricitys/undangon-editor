@@ -26,7 +26,7 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
   const { toast } = useToast();
 
   const onPublish = useCallback<ViewportProviderProps["onPublish"]>(
-    async (frame, query, { setLoading }) => {
+    async (frame, query, { setLoading, setSaved }) => {
       setLoading(true);
       const json = JSON.stringify(frame);
       const content = lz.encodeBase64(lz.compress(json));
@@ -36,11 +36,13 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
           title: "Publish",
           description: "Project is saved.",
         });
+        setSaved(true);
       } catch (err) {
         toast({
           title: "Publish",
           description: "Error while saving the project.",
         });
+        setSaved(false);
         console.error(err);
       }
       setLoading(false);

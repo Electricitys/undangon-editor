@@ -2,7 +2,7 @@ import { useEditor } from "@craftjs/core";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, HomeIcon } from "@radix-ui/react-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import * as ResolverNodes from "../../Nodes";
 import { useViewportFrame } from "./Frame";
 import { Template } from "../Templates";
