@@ -1,29 +1,37 @@
 import {
-  Node,
   NodeId,
-  NodeTree,
   SerializedNodes,
   serializeNode,
   useEditor,
 } from "@craftjs/core";
 import { PanelSection } from "../PanelSection";
 import { Button } from "@/components/ui/button";
-import { ChevronRightIcon, LayersIcon, PlusIcon } from "@radix-ui/react-icons";
+import {
+  ChevronRightIcon,
+  LayersIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import React from "react";
 import { generateId } from "@/components/utils/generateId";
 import { getCloneTree } from "../../utils/getCloneTree";
 import * as ResolverNodes from "../../Nodes";
-import { useViewport } from "../useViewport";
 import { AddTemplateDialog } from "./AddDialog";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Properties } from "../../Settings/Properties";
-import { useViewportFrame, useViewportFrameTemplates } from "../Frames/Frame";
+import { useViewportFrameTemplates } from "../Frames/Frame";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type SerializedNodeWithTemplates = {
   rootNodeId: NodeId;
@@ -136,12 +144,36 @@ export const TemplatesPanel = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
+                          asChild
                           variant={"ghost"}
                           className="w-full justify-start flex"
                         >
-                          <LayersIcon className="mr-2 h-4 w-4" />
-                          <div className="grow text-left">{field.name}</div>
-                          <ChevronRightIcon />
+                          <div>
+                            <LayersIcon className="mr-2 h-4 w-4" />
+                            <div className="grow text-left">{field.name}</div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  size={"sm"}
+                                  variant={"ghost"}
+                                  className="hover:bg-gray-200 p-0 h-7 w-7 mr-1"
+                                  onClick={() => {}}
+                                >
+                                  <TrashIcon />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuItem
+                                  color="red"
+                                  onClick={() => itemsHelper.remove(index)}
+                                >
+                                  <TrashIcon className="mr-2 h-4 w-4" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                            <ChevronRightIcon />
+                          </div>
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="right">

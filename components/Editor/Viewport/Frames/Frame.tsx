@@ -1,5 +1,5 @@
 import { Frame, FrameProps as CraftFrameProps, useEditor } from "@craftjs/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import _omit from "lodash/omit";
 import { useDebounce, useEffectOnce, useList, usePrevious } from "react-use";
 import { ListActions } from "react-use/lib/useList";
@@ -8,6 +8,7 @@ import { Properties } from "../../Settings/Properties";
 import { FrameProps } from ".";
 import { Template } from "../Templates";
 import _set from "lodash/set";
+import { useListState } from "@mantine/hooks";
 
 export interface ViewportFrameProps extends Partial<CraftFrameProps> {
   initialData?: string;
@@ -211,33 +212,71 @@ interface ViewportFrameTemplatesValue {
   helper: {
     get: (id: string) => Template | undefined;
     push: (template: Template) => void;
+    remove: (id: number) => void;
+    update: (id: string, template: Partial<Template>) => void;
   };
 }
 
 export const useViewportFrameTemplates = (): ViewportFrameTemplatesValue => {
   const { frame, frameHelper } = useViewportFrame();
+  const frameId = frame?.id;
   const templates = frame?.templates || [];
-  const [localTemplates, setLocalTemplates] = useState<Template[]>([]);
+
   useEffectOnce(() => {
     const presetOnLocal = window.localStorage.getItem("manjo.presets");
     if (!presetOnLocal) return;
-    setLocalTemplates(JSON.parse(presetOnLocal));
+    console.log("UPDATE");
+    frameHelper.updateFrameAt(frameId, {
+      templates: JSON.parse(presetOnLocal),
+      _updatedAt: Date.now(),
+    });
   });
+
   return {
-    templates: localTemplates,
+    templates: [...templates.filter(({ id }) => frameId !== id)],
     helper: {
       get: (id) => {
-        return frame.templates.find((template) => template.id === id);
+        return templates.find((template) => template.id === id);
       },
-      push: function (template: Template): void {
+      push: (template) => {
+        const newTemplates = [...templates, template];
         window.localStorage.setItem(
           "manjo.presets",
-          JSON.stringify([...templates, template])
+          JSON.stringify(newTemplates)
         );
-        setLocalTemplates([...templates, template]);
         frameHelper.updateFrameAt(frame.id, {
-          templates: [...templates, template],
+          templates: newTemplates,
+          _updatedAt: Date.now(),
         });
+      },
+      remove: (id) => {
+        let newTemplates = [...templates];
+        newTemplates.splice(id, 1);
+        window.localStorage.setItem(
+          "manjo.presets",
+          JSON.stringify(newTemplates)
+        );
+        frameHelper.updateFrameAt(frame.id, {
+          templates: newTemplates,
+          _updatedAt: Date.now(),
+        });
+      },
+      update: async (id, template) => {
+        const targetId = templates.findIndex(({ id: i }) => id === i);
+        let newTemplates = [...templates];
+        newTemplates[targetId] = {
+          ...templates[targetId],
+          ...template,
+        };
+        window.localStorage.setItem(
+          "manjo.presets",
+          JSON.stringify(newTemplates)
+        );
+        frameHelper.updateFrameAt(frameId, {
+          templates: frame.templates,
+          _updatedAt: Date.now(),
+        });
+        // localTemplatesHandler.setItem(targetId, { ...newTemplates[targetId] });
       },
     },
   };
