@@ -17,7 +17,11 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const data: InvitationSchema = await featherRestApp
     .service("invitations")
-    .get(params.id);
+    .get(params.id, {
+      query: {
+        $select: ["name"],
+      },
+    });
 
   return {
     title: `Invitation Editor - ${data.name}`,
@@ -27,7 +31,11 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params }: Props) {
   const data: InvitationSchema = await featherRestApp
     .service("invitations")
-    .get(params.id);
+    .get(params.id, {
+      query: {
+        $select: ["content"],
+      },
+    });
 
   let content: FrameProps = {
     id: generateId(),
@@ -40,5 +48,12 @@ export default async function Page({ params }: Props) {
     content = JSON.parse(lz.decompress(lz.decodeBase64(data.content)));
   } catch (err) {}
 
-  return <Body type="invitation" id={params.id} slug={params.slug} content={content} />;
+  return (
+    <Body
+      type="invitation"
+      id={params.id}
+      slug={params.slug}
+      content={content}
+    />
+  );
 }

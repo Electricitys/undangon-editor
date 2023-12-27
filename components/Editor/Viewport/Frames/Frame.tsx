@@ -14,7 +14,6 @@ import { Properties } from "../../Settings/Properties";
 import { FrameProps } from ".";
 import { Template } from "../Templates";
 import _set from "lodash/set";
-import { useListState } from "@mantine/hooks";
 import { useViewport } from "../useViewport";
 
 export interface ViewportFrameProps extends Partial<CraftFrameProps> {

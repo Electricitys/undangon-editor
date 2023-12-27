@@ -1,15 +1,27 @@
 import { Select } from "@/components/component/Select";
+import { Button } from "@/components/ui/button";
 import {
   CSSUnitValue,
   CSSUnitInput,
   uncss,
 } from "@/components/ui/css_unit_input";
 import { useEditor, useNode } from "@craftjs/core";
+import {
+  Crosshair1Icon,
+  Crosshair2Icon,
+  MarginIcon,
+} from "@radix-ui/react-icons";
+import * as ToggleGroup from "@radix-ui/react-toggle-group";
+import { Toggle } from "@/components/ui/toggle";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
+import _get from "lodash/get";
 import React from "react";
 
 export interface BoxSizingProps {
+  position: "absolute" | "relative" | "unset";
+  top: string;
+  left: string;
   width: string;
   height: string;
   h_sizing: "fixed" | "fill" | "hug";
@@ -17,6 +29,9 @@ export interface BoxSizingProps {
 }
 
 const defaultValue: Partial<BoxSizingProps> = {
+  position: "unset",
+  top: "auto",
+  left: "auto",
   width: "auto",
   height: "auto",
   h_sizing: "hug",
@@ -55,6 +70,61 @@ export const BoxSizing = () => {
 
   return (
     <div className="px-2">
+      <div className="flex items-center pl-3 pr-1">
+        <div className="grow text-sm">Position</div>
+        <div className="flex border border-transparent hover:border-gray-200 rounded-md">
+          <ToggleGroup.Root
+            id="boxSizing.position"
+            type="single"
+            value={_get(boxSizing, "position")}
+            onValueChange={(value) => {
+              setProp(
+                (props: any) => _set(props, "boxSizing.position", value),
+                1000
+              );
+            }}
+          >
+            <ToggleGroup.Item asChild value="absolute">
+              <Toggle>
+                <Crosshair1Icon />
+              </Toggle>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item asChild value="relative">
+              <Toggle>
+                <Crosshair2Icon />
+              </Toggle>
+            </ToggleGroup.Item>
+          </ToggleGroup.Root>
+        </div>
+      </div>
+      <div className="flex pb-2">
+        <div className="px-1 w-1/2">
+          <CSSUnitInput
+            id="boxSizing.top"
+            className="border-transparent hover:border-gray-200"
+            label={"Top"}
+            disabled={_get(boxSizing, "position") !== "absolute"}
+            icon={"X"}
+            onChange={function (_value: any, raw): void {
+              _setProps("boxSizing.top", raw);
+            }}
+            initialValue={uncss.parse(boxSizing.top)}
+          />
+        </div>
+        <div className="px-1 w-1/2">
+          <CSSUnitInput
+            id="boxSizing.left"
+            className="border-transparent hover:border-gray-200"
+            label={"Left"}
+            disabled={_get(boxSizing, "position") !== "absolute"}
+            icon={"Y"}
+            onChange={function (_value: any, raw): void {
+              _setProps("boxSizing.left", raw);
+            }}
+            initialValue={uncss.parse(boxSizing.left)}
+          />
+        </div>
+      </div>
       <div className="flex pb-2">
         <div className="px-1 w-1/2">
           <CSSUnitInput

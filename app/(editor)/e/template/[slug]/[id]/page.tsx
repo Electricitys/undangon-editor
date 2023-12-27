@@ -17,7 +17,11 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const data: TemplateSchema = await featherRestApp
     .service("templates")
-    .get(params.id);
+    .get(params.id, {
+      query: {
+        $select: ["name"],
+      },
+    });
 
   return {
     title: `Template Editor - ${data.name}`,
@@ -27,7 +31,11 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params }: Props) {
   const data: TemplateSchema = await featherRestApp
     .service("templates")
-    .get(params.id);
+    .get(params.id, {
+      query: {
+        $select: ["content"],
+      },
+    });
 
   const content: FrameProps = data.content
     ? JSON.parse(lz.decompress(lz.decodeBase64(data.content)))
