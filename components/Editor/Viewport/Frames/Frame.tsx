@@ -1,7 +1,13 @@
 import { Frame, FrameProps as CraftFrameProps, useEditor } from "@craftjs/core";
 import React, { useEffect, useState } from "react";
 import _omit from "lodash/omit";
-import { useDebounce, useEffectOnce, useList, usePrevious } from "react-use";
+import {
+  useDebounce,
+  useEffectOnce,
+  useFirstMountState,
+  useList,
+  usePrevious,
+} from "react-use";
 import { ListActions } from "react-use/lib/useList";
 import { generateId } from "@/components/utils/generateId";
 import { Properties } from "../../Settings/Properties";
@@ -166,12 +172,15 @@ export const ViewportFrameProvider: React.FC<
     [activeFrame, nodes, store.history.timeline]
   );
 
+  const isFirst = useFirstMountState();
+
   useDebounce(
     () => {
+      if (!isFirst) return;
       saveStatus.setUnsave(true);
     },
     1000,
-    [store.history.timeline.length]
+    [isFirst, store.history.timeline.length]
   );
 
   return (

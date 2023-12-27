@@ -21,7 +21,6 @@ interface EditorPageProps {
 }
 
 const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
-  const client = useClient();
   const router = useRouter();
   const { toast } = useToast();
 

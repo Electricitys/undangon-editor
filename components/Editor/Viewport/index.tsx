@@ -31,6 +31,7 @@ import { PropertiesPanel } from "./PropertiesPanel";
 import { Toaster } from "@/components/ui/toaster";
 import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeManager";
 import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
+import { ProductionRenderNode } from "../Nodes/ProductionRenderNode";
 // import * as ResolverComponents from "../Components";
 
 type ViewportWrapperProps = {
@@ -234,6 +235,7 @@ export const Viewport: FC<ViewportProps> = ({
           ...ResolverNodes,
           // ...ResolverComponents,
         }}
+        onRender={ProductionRenderNode}
       >
         <FontFaceProvider>
           <ViewportProvider defaultMode={defaultMode} isProduction={true}>

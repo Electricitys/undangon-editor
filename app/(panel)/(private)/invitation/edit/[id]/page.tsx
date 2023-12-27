@@ -43,7 +43,7 @@ const InvitationEdit: React.FC = () => {
   const templateUrl = React.useMemo(() => {
     // const auth = feathers.get("authentication");
     return `/e/invitation/${
-      invitationData && slugify(invitationData?.name)
+      invitationData && slugify(invitationData?.slug)
     }/${invitationData?.id}`;
   }, [queryResult]);
 

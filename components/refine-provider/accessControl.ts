@@ -30,6 +30,13 @@ export const defineAbilityFor = (user: UserSchema) => {
       [PERMISSIONS.CREATE, PERMISSIONS.UPDATE],
       ["invitations", "templates"]
     );
+  }
+  if (user.role === "maintainer") {
+    can(PERMISSIONS.MANAGE, "all");
+    cannot(
+      [PERMISSIONS.CREATE, PERMISSIONS.UPDATE, PERMISSIONS.DELETE],
+      ["users"]
+    );
   } else {
     can(PERMISSIONS.MANAGE, "invitations", {
       user_id: user.id,

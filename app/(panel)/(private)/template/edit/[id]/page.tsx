@@ -29,8 +29,6 @@ const TemplateEdit: React.FC = () => {
     },
   });
 
-  const { data } = useGetIdentity<AuthenticationResponse>();
-
   const templateData = queryResult?.data?.data;
 
   const { selectProps: categorySelectProps } = useSelect({

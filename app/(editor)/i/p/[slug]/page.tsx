@@ -4,8 +4,8 @@ import { FrameProps } from "@/components/Editor/Viewport/Frames";
 
 import lz from "lzutf8";
 import { generateId } from "@/components/utils/generateId";
-import Body from "./Body";
 import { CONSTANTS } from "@/components/Constants";
+import Body from "../../[slug]/Body";
 
 type Props = {
   params: {
@@ -14,27 +14,13 @@ type Props = {
   searchParams: {};
 };
 
-export async function generateStaticParams(): Promise<Props["params"][]> {
-  const res: FeathersFindResult<InvitationSchema> = await featherRestApp
-    .service("invitations")
-    .find({
-      query: {
-        $select: ["slug"],
-      },
-    });
-
-  return res.data.map((invitation) => {
-    return { slug: invitation.slug };
-  });
-}
-
 export async function generateMetadata({ params }: Props) {
   const res: FeathersFindResult<InvitationSchema> = await featherRestApp
     .service("invitations")
     .find({
       query: {
-        $select: ["name", "slug"],
         slug: params.slug,
+        $select: ["name", "slug"],
       },
     });
 

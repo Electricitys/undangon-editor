@@ -56,3 +56,10 @@ export interface InvitationSchema extends DefaultDataSchema {
   package_id: number;
   package: PackageSchema;
 }
+
+export interface FeathersFindResult<T> {
+  total: number;
+  limit: number;
+  skip: number;
+  data: T[];
+}

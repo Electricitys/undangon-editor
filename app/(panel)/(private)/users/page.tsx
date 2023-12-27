@@ -28,6 +28,11 @@ const UserList: React.FC = () => {
         header: "Name",
       },
       {
+        id: "role",
+        accessorKey: "role",
+        header: "Role",
+      },
+      {
         id: "email",
         accessorKey: "email",
         header: "Email",
