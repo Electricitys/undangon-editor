@@ -151,10 +151,13 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
 
   useHotkeys("ctrl+c", copyNode);
   useHotkeys("ctrl+v", pasteNode);
-  useHotkeys("ctrl+d", () => duplicateNode());
+  useHotkeys("ctrl+d", (e) => {
+    e.preventDefault();
+    duplicateNode();
+  });
   useHotkeys("ctrl+shift+z", () => actions.history.redo());
   useHotkeys("ctrl+z", () => actions.history.undo());
-  useHotkeys("del", (e: any) => {
+  useHotkeys(["delete", "backspace"], (e: any) => {
     const [selectedNodeId] = selected;
     if (!selectedNodeId) return;
     const node = getNodeById(selectedNodeId);

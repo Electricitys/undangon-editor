@@ -6,6 +6,9 @@ import { Typography, TypographyProps } from "../../Settings/Typogrphy";
 import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
 import { UserComponent, useNode } from "@craftjs/core";
 import { cx } from "class-variance-authority";
+import { Generic, GenericProps } from "../../Settings/Generic";
+import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
+import { useViewport } from "../../Viewport/useViewport";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -15,6 +18,8 @@ interface NativeTagProps<T = any> {
   classList: ClassListProps;
   typography: TypographyProps;
 
+  generic: GenericProps;
+
   as: string;
 }
 
@@ -23,6 +28,8 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   spacing,
   classList,
   typography,
+
+  generic,
 
   as,
   children,
@@ -34,11 +41,23 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     tag: node.data.custom.name,
   }));
 
-  const style: React.CSSProperties = {
+  const { isProduction, media } = useViewport();
+
+  let style: React.CSSProperties = {
     ...boxSizing,
     ...spacing,
     ...typography,
   };
+
+  if (!isProduction) {
+    style = {
+      ...spacing,
+      ...BoxSizingHandler(boxSizing, {
+        media,
+      }),
+      ...typography,
+    };
+  }
 
   const className = cx(
     (classList as ClassListProps).map(({ className }) => className)
@@ -46,7 +65,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 
   return React.createElement(
     as || tag || "div",
-    { style, className, ref: (ref: any) => connect(ref as any) },
+    { style, className, ref: (ref: any) => connect(ref as any), ...generic },
     children
   );
 };
@@ -59,6 +78,7 @@ NativeTag.craft = {
   },
   props: {
     as: undefined,
+    generic: Generic.defaultValue,
     boxSizing: BoxSizing.defaultValue,
     spacing: Spacing.defaultValue,
     typography: Typography.defaultValue,

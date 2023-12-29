@@ -8,6 +8,7 @@ import { Spacing } from "../../Settings/Spacing";
 import { ClassList } from "../../Settings/ClassList";
 import { PanelSection } from "../../Viewport/PanelSection";
 import { Typography } from "../../Settings/Typogrphy";
+import { Generic } from "../../Settings/Generic";
 
 export const NativeTagSettings = () => {
   return (
@@ -19,8 +20,11 @@ export const NativeTagSettings = () => {
       <PanelSection text="Typography">
         <Typography />
       </PanelSection>
-      <PanelSection text="Class List" separator={false}>
+      <PanelSection text="Class List">
         <ClassList />
+      </PanelSection>
+      <PanelSection text="Generic Properties" separator={false}>
+        <Generic />
       </PanelSection>
     </>
   );

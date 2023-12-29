@@ -7,6 +7,7 @@ import _pick from "lodash/pick";
 import _set from "lodash/set";
 import { ExpressionInput } from "@/components/ui/expression-input";
 import { useViewportFrame } from "../../Viewport/Frames/Frame";
+import { Generic } from "../../Settings/Generic";
 
 export const TextSettings = () => {
   const {
@@ -57,6 +58,9 @@ export const TextSettings = () => {
       </PanelSection>
       <PanelSection text="Class List" separator={false}>
         <ClassList />
+      </PanelSection>
+      <PanelSection text="Generic Properties" separator={false}>
+        <Generic />
       </PanelSection>
     </>
   );

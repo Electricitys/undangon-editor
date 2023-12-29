@@ -17,9 +17,10 @@ import _pick from "lodash/pick";
 import _set from "lodash/set";
 import _get from "lodash/get";
 import React from "react";
+import { useViewport } from "../../Viewport/useViewport";
 
 export interface BoxSizingProps {
-  position: "absolute" | "relative" | "unset";
+  position: "absolute" | "relative" | undefined;
   top: string;
   left: string;
   width: string;
@@ -29,7 +30,7 @@ export interface BoxSizingProps {
 }
 
 const defaultValue: Partial<BoxSizingProps> = {
-  position: "unset",
+  position: undefined,
   top: "auto",
   left: "auto",
   width: "auto",

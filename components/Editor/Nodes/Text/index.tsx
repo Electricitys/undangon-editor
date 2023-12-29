@@ -11,6 +11,7 @@ import { Typography, TypographyProps } from "../../Settings/Typogrphy";
 import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";
+import { Generic, GenericProps } from "../../Settings/Generic";
 
 type TextProps = {
   children?: ReactNode;
@@ -18,6 +19,7 @@ type TextProps = {
   spacing: SpacingProps;
   classList: ClassListProps;
   typography: TypographyProps;
+  generic: GenericProps;
 
   text: string;
 };
@@ -28,6 +30,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   spacing,
   classList,
   typography,
+  generic,
 
   text = "Some Text",
 }) => {
@@ -69,6 +72,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
     return (
       <div
         ref={(ref) => connect(ref as any)}
+        {...generic}
         style={style as any}
         className={className}
       >
@@ -90,6 +94,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   return (
     <div
       ref={(ref) => connect(ref as any)}
+      {...generic}
       style={style as any}
       className={className}
       // onDoubleClick={() => {
@@ -118,6 +123,7 @@ Text.craft = {
     spacing: Spacing.defaultValue,
     typography: Typography.defaultValue,
     classList: ClassList.defaultValue,
+    generic: Generic.defaultValue,
   },
   related: {
     settings: TextSettings,

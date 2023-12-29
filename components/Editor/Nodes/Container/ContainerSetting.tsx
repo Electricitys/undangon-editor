@@ -7,6 +7,7 @@ import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
 import { Spacing } from "../../Settings/Spacing";
 import { ClassList } from "../../Settings/ClassList";
 import { PanelSection } from "../../Viewport/PanelSection";
+import { Generic } from "../../Settings/Generic";
 
 export const ContainerSettings = () => {
   return (
@@ -17,6 +18,9 @@ export const ContainerSettings = () => {
       </PanelSection>
       <PanelSection text="Class List" separator={false}>
         <ClassList />
+      </PanelSection>
+      <PanelSection text="Generic Properties" separator={false}>
+        <Generic />
       </PanelSection>
     </>
   );

@@ -10,6 +10,9 @@ import { ClassList, ClassListProps } from "../../Settings/ClassList";
 import { cx } from "class-variance-authority";
 import { Text } from "../Text";
 import { generateId } from "@/components/utils/generateId";
+import { Generic, GenericProps } from "../../Settings/Generic";
+import { useViewport } from "../../Viewport/useViewport";
+import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
 
 type ContainerProps = {
   children?: ReactNode;
@@ -17,6 +20,7 @@ type ContainerProps = {
   spacing: SpacingProps;
   classList: ClassListProps;
   typography: TypographyProps;
+  generic: GenericProps;
 };
 
 export const Container: UserComponent<Partial<ContainerProps>> = ({
@@ -25,6 +29,7 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
   spacing,
   classList,
   typography,
+  generic,
 }) => {
   const {
     connectors: { connect },
@@ -32,18 +37,35 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
     isActive: node.events.selected,
   }));
 
-  const style: CSSProperties = {
+  const { isProduction, media } = useViewport();
+
+  let style: CSSProperties = {
     ...spacing,
     ...boxSizing,
     ...typography,
   };
+
+  if(isProduction) {
+    style = {
+      ...spacing,
+      ...BoxSizingHandler(boxSizing, {
+        media,
+      }),
+      ...typography,
+    }
+  }
 
   const className = cx(
     (classList as ClassListProps).map(({ className }) => className)
   );
 
   return (
-    <div ref={(ref) => connect(ref as any)} style={style} className={className}>
+    <div
+      ref={(ref) => connect(ref as any)}
+      {...generic}
+      style={style}
+      className={className}
+    >
       {children}
     </div>
   );
@@ -60,6 +82,7 @@ Container.craft = {
     boxSizing: BoxSizing.defaultValue,
     spacing: Spacing.defaultValue,
     classList: ClassList.defaultValue,
+    generic: Generic.defaultValue,
   },
   related: {
     settings: ContainerSettings,

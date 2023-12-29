@@ -8,7 +8,7 @@ import { FrameProps } from "./Frames";
 
 const ViewportContext = React.createContext<ViewportValueProps>(null as any);
 
-type MediaProps = {
+export type MediaProps = {
   setMedia: (name: "desktop" | "mobile") => void;
   currentMedia: {
     name: string;
