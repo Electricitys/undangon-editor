@@ -101,28 +101,28 @@ export const BoxSizing = () => {
       <div className="flex pb-2">
         <div className="px-1 w-1/2">
           <CSSUnitInput
-            id="boxSizing.top"
-            className="border-transparent hover:border-gray-200"
-            label={"Top"}
-            disabled={_get(boxSizing, "position") !== "absolute"}
-            icon={"X"}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.top", raw);
-            }}
-            initialValue={uncss.parse(boxSizing.top)}
-          />
-        </div>
-        <div className="px-1 w-1/2">
-          <CSSUnitInput
             id="boxSizing.left"
             className="border-transparent hover:border-gray-200"
             label={"Left"}
             disabled={_get(boxSizing, "position") !== "absolute"}
-            icon={"Y"}
+            icon={"X"}
             onChange={function (_value: any, raw): void {
               _setProps("boxSizing.left", raw);
             }}
             initialValue={uncss.parse(boxSizing.left)}
+          />
+        </div>
+        <div className="px-1 w-1/2">
+          <CSSUnitInput
+            id="boxSizing.top"
+            className="border-transparent hover:border-gray-200"
+            label={"Top"}
+            disabled={_get(boxSizing, "position") !== "absolute"}
+            icon={"Y"}
+            onChange={function (_value: any, raw): void {
+              _setProps("boxSizing.top", raw);
+            }}
+            initialValue={uncss.parse(boxSizing.top)}
           />
         </div>
       </div>
@@ -132,7 +132,7 @@ export const BoxSizing = () => {
             id="boxSizing.width"
             className="border-transparent hover:border-gray-200"
             label={"Width"}
-            disabled={false}
+            disabled={_get(boxSizing, "h_sizing") !== "fixed"}
             icon={"W"}
             onChange={function (_value: any, raw): void {
               _setProps("boxSizing.width", raw);
@@ -145,7 +145,7 @@ export const BoxSizing = () => {
             id="boxSizing.height"
             className="border-transparent hover:border-gray-200"
             label={"Height"}
-            disabled={false}
+            disabled={_get(boxSizing, "v_sizing") !== "fixed"}
             icon={"H"}
             onChange={function (_value: any, raw): void {
               _setProps("boxSizing.height", raw);

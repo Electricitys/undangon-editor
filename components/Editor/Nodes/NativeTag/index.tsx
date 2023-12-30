@@ -9,6 +9,9 @@ import { cx } from "class-variance-authority";
 import { Generic, GenericProps } from "../../Settings/Generic";
 import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
 import { useViewport } from "../../Viewport/useViewport";
+import _pick from "lodash/pick";
+import _get from "lodash/get";
+import { SpacingHandler } from "../../Settings/Spacing/handler";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -43,7 +46,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 
   const { isProduction, media } = useViewport();
 
-  let style: React.CSSProperties = {
+  let style: Record<string, any> = {
     ...boxSizing,
     ...spacing,
     ...typography,
@@ -51,10 +54,8 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 
   if (!isProduction) {
     style = {
-      ...spacing,
-      ...BoxSizingHandler(boxSizing, {
-        media,
-      }),
+      ...SpacingHandler(spacing as SpacingProps, { media }),
+      ...BoxSizingHandler(boxSizing as BoxSizingProps, { media }),
       ...typography,
     };
   }

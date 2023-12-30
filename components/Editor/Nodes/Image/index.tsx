@@ -8,6 +8,10 @@ import { cx } from "class-variance-authority";
 import { ImageSettings } from "./ImageSetting";
 import { useViewport } from "../../Viewport/useViewport";
 import Zoom from "react-medium-image-zoom";
+import { Slot } from "@radix-ui/react-slot";
+import { GenericProps } from "../../Settings/Generic";
+import { SpacingHandler } from "../../Settings/Spacing/handler";
+import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
 
 export type Sources =
   | {
@@ -25,14 +29,19 @@ export type Sources =
       value: string;
     };
 
-interface ImageProps<T = any> {
+export type AttributesProps = {
+  zoomable?: boolean;
+  objectFit?: "contain" | "cover" | "fill" | "scale-down";
+};
+
+export interface ImageProps<T = any> {
   boxSizing: BoxSizingProps;
   spacing: SpacingProps;
   classList: ClassListProps;
 
-  attributes: {
-    zoomable: boolean;
-  };
+  generic: GenericProps;
+
+  attributes: AttributesProps;
 
   image: Sources;
 }
@@ -41,6 +50,8 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
   boxSizing,
   spacing,
   classList,
+
+  generic,
 
   attributes,
 
@@ -52,11 +63,12 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
   const {
     connectors: { connect },
   } = useNode();
-  const { isProduction } = useViewport();
+  const { isProduction, media } = useViewport();
 
   const style: React.CSSProperties = {
-    ...boxSizing,
-    ...spacing,
+    ...SpacingHandler(spacing as SpacingProps, { media, isProduction }),
+    ...BoxSizingHandler(boxSizing as BoxSizingProps, { media, isProduction }),
+    ...attributes,
   };
 
   const className = cx(
@@ -81,14 +93,29 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
       break;
     default:
       // eslint-disable-next-line @next/next/no-img-element
-      imageDOM = <img style={style} src={image.value} className={className} alt="Gallery" />;
+      imageDOM = (
+        <img
+          style={style}
+          src={image.value}
+          className={className}
+          alt="Gallery"
+        />
+      );
   }
 
   if (attributes?.zoomable && isProduction) {
     return <Zoom>{imageDOM}</Zoom>;
   }
 
-  return <div ref={(ref) => connect(ref as any)}>{imageDOM}</div>;
+  return (
+    <Slot ref={(ref) => connect(ref as any)} {...(generic as any)}>
+      {imageDOM}
+    </Slot>
+  );
+};
+
+export const defaultAttributes: AttributesProps = {
+  objectFit: undefined,
 };
 
 Image.craft = {
@@ -111,6 +138,9 @@ Image.craft = {
     image: {
       type: "image",
       value: "https://placehold.co/150x150/EEE/31343c",
+    },
+    attributes: {
+      objectFit: undefined,
     },
   },
   related: {

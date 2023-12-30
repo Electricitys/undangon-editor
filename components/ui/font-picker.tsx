@@ -11,9 +11,12 @@ import {
   SelectTriggerProps,
   SelectValue,
 } from "@radix-ui/react-select";
-import { Virtuoso } from "react-virtuoso";
 import { useFontFace } from "../Editor/Nodes/Text/FontFaceProvider";
 import { Skeleton } from "./skeleton";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { ChevronsUpDown } from "lucide-react";
+import { Button } from "./button";
+import { VirtualizedCommand } from "./virtualized_command";
 
 export interface WebfontsFontResponse {
   family: string;
@@ -53,6 +56,7 @@ const FontPicker: FC<FontPickerProps> = ({
   limit = 100,
   ...props
 }) => {
+  const [open, setOpen] = React.useState<boolean>(false);
   const { data, isLoading } = useQuery<Item[]>(
     ["font_picker"],
     async () => {
@@ -82,39 +86,46 @@ const FontPicker: FC<FontPickerProps> = ({
 
   return (
     <>
-      <Select
-        onValueChange={(value) => {
-          onChange(
-            items.find(({ value: v }) => v === value)?.data as Item["data"]
-          );
-        }}
-        defaultValue={activeFontFamily}
-        value={activeFontFamily}
-      >
-        <SelectTrigger className="w-[180px]" {...props}>
-          <FontPreviewer fontFamily={activeFontFamily}>
-            {activeFontFamily}
-            {/* <SelectValue placeholder={placeholder} /> */}
-          </FontPreviewer>
-        </SelectTrigger>
-        <SelectContent>
-          <Virtuoso
-            className="min-h-96"
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="justify-between"
             style={{
-              minWidth: 150,
-              minHeight: 350,
+              width: "100%",
             }}
-            totalCount={items.length}
-            itemContent={(index) => (
-              <SelectItem value={items[index].value} style={{ fontSize: 18 }}>
-                <FontPreviewer fontFamily={items[index].value}>
-                  {items[index].label}
+          >
+            <FontPreviewer fontFamily={activeFontFamily}>
+              {activeFontFamily}
+            </FontPreviewer>
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" style={{ width: "400px" }}>
+          <VirtualizedCommand
+            onItemRender={(option) => {
+              return (
+                <FontPreviewer fontFamily={option.value}>
+                  {option.label}
                 </FontPreviewer>
-              </SelectItem>
-            )}
+              );
+            }}
+            height={"400px"}
+            options={data?.map(({ label, value }) => ({ label, value })) || []}
+            placeholder={"Select Font..."}
+            selectedOption={activeFontFamily}
+            onSelectOption={(option) => {
+              onChange(
+                items.find(({ value: v }) => v === option.value)
+                  ?.data as Item["data"]
+              );
+              setOpen(false);
+            }}
           />
-        </SelectContent>
-      </Select>
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

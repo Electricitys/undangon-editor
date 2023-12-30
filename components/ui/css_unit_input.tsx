@@ -153,7 +153,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
             <Select.Root
               defaultValue={unitOptions[0]}
               value={unit}
-              disabled={!(unitOptions.length > 1)}
+              disabled={disabled || !(unitOptions.length > 1)}
               onValueChange={(u) => {
                 ChangeHandler({ value, unit: u });
               }}

@@ -1,27 +1,37 @@
+import { Spacing, SpacingProps } from ".";
 import _get from "lodash/get";
 import { ProcessUnitForViewport } from "../../utils/processViewportUnit";
 import { MediaProps } from "../../Viewport/useViewport";
-import { uncss } from "@/components/ui/css_unit_input";
-import { SpacingProps } from ".";
 
 type Context = {
-  media: MediaProps;
+  media?: MediaProps;
+  isProduction?: boolean;
 };
 
 export const SpacingHandler = (
-  props?: SpacingProps,
+  props: SpacingProps,
+  context: Context
+): SpacingProps => {
+  let result: any = { ...props };
+  for (const [key, value] of Object.entries(props)) {
+    result[key] = SpacingPropertyHandler(key, value, context);
+  }
+  return result as SpacingProps;
+};
+
+export const SpacingPropertyHandler = (
+  path: string,
+  value: any,
   context?: Context
-): SpacingProps | undefined => {
-  if (!props) return undefined;
-  if (!context) return undefined;
-  return Object.keys(props).reduce((prev, key: any) => {
-    let value = ProcessUnitForViewport(uncss.parse(_get(props, key)), {
+): any => {
+  let result = value;
+  if (!context) return result;
+  if (Object.keys(Spacing.defaultValue).indexOf(path) < 0) return result;
+  if (!context.isProduction && context.media) {
+    result = ProcessUnitForViewport(value, {
       height: context.media.currentMedia.height,
       width: context.media.currentMedia.width,
     });
-    return {
-      ...prev,
-      [key]: value,
-    };
-  }, props);
+  }
+  return result;
 };

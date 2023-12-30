@@ -42,8 +42,6 @@ export async function generateMetadata({ params }: Props) {
 
   if (!data) return "Page not Found";
 
-  console.log(data);
-
   return {
     title: `Invitation Editor - ${data.name}`,
     twitter: {

@@ -1,4 +1,4 @@
-import { CSSUnitValue } from "@/components/ui/css_unit_input";
+import { CSSUnitValue, uncss } from "@/components/ui/css_unit_input";
 
 type Viewport = {
   height: number;
@@ -6,11 +6,11 @@ type Viewport = {
 };
 
 export const ProcessUnitForViewport = (
-  raw: CSSUnitValue,
+  raw: string,
   viewport: Viewport
 ) => {
   if (!raw) return raw;
-  const { unit, value } = raw;
+  const { unit, value } = uncss.parse(raw);
   if (["vh", "vw"].indexOf(unit) > -1) {
     return (
       (value / 100) * (unit === "vh" ? viewport["height"] : viewport["width"])

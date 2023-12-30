@@ -13,6 +13,7 @@ import { generateId } from "@/components/utils/generateId";
 import { Generic, GenericProps } from "../../Settings/Generic";
 import { useViewport } from "../../Viewport/useViewport";
 import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
+import { SpacingHandler } from "../../Settings/Spacing/handler";
 
 type ContainerProps = {
   children?: ReactNode;
@@ -40,20 +41,10 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
   const { isProduction, media } = useViewport();
 
   let style: CSSProperties = {
-    ...spacing,
-    ...boxSizing,
+    ...SpacingHandler(spacing as SpacingProps, { media, isProduction }),
+    ...BoxSizingHandler(boxSizing as BoxSizingProps, { media, isProduction }),
     ...typography,
   };
-
-  if(isProduction) {
-    style = {
-      ...spacing,
-      ...BoxSizingHandler(boxSizing, {
-        media,
-      }),
-      ...typography,
-    }
-  }
 
   const className = cx(
     (classList as ClassListProps).map(({ className }) => className)
@@ -62,7 +53,7 @@ export const Container: UserComponent<Partial<ContainerProps>> = ({
   return (
     <div
       ref={(ref) => connect(ref as any)}
-      {...generic}
+      {...(generic as any)}
       style={style}
       className={className}
     >
