@@ -1,7 +1,7 @@
-export * from "./NativeTag";
+export { NativeTag } from "./NativeTag";
 export { Slot } from "./Slot";
 export { TemplateNode } from "./Template";
 
-export * from "./Image";
-export * from "./Text";
-export * from "./Container";
+export { Image } from "./Image";
+export { Text } from "./Text";
+export { Container } from "./Container";

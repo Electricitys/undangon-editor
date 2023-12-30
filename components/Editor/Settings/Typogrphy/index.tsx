@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/css_unit_input";
 import { FontPicker, WebfontsFontResponse } from "@/components/ui/font-picker";
 import { WrapTextIcon } from "lucide-react";
+import { ColorPicker } from "@/components/ui/color_picker";
 
 export interface TypographyProps
   extends Pick<
@@ -92,10 +93,23 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
+          <div className="grow text-sm w-full">Color</div>
+          <ColorPicker
+            className="shrink-0 w-32 border-transparent hover:border-gray-200 px-3"
+            value={_get(typography, "color") || ""}
+            onChange={(value: any) => {
+              setProp(
+                (props: any) => _set(props, "typography.color", value),
+                1000
+              );
+            }}
+          />
+        </div>
+        <div className="flex items-center pl-3 pr-1">
           <div className="grow text-sm w-full">Size</div>
           <CSSUnitInput
             id="typography.fontSize"
-            className="border-transparent hover:border-gray-200"
+            className="shrink-0 w-32 border-transparent hover:border-gray-200"
             label={"size"}
             icon={<FontSizeIcon />}
             initialValue={uncss.parse(typography.fontSize)}
@@ -121,7 +135,7 @@ export const Typography = () => {
           <div className="grow text-sm w-full">Line Height</div>
           <CSSUnitInput
             id="typography.lineHeight"
-            className="border-transparent hover:border-gray-200"
+            className="shrink-0 w-32 border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LineHeightIcon />}
             initialValue={uncss.parse(typography.lineHeight)}
@@ -147,7 +161,7 @@ export const Typography = () => {
           <div className="grow text-sm w-full">Letter Spacing</div>
           <CSSUnitInput
             id="typography.letterSpacing"
-            className="border-transparent hover:border-gray-200"
+            className="shrink-0 w-32 border-transparent hover:border-gray-200"
             label={"size"}
             icon={<LetterSpacingIcon />}
             initialValue={uncss.parse(typography.letterSpacing)}

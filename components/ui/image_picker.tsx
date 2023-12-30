@@ -206,6 +206,7 @@ const Droparea = (
     maxSize: 10 * 1024 ** 2,
     maxFiles,
     accept: {
+      ["image/webp"]: [".webp"],
       ["image/png"]: [".png"],
       ["image/jpeg"]: [".jpg", ".jpeg"],
     },

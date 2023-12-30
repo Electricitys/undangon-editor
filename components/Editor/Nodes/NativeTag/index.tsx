@@ -12,6 +12,7 @@ import { useViewport } from "../../Viewport/useViewport";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
 import { SpacingHandler } from "../../Settings/Spacing/handler";
+import { Fill, FillProps } from "../../Settings/Fill";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ interface NativeTagProps<T = any> {
   spacing: SpacingProps;
   classList: ClassListProps;
   typography: TypographyProps;
+  fill: FillProps;
 
   generic: GenericProps;
 
@@ -31,6 +33,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   spacing,
   classList,
   typography,
+  fill,
 
   generic,
 
@@ -47,18 +50,11 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   const { isProduction, media } = useViewport();
 
   let style: Record<string, any> = {
-    ...boxSizing,
-    ...spacing,
+    ...SpacingHandler(spacing as SpacingProps, { media, isProduction }),
+    ...BoxSizingHandler(boxSizing as BoxSizingProps, { media, isProduction }),
     ...typography,
+    ...fill,
   };
-
-  if (!isProduction) {
-    style = {
-      ...SpacingHandler(spacing as SpacingProps, { media }),
-      ...BoxSizingHandler(boxSizing as BoxSizingProps, { media }),
-      ...typography,
-    };
-  }
 
   const className = cx(
     (classList as ClassListProps).map(({ className }) => className)
@@ -84,6 +80,7 @@ NativeTag.craft = {
     spacing: Spacing.defaultValue,
     typography: Typography.defaultValue,
     classList: ClassList.defaultValue,
+    fill: Fill.defaultValue,
   },
   related: {
     settings: NativeTagSettings,

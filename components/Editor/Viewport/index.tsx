@@ -200,14 +200,14 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
             </div>
           </div>
         </div>
-        <div className="fixed top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+        <div className="fixed scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
           <FramesPanel />
           <TemplatesPanel />
           <AdditionalPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>
-        <div className="fixed top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white pb-32">
+        <div className="fixed scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
           {isSelected ? (
             <SettingPanel />
           ) : mode.current === "advanced" ? (

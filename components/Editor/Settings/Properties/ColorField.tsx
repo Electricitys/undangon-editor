@@ -1,4 +1,5 @@
-import { GradientPicker } from "@/components/ui/color_picker";
+import { BackgroundPicker } from "@/components/ui/background_picker";
+import { ColorPicker } from "@/components/ui/color_picker";
 import React from "react";
 
 export type ColorFieldProps = {
@@ -10,10 +11,10 @@ export type ColorFieldProps = {
 export const ColorField: React.FC<ColorFieldProps> = ({ value, onChange }) => {
   return (
     <div className="border rounded-e-md">
-      <GradientPicker
+      <ColorPicker
         className="rounded-s-none border-none w-full"
-        background={value}
-        setBackground={onChange}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
