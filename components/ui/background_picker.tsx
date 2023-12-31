@@ -12,7 +12,10 @@ import { cn } from "@/lib/utils";
 import { PopoverPortal } from "@radix-ui/react-popover";
 import { Paintbrush } from "lucide-react";
 import { useMemo } from "react";
+import ColorPicker from "react-gcolor-picker";
 import Gradient from "./gcolor_picker/Gradient";
+import { HexColorPicker } from "react-colorful";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 export function BackgroundPicker({
   value,
@@ -107,15 +110,19 @@ export function BackgroundPicker({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="solid" className="flex flex-wrap gap-1 mt-0">
-              {solids.map((s) => (
-                <div
-                  key={s}
-                  style={{ background: s }}
-                  className="rounded-md h-6 w-6 cursor-pointer active:scale-105"
-                  onClick={() => onChange(s)}
+            <TabsContent value="solid" className="mt-0">
+              <div className="mb-2">
+                <HexColorPicker
+                  className="mb-3"
+                  style={{
+                    width: "100%",
+                  }}
+                  color={value}
+                  onChange={(color) => {
+                    onChange(color);
+                  }}
                 />
-              ))}
+              </div>
             </TabsContent>
 
             <TabsContent value="gradient" className="mt-0">
@@ -146,13 +153,24 @@ export function BackgroundPicker({
               Change your password here.
             </TabsContent>
           </Tabs>
-
-          <Input
-            id="custom"
-            value={value}
-            className="col-span-2 h-8 mt-4"
-            onChange={(e) => onChange(e.currentTarget.value)}
-          />
+          <div className="flex mt-4">
+            <Input
+              id="custom"
+              value={value}
+              className="col-span-2 h-8"
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              className="px-2 h-8"
+              onClick={() => {
+                onChange("inherit");
+              }}
+            >
+              <Cross1Icon height={16} width={16} />
+            </Button>
+          </div>
         </PopoverContent>
       </PopoverPortal>
     </Popover>

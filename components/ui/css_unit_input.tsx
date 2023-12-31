@@ -40,6 +40,7 @@ interface CSSUnitInputProps {
   max?: number;
   min?: number;
   unitOptions?: string[];
+  small?: boolean;
 }
 
 export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
@@ -57,6 +58,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
   max = 999999,
   min = 0,
   unitOptions = defaultUnitOptions,
+  small = false,
 }) => {
   const [value, setValue] = React.useState(initialValue?.value);
   const [unit, setUnit] = React.useState(initialValue?.unit);
@@ -107,7 +109,9 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                   size={"icon"}
                   disabled={disabled}
                   style={{
-                    minWidth: 40,
+                    height: 32,
+                    width: 32,
+                    minWidth: 32,
                     zIndex: 1,
                     cursor: disabled ? "auto" : "w-resize",
                   }}
@@ -126,6 +130,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                   disabled={disabled}
                   placeholder={placeholder}
                   style={{
+                    height: 32,
                     boxShadow: "none",
                     outline: "!important none",
                     paddingRight: 0,
@@ -165,7 +170,8 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
                   variant={"ghost"}
                   disabled={disabled}
                   style={{
-                    minWidth: 40,
+                    height: 32,
+                    minWidth: 32,
                     pointerEvents: unitOptions.length > 1 ? "inherit" : "none",
                   }}
                 >

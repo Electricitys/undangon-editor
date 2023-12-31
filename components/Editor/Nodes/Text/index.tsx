@@ -72,7 +72,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
     return (
       <div
         ref={(ref) => connect(ref as any)}
-        {...generic}
+        {...(generic as any)}
         style={style as any}
         className={className}
       >
@@ -94,7 +94,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   return (
     <div
       ref={(ref) => connect(ref as any)}
-      {...generic}
+      {...(generic as any)}
       style={style as any}
       className={className}
       // onDoubleClick={() => {

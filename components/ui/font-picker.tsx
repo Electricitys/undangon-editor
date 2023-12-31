@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "./button";
 import { VirtualizedCommand } from "./virtualized_command";
+import { PopoverPortal } from "@radix-ui/react-popover";
 
 export interface WebfontsFontResponse {
   family: string;
@@ -103,28 +104,32 @@ const FontPicker: FC<FontPickerProps> = ({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0" style={{ width: "400px" }}>
-          <VirtualizedCommand
-            onItemRender={(option) => {
-              return (
-                <FontPreviewer fontFamily={option.value}>
-                  {option.label}
-                </FontPreviewer>
-              );
-            }}
-            height={"400px"}
-            options={data?.map(({ label, value }) => ({ label, value })) || []}
-            placeholder={"Select Font..."}
-            selectedOption={activeFontFamily}
-            onSelectOption={(option) => {
-              onChange(
-                items.find(({ value: v }) => v === option.value)
-                  ?.data as Item["data"]
-              );
-              setOpen(false);
-            }}
-          />
-        </PopoverContent>
+        <PopoverPortal>
+          <PopoverContent className="p-0" style={{ width: "275px" }}>
+            <VirtualizedCommand
+              onItemRender={(option) => {
+                return (
+                  <FontPreviewer fontFamily={option.value}>
+                    {option.label}
+                  </FontPreviewer>
+                );
+              }}
+              height={"400px"}
+              options={
+                data?.map(({ label, value }) => ({ label, value })) || []
+              }
+              placeholder={"Select Font..."}
+              selectedOption={activeFontFamily}
+              onSelectOption={(option) => {
+                onChange(
+                  items.find(({ value: v }) => v === option.value)
+                    ?.data as Item["data"]
+                );
+                setOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </PopoverPortal>
       </Popover>
     </>
   );
