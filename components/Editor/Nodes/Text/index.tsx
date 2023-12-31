@@ -12,6 +12,8 @@ import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";
 import { Generic, GenericProps } from "../../Settings/Generic";
+import { SpacingHandler } from "../../Settings/Spacing/handler";
+import { useViewport } from "../../Viewport/useViewport";
 
 export type TextType =
   | {
@@ -60,9 +62,10 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   // const [isEditable, setIsEditable] = useState(false);
 
   const fontFace = useFontFace();
+  const { isProduction, media } = useViewport();
 
   const style: CSSProperties = {
-    ...spacing,
+    ...SpacingHandler(spacing as SpacingProps, { media, isProduction }),
     ...typography,
   };
 
