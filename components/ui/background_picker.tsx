@@ -14,7 +14,7 @@ import { Paintbrush } from "lucide-react";
 import { useMemo } from "react";
 import ColorPicker from "react-gcolor-picker";
 import Gradient from "./gcolor_picker/Gradient";
-import { HexColorPicker } from "react-colorful";
+import { HexAlphaColorPicker } from "react-colorful";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
 export function BackgroundPicker({
@@ -112,7 +112,7 @@ export function BackgroundPicker({
 
             <TabsContent value="solid" className="mt-0">
               <div className="mb-2">
-                <HexColorPicker
+                <HexAlphaColorPicker
                   className="mb-3"
                   style={{
                     width: "100%",

@@ -13,6 +13,20 @@ import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";
 import { Generic, GenericProps } from "../../Settings/Generic";
 
+export type TextType =
+  | {
+      type: "text";
+      value: string;
+    }
+  | {
+      type: "variable";
+      value: string;
+    }
+  | {
+      type: "expression";
+      value: string;
+    };
+
 type TextProps = {
   children?: ReactNode;
 
@@ -21,7 +35,7 @@ type TextProps = {
   typography: TypographyProps;
   generic: GenericProps;
 
-  text: string;
+  text: TextType;
 };
 
 export const Text: UserComponent<Partial<TextProps>> = ({
@@ -32,7 +46,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   typography,
   generic,
 
-  text = "Some Text",
+  text,
 }) => {
   const {
     connectors: { connect },
@@ -105,7 +119,7 @@ export const Text: UserComponent<Partial<TextProps>> = ({
       // }}
 
       dangerouslySetInnerHTML={{
-        __html: (text || "Some text") as string,
+        __html: (text?.value || "Some text") as string,
       }}
     />
   );
@@ -116,10 +130,18 @@ Text.craft = {
   custom: {
     type: "component",
     strictProps: ["spacing", "typography", "classList"],
-    functionProps: ["text"],
+    functionProps: [
+      {
+        name: "text",
+        path: "text.value",
+      },
+    ],
   },
   props: {
-    text: "Text Area",
+    text: {
+      type: "text",
+      value: "Text Area",
+    },
     spacing: Spacing.defaultValue,
     typography: Typography.defaultValue,
     classList: ClassList.defaultValue,
