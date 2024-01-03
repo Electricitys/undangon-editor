@@ -1,17 +1,17 @@
-import checkFormat from './checkFormat';
+import checkFormat from "./checkFormat";
 
-export default (
+const getGradient = (
   type: string,
   stops: Array<any>,
   modifier: string | number | undefined,
-  format: 'rgb' | 'hsl' | 'hex' = 'rgb',
+  format: "rgb" | "hsl" | "hex" = "rgb",
   showAlpha: boolean
 ) => {
-  let str = '';
+  let str = "";
 
   switch (type) {
-    case 'linear':
-      if (typeof modifier === 'number') {
+    case "linear":
+      if (typeof modifier === "number") {
         str = `linear-gradient(${modifier}deg, ${stops.map(
           (color: [string, number]) => {
             return `${checkFormat(color[0], format, showAlpha)} ${Math.round(
@@ -20,7 +20,7 @@ export default (
           }
         )})`;
       }
-      if (typeof modifier === 'string') {
+      if (typeof modifier === "string") {
         str = `linear-gradient(${modifier}, ${stops.map(
           (color: [string, number]) => {
             return `${checkFormat(color[0], format, showAlpha)} ${Math.round(
@@ -30,7 +30,7 @@ export default (
         )})`;
       }
       break;
-    case 'radial':
+    case "radial":
       str = `radial-gradient(${modifier}, ${stops.map(
         (color: [string, number]) => {
           return `${checkFormat(color[0], format, showAlpha)} ${Math.round(
@@ -45,3 +45,5 @@ export default (
 
   return str;
 };
+
+export default getGradient;

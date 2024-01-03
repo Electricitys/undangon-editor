@@ -131,6 +131,8 @@ export const Text: UserComponent<Partial<TextProps>> = ({
 Text.craft = {
   name: "Text",
   custom: {
+    alias: undefined,
+    name: "Text",
     type: "component",
     strictProps: ["spacing", "typography", "classList"],
     functionProps: [

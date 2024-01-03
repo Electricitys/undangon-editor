@@ -92,8 +92,8 @@ export const Image: UserComponent<Partial<ImageProps>> = ({
       );
       break;
     default:
-      // eslint-disable-next-line @next/next/no-img-element
       imageDOM = (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           style={style}
           src={image.value}
@@ -121,6 +121,7 @@ export const defaultAttributes: AttributesProps = {
 Image.craft = {
   name: "Image",
   custom: {
+    alias: undefined,
     name: "Image",
     type: "component",
     functionProps: [

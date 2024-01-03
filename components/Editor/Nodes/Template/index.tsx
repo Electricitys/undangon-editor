@@ -132,6 +132,7 @@ export const TemplateWrapper: UserComponent<
 TemplateNode.craft = {
   name: "Template",
   custom: {
+    alias: undefined,
     name: "Template",
     type: "template",
   },

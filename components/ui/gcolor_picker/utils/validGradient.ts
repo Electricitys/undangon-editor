@@ -1,7 +1,7 @@
 /* eslint no-useless-escape: off */
 /* eslint prefer-const: off */
 /* eslint no-prototype-builtins: off */
-import tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
 interface IGradientStop {
   color: string;
@@ -30,18 +30,19 @@ const combineRegExp = (
   return new RegExp(
     regexpList.reduce<string>(
       (result, item) =>
-        result + (typeof item === 'string' ? item : item.source),
-      ''
+        result + (typeof item === "string" ? item : item.source),
+      ""
     ),
     flags
   );
 };
 
 const generateRegExp = () => {
-  const searchFlags = 'gi';
+  const searchFlags = "gi";
   const rAngle = /(?:[+-]?\d*\.?\d+)(?:deg|grad|rad|turn)/;
   const rSideCornerCapture = /to\s+((?:(?:left|right)(?:\s+(?:top|bottom))?))/;
-  const rRadial = /circle at\s+((?:(?:left|right|center|top|bottom)(?:\s+(?:left|right|center|top|bottom))?))/;
+  const rRadial =
+    /circle at\s+((?:(?:left|right|center|top|bottom)(?:\s+(?:left|right|center|top|bottom))?))/;
   const rComma = /\s*,\s*/;
   const rColorHex = /\#(?:[a-f0-9]{6,8}|[a-f0-9]{3})/;
   const rDigits3 = /\(\s*(?:\d{1,3}%?\s*,\s*){2}%?\d{1,3}%?\s*\)/;
@@ -50,64 +51,64 @@ const generateRegExp = () => {
   const rKeyword = /[_a-z-][_a-z0-9-]*/;
   const rColor = combineRegExp(
     [
-      '(?:',
+      "(?:",
       rColorHex,
-      '|',
-      '(?:rgb|hsl)',
+      "|",
+      "(?:rgb|hsl)",
       rDigits3,
-      '|',
-      '(?:rgba|hsla)',
+      "|",
+      "(?:rgba|hsla)",
       rDigits4,
-      '|',
+      "|",
       rKeyword,
-      ')'
+      ")",
     ],
-    ''
+    ""
   );
   const rColorStop = combineRegExp(
-    [rColor, '(?:\\s+', rValue, '(?:\\s+', rValue, ')?)?'],
-    ''
+    [rColor, "(?:\\s+", rValue, "(?:\\s+", rValue, ")?)?"],
+    ""
   );
   const rColorStopList = combineRegExp(
-    ['(?:', rColorStop, rComma, ')*', rColorStop],
-    ''
+    ["(?:", rColorStop, rComma, ")*", rColorStop],
+    ""
   );
   const rLineCapture = combineRegExp(
-    ['(?:(', rAngle, ')|', rSideCornerCapture, '|', rRadial, ')'],
-    ''
+    ["(?:(", rAngle, ")|", rSideCornerCapture, "|", rRadial, ")"],
+    ""
   );
   const rGradientSearch = combineRegExp(
-    ['(?:(', rLineCapture, ')', rComma, ')?(', rColorStopList, ')'],
+    ["(?:(", rLineCapture, ")", rComma, ")?(", rColorStopList, ")"],
     searchFlags
   );
   const rColorStopSearch = combineRegExp(
     [
-      '\\s*(',
+      "\\s*(",
       rColor,
-      ')',
-      '(?:\\s+',
-      '(',
+      ")",
+      "(?:\\s+",
+      "(",
       rValue,
-      '))?',
-      '(?:',
+      "))?",
+      "(?:",
       rComma,
-      '\\s*)?'
+      "\\s*)?",
     ],
     searchFlags
   );
 
   return {
     gradientSearch: rGradientSearch,
-    colorStopSearch: rColorStopSearch
+    colorStopSearch: rColorStopSearch,
   };
 };
 
 const parseGradient = (regExpLib: IGradientReg, input: string) => {
   let result: IParsedGraient = {
     stops: [],
-    angle: '',
-    line: '',
-    original: ''
+    angle: "",
+    line: "",
+    original: "",
   };
   let matchGradient, matchColorStop, stopResult: IGradientStop;
 
@@ -117,7 +118,7 @@ const parseGradient = (regExpLib: IGradientReg, input: string) => {
   if (matchGradient !== null) {
     result = {
       ...result,
-      original: matchGradient[0]
+      original: matchGradient[0],
     };
 
     if (matchGradient[1]) {
@@ -138,7 +139,7 @@ const parseGradient = (regExpLib: IGradientReg, input: string) => {
     while (matchColorStop !== null) {
       const tinyColor = tinycolor(matchColorStop[1]);
       stopResult = {
-        color: tinyColor.toRgbString()
+        color: tinyColor.toRgbString(),
       };
 
       if (matchColorStop[2]) {
@@ -155,10 +156,11 @@ const parseGradient = (regExpLib: IGradientReg, input: string) => {
   return result;
 };
 
-export default (input: string) => {
+const validGradient = (input: string) => {
   const regExpLib = generateRegExp();
   let result;
-  const rGradientEnclosedInBrackets = /.*gradient\s*\(((?:\([^\)]*\)|[^\)\(]*)*)\)/;
+  const rGradientEnclosedInBrackets =
+    /.*gradient\s*\(((?:\([^\)]*\)|[^\)\(]*)*)\)/;
   const match = rGradientEnclosedInBrackets.exec(input);
 
   if (match !== null) {
@@ -169,13 +171,15 @@ export default (input: string) => {
     }
 
     if (
-      result.stops.every((item) => item.hasOwnProperty('position')) === false
+      result.stops.every((item) => item.hasOwnProperty("position")) === false
     ) {
-      result = 'Not correct position';
+      result = "Not correct position";
     }
   } else {
-    result = 'Failed to find gradient';
+    result = "Failed to find gradient";
   }
 
   return result;
 };
+
+export default validGradient;

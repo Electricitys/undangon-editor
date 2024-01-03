@@ -31,6 +31,8 @@ const SelectTrigger = React.forwardRef<
   </SelectPrimitive.Trigger>
 ));
 
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+
 const SelectTriggerWithoutIcon = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -47,7 +49,7 @@ const SelectTriggerWithoutIcon = React.forwardRef<
   </SelectPrimitive.Trigger>
 ));
 
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+SelectTriggerWithoutIcon.displayName = "SelectTriggerWithoutIcon";
 
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,

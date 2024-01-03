@@ -70,6 +70,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 NativeTag.craft = {
   name: "NativeTag",
   custom: {
+    alias: undefined,
     name: "div",
     type: "tag",
   },

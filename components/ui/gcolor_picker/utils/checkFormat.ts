@@ -1,6 +1,6 @@
-import tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
-export default (
+const checkFormat = (
   color: string,
   format: string,
   showAlpha: boolean,
@@ -11,13 +11,13 @@ export default (
   const alphaValue = stateColorAlpha || tinyColor.getAlpha() * 100;
 
   switch (format) {
-    case 'rgb':
+    case "rgb":
       value = tinyColor.toRgbString();
       break;
-    case 'hsl':
+    case "hsl":
       value = tinyColor.toHslString();
       break;
-    case 'hex':
+    case "hex":
       if (showAlpha && alphaValue !== 100) {
         value = tinyColor.toHex8String();
       } else {
@@ -26,9 +26,11 @@ export default (
       break;
 
     default:
-      value = '';
+      value = "";
       break;
   }
 
   return value;
 };
+
+export default checkFormat;

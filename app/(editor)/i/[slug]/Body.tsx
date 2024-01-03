@@ -1,6 +1,6 @@
 "use client";
 
-import { Viewport, ViewportFrame } from "@/components/Editor/Viewport";;
+import { Viewport, ViewportFrame } from "@/components/Editor/Viewport";
 import React from "react";
 import { FrameProps } from "@/components/Editor/Viewport/Frames";
 import { Element } from "@craftjs/core";
@@ -29,7 +29,13 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
             name: "div",
           }}
         >
-          <Element is={Text} text={`"contoh"`} />
+          <Element
+            is={Text}
+            text={{
+              type: "text",
+              value: "contoh",
+            }}
+          />
           <Element
             is={NativeTag}
             canvas
@@ -38,7 +44,13 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
             }}
           >
             <Element is={Container} canvas>
-              <Element is={Text} text={`"CONTAINER"`} />
+              <Element
+                is={Text}
+                text={{
+                  type: "text",
+                  value: "CONTAINER",
+                }}
+              />
             </Element>
           </Element>
         </Element>

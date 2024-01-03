@@ -1,5 +1,7 @@
-import rgbaToHex from './rgbaToHex';
+import rgbaToHex from "./rgbaToHex";
 
-export default (rgba: Array<string | number>) => {
+const isValidRgba = (rgba: Array<string | number>) => {
   return !!rgbaToHex(rgba);
 };
+
+export default isValidRgba;

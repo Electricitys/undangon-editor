@@ -7,6 +7,7 @@ export default function Home() {
       <header>
         <div className="px-3 mx-auto h-44 max-w-[1280px] items-center justify-center">
           <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img alt="Logo Manjo" height={36} src="/logo.svg" />
           </div>
         </div>

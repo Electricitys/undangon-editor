@@ -20,6 +20,8 @@ export const Slot: UserComponent<Partial<SlotProps>> = ({ children }) => {
 Slot.craft = {
   name: "<slot />",
   custom: {
+    alias: undefined,
+    name: "slot",
     type: "slot",
   },
   props: {},

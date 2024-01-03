@@ -11,7 +11,10 @@ export const SettingPanel = () => {
     if (currentNodeId) {
       selected = {
         id: currentNodeId,
-        name: currentNode.data.custom.name || currentNode.data.name,
+        name:
+          currentNode.data.custom.alias ||
+          currentNode.data.custom.name ||
+          currentNode.data.name,
         settings: currentNode.related && currentNode.related.settings,
         component_type: currentNode.data.custom.type,
       };
