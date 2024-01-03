@@ -175,7 +175,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
       <div tabIndex={0}>
         <div className="fixed inset-0 bg-gray-200" />
         <div
-          className="page-container pt-16 mr-72 ml-72 min-h-screen relative"
+          className="page-container pt-16 px-72 min-h-screen relative"
           ref={(ref) =>
             connectors.select(
               connectors.hover(ref as any, null as any),
