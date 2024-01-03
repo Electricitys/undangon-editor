@@ -41,6 +41,7 @@ interface CSSUnitInputProps {
   min?: number;
   unitOptions?: string[];
   small?: boolean;
+  actions?: React.ReactElement;
 }
 
 export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
@@ -59,6 +60,7 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
   min = 0,
   unitOptions = defaultUnitOptions,
   small = false,
+  actions,
 }) => {
   const [value, setValue] = React.useState(initialValue?.value);
   const [unit, setUnit] = React.useState(initialValue?.unit);
@@ -84,13 +86,15 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
   return (
     <TooltipProvider>
       <Tooltip
-        // open
-        open={!!value ? undefined : false}
+        // open={disabled ? false : undefined}
         delayDuration={0}
       >
         <TooltipTrigger asChild>
           <div
-            className={cx("flex border border-gray-200 rounded-md", className)}
+            className={cx(
+              "flex group border relative border-gray-200 rounded-md",
+              className
+            )}
             style={style}
           >
             <DragValue
@@ -189,19 +193,18 @@ export const CSSUnitInput: React.FC<CSSUnitInputProps> = ({
           </div>
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent side="bottom" className="p-0">
-            <Button
-              disabled={disabled}
-              variant={"ghost"}
-              size={"sm"}
-              style={{
-                minWidth: 40,
-              }}
-              onClick={handleReset}
-            >
-              Clear
-            </Button>
-            <TooltipArrow color="white" />
+          <TooltipContent side="bottom" align="end" className="p-0">
+            {actions}
+            <div className="flex flex-col">
+              <button
+                className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-50"
+                disabled={!value}
+                onClick={handleReset}
+              >
+                <Cross1Icon className="mr-2 h-4 w-4" />
+                <span>Clear Value</span>
+              </button>
+            </div>
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
