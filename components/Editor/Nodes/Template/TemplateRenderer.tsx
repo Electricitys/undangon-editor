@@ -1,4 +1,4 @@
-import { NodeData, SerializedNode } from "@craftjs/core";
+import { NodeData, SerializedNode, useEditor } from "@craftjs/core";
 import { Slot } from "@radix-ui/react-slot";
 import React from "react";
 import { Properties } from "../../Settings/Properties";
@@ -24,22 +24,39 @@ export const TemplateRenderer: React.FC<
 > = ({ asChild, template, node, properties, ...props }) => {
   const Comp = asChild ? Slot : "div";
 
+  const { nodeResolver } = useEditor((state) => ({
+    nodeResolver: state.options.resolver,
+  }));
+
   const { parentProperties } = useInternalTemplate();
 
   const context = React.useMemo<Context>(() => {
     let ctx: Context = {};
     for (let p of parentProperties) {
-      ctx[`$${p.name}`] = p.value;
+      let value = p.value;
+      if (["text", "color", "image"].indexOf(p.type) > -1) {
+        value = `"${value}"`;
+      }
+      ctx[`$${p.name}`] = value;
     }
     return ctx;
   }, [parentProperties]);
 
   const compiled = React.useMemo(() => {
     let result: any = { ...node.props };
-    if (node.custom?.functionProps) {
-      for (let props of node.custom.functionProps) {
+    const currentNodeResolver = (
+      Object.values(nodeResolver).find(
+        (value) => node.type === (value as any)
+      ) as any
+    ).craft as NodeData;
+    let functionProps = currentNodeResolver.custom?.functionProps;
+    if (functionProps) {
+      for (let props of functionProps) {
         const path = typeof props === "string" ? props : props.path;
         let inputValue = _get(result, path);
+        const inputType = _get(result, props.name).type;
+        if (["expression"].indexOf(inputType) < 0)
+          inputValue = `"${inputValue}"`;
         const compiledProps = compileProps(inputValue, context);
         result = _fpset(path, compiledProps, result);
       }
