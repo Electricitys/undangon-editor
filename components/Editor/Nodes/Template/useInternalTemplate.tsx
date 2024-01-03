@@ -29,9 +29,9 @@ export const InternalTemplateProvider: React.FC<
   const { store } = useTemplateNodeManager();
   const template = store[id] || {};
   const { frame } = useViewportFrame();
-  const parentProperties = template._parentTemplateId
-    ? store[template._parentTemplateId].data.props.props
-    : frame?.properties || [];
+  // const parentProperties = template._parentTemplateId
+  //   ? store[template._parentTemplateId].data.props.props
+  //   : frame?.properties || [];
   const processedProperties = template.id
     ? processProperties(store, template.id, frame?.properties || [])
     : [];

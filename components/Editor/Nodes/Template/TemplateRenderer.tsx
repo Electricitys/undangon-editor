@@ -55,7 +55,7 @@ export const TemplateRenderer: React.FC<
         const path = typeof props === "string" ? props : props.path;
         let inputValue = _get(result, path);
         const inputType = _get(result, props.name).type;
-        if (["expression"].indexOf(inputType) < 0)
+        if (["expression", "variable"].indexOf(inputType) < 0)
           inputValue = `"${inputValue}"`;
         const compiledProps = compileProps(inputValue, context);
         result = _fpset(path, compiledProps, result);
