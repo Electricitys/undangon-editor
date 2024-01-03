@@ -13,6 +13,7 @@ import _fpset from "lodash/fp/set";
 import _merge from "lodash/merge";
 import _get from "lodash/get";
 import { useDebouncedValue } from "@mantine/hooks";
+import * as ResolvedNodes from "../Nodes";
 
 const debounceFunction = _debounce((fn: () => void) => {
   return fn();
@@ -63,10 +64,18 @@ export const ProductionRenderNode = ({ render }: { render: ReactElement }) => {
         _node,
       };
     } else {
-      if (SerializedNode.custom?.functionProps) {
-        for (let props of SerializedNode.custom.functionProps) {
+      const functionProps = (
+        Object.entries(ResolvedNodes).find(
+          ([key]) => key === (SerializedNode.type as any).resolvedName
+        ) as any
+      )[1].craft?.custom.functionProps;
+      if (functionProps) {
+        for (let props of functionProps) {
           const path = typeof props === "string" ? props : props.path;
           let inputValue = _get(renderProps, path);
+          const inputType = _get(renderProps, props.name).type;
+          if (["expression"].indexOf(inputType) < 0)
+            inputValue = `"${inputValue}"`;
           const compiledProps = compileProps(
             inputValue,
             frame.properties.reduce((p, c) => {

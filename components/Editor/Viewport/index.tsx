@@ -33,6 +33,7 @@ import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeMa
 import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
 import { ProductionRenderNode } from "../Nodes/ProductionRenderNode";
 // import * as ResolverComponents from "../Components";
+import styles from "./viewport.module.css";
 
 type ViewportWrapperProps = {
   children: ReactNode;
@@ -186,7 +187,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           <div className="prevent-select editor-renderer bg-gray-200">
             <div className="py-4 px-2">
               <div
-                className="relative mx-auto bg-white after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2"
+                className={`${styles["transparent-pattern-bg"]} relative mx-auto after:border-b-1 after:border-dashed after:border-red-400 after:w-full after:top-1/2`}
                 style={{
                   maxWidth: media.currentMedia.width,
                   transition: "max-width 500ms ease",

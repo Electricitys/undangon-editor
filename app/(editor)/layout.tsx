@@ -17,7 +17,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{
+        scrollBehavior: "smooth",
+      }}
+    >
       <body tabIndex={0} className={inter.className}>
         <QueryProvider>
           <ClientProvider>{children}</ClientProvider>
