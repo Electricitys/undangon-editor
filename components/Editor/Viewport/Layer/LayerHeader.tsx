@@ -85,14 +85,17 @@ export const LayerTrigger = () => {
         <Button
           size={"sm"}
           variant={"ghost"}
-          className="hover:bg-gray-200"
+          className="shrink-0 hover:bg-gray-200"
           onClick={() => {
             actions.setHidden(id, !hidden);
           }}
         >
           {hidden ? <EyeClosedIcon /> : <EyeOpenIcon />}
         </Button>
-        <div className="grow flex items-center mr-3">
+        <div
+          style={{ width: 1 }}
+          className="grow shrink flex items-center pr-3"
+        >
           {isEditing ? (
             <input
               ref={inputRef}
@@ -107,13 +110,18 @@ export const LayerTrigger = () => {
             />
           ) : (
             <>
-              <div className="text-sm">{displayName}</div>
+              <div
+                style={{ minWidth: 1 }}
+                className="shrink text-sm text-ellipsis overflow-hidden"
+              >
+                {displayName}
+              </div>
               {hasChildCanvases && (
                 <CollapsibleTrigger asChild onClick={() => toggleLayer()}>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    className="hover:bg-gray-200 rounded-full h-6 w-6 p-0 ml-1"
+                    className="shrink-0 hover:bg-gray-200 rounded-full h-6 w-6 p-0 ml-1"
                   >
                     {expanded ? (
                       <ChevronDown className="h-4 w-4" />
