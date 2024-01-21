@@ -314,7 +314,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
 
 const IndicatorDiv = styled("div", {
   position: "fixed",
-  zIndex: 70,
+  zIndex: 49,
 
   alignItems: "center",
   marginTop: "-20px",
@@ -329,7 +329,7 @@ const IndicatorDiv = styled("div", {
 });
 
 const IndicatorBorderDiv = styled("div", {
-  zIndex: 70,
+  zIndex: 49,
   position: "fixed",
   border: "1px dashed red",
   pointerEvents: "none",
