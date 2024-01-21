@@ -9,6 +9,7 @@ import { ColorField } from "./ColorField";
 import { ImagePickerField } from "./ImagePickerField";
 import { TextField } from "./TextField";
 import { GripIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const PROPERTIES_TYPES = {
   expression: "any",
@@ -119,7 +120,10 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
               <div>
                 <div>
                   <div
-                    className={`border rounded-md rounded-b-none rounded-e-none border-b-0 border-r-0`}
+                    className={cn(
+                      `border rounded-md rounded-b-none rounded-e-none border-b-0 border-r-0`,
+                      !type && "border-0"
+                    )}
                   >
                     <Input
                       readOnly={!type}
@@ -174,7 +178,7 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
                     />
                   </div>
                 ) : (
-                  <div style={{ width: "70%", position: "relative" }}>
+                  <div style={{ position: "relative" }}>
                     {Field(index, field)}
                   </div>
                 )}
