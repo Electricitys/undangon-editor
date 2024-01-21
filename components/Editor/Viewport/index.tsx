@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  DerivedCoreEventHandlers,
   Editor,
   SerializedNode,
   serializeNode,
@@ -47,7 +48,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   enableToolbar = true,
 }) => {
   const { toast } = useToast();
-  const { media, mode } = useViewport();
+  const { media, mode, containerRef } = useViewport();
   const {
     connectors,
     actions,
@@ -177,12 +178,12 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         <div className="fixed inset-0 bg-gray-200" />
         <div
           className="page-container pt-16 px-72 min-h-screen relative"
-          ref={(ref) =>
+          ref={(ref) => {
             connectors.select(
               connectors.hover(ref as any, null as any),
               null as any
-            )
-          }
+            );
+          }}
         >
           <div className="prevent-select editor-renderer bg-gray-200">
             <div className="py-4 px-2">
@@ -193,7 +194,16 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
                   transition: "max-width 500ms ease",
                 }}
               >
-                {children}
+                <div
+                  className="relative"
+                  ref={containerRef}
+                  style={{
+                    minHeight: media.currentMedia.height,
+                    transition: "min-height 500ms ease",
+                  }}
+                >
+                  {children}
+                </div>
                 <div className="absolute bottom-full left-0">
                   {media.currentMedia.width} x {media.currentMedia.height}
                 </div>
@@ -201,14 +211,14 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
             </div>
           </div>
         </div>
-        <div className="fixed scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+        <div className="fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
           <FramesPanel />
           <TemplatesPanel />
           <AdditionalPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>
-        <div className="fixed scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
+        <div className="fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
           {isSelected ? (
             <SettingPanel />
           ) : mode.current === "advanced" ? (
@@ -217,7 +227,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
             <PropertiesPanelSimple />
           )}
         </div>
-        <div className="border-b border-gray-300 fixed right-0 left-0 top-0 bg-white">
+        <div className="border-b pointer-events-auto z-50 border-gray-300 fixed right-0 left-0 top-0 bg-white">
           <Toolbar />
         </div>
       </div>

@@ -61,10 +61,10 @@ export interface BoxSizingProps {
 
 const defaultValue: Partial<BoxSizingProps> = {
   position: undefined,
-  top: "auto",
-  left: "auto",
-  width: "auto",
-  height: "auto",
+  top: undefined,
+  left: undefined,
+  width: undefined,
+  height: undefined,
   minWidth: undefined,
   minHeight: undefined,
   maxWidth: undefined,

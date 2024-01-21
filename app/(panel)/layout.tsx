@@ -58,6 +58,19 @@ export default function RootLayout(props: React.PropsWithChildren) {
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
+                  disableTelemetry: true,
+                  reactQuery: {
+                    clientConfig: {
+                      defaultOptions: {
+                        queries: {
+                          networkMode: "always",
+                        },
+                        mutations: {
+                          networkMode: "always",
+                        },
+                      },
+                    },
+                  },
                 }}
                 resources={[
                   {

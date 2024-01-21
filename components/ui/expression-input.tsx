@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import * as monaco from 'monaco-editor'
 import { Input } from "./input";
 import { cn } from "@/lib/utils";
@@ -86,7 +86,7 @@ export const ExpressionInput: React.FC<ExpressionInputProps> = ({
           </span>
         </label>
         <RadixDropdownMenu.Portal>
-          <RadixDropdownMenu.Content align="start">
+          <RadixDropdownMenu.Content align="start" className="z-50">
             <div ref={inputRef as any} className={`bg-background border w-64`}>
               <div style={{ height: editorHeight }} className="my-2">
                 <Editor

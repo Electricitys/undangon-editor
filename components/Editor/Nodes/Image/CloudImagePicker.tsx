@@ -39,11 +39,13 @@ export const CloudImagePicker: React.FC<{
   const imagesQuery = useQuery({
     queryKey: ["images", folders, filter],
     queryFn: async () => {
+      console.log("IMAGE QUERY");
       const res = await Promise.all(
         folders.map(
           async ({ folder }) => await axiosInstance.get(`/api/images/${folder}`)
         )
       );
+      console.log(res);
       return (
         res.reduce((p, c, idx) => {
           return [
@@ -78,6 +80,7 @@ export const CloudImagePicker: React.FC<{
           folder: folders[0].folder,
         });
         helper.setSubmitting(idx, 100);
+        console.log(res);
         return res;
       })
     );

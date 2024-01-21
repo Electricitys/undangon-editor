@@ -50,6 +50,7 @@ export type ViewportProviderProps = {
 
 interface ViewportValueProps
   extends Pick<ViewportProviderProps, "isProduction" | "id"> {
+  containerRef: React.RefObject<HTMLDivElement>;
   mode: {
     current: ViewportProviderProps["defaultMode"];
     setMode: (mode: ViewportProviderProps["defaultMode"]) => void;
@@ -113,6 +114,8 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
     availableMedia["mobile"]
   );
 
+  let containerRef = React.useRef<HTMLDivElement>(null);
+
   const [unsave, setUnsave] = React.useState(false);
 
   let [mode, setMode] = React.useState<"advanced" | "simple">(defaultMode);
@@ -152,6 +155,8 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   return (
     <ViewportContext.Provider
       value={{
+        containerRef,
+
         isProduction,
         handler,
         media,

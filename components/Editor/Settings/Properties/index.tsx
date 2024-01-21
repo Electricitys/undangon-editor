@@ -8,6 +8,7 @@ import { StringField } from "./StringField";
 import { ColorField } from "./ColorField";
 import { ImagePickerField } from "./ImagePickerField";
 import { TextField } from "./TextField";
+import { GripIcon } from "lucide-react";
 
 export const PROPERTIES_TYPES = {
   expression: "any",
@@ -115,75 +116,95 @@ export const PropertiesInput: React.FC<PropertiesProps> = ({
         {value.map((field, index: number) => {
           return (
             <div key={field.id} className={`flex mb-2`}>
-              <div style={{ width: "30%" }}>
-                <div className={`border rounded-md rounded-e-none border-r-0`}>
-                  <Input
-                    readOnly={!type}
-                    id={`props.${index}.name`}
-                    name={`props.${index}.name`}
-                    placeholder="name"
-                    className={`border-none`}
-                    onChange={(e) =>
-                      updateAt(index, {
-                        ...field,
-                        name: e.target.value,
-                      })
-                    }
-                    defaultValue={field.name}
-                  />
-                </div>
-              </div>
-              {type ? (
-                <div style={{ width: "70%" }} className={`border border-r-0`}>
-                  <Select
-                    label="Type"
-                    disabled={false}
-                    value={field.type}
-                    options={[
-                      {
-                        label: "Text",
-                        value: "text",
-                      },
-                      {
-                        label: "Expression",
-                        value: "expression",
-                      },
-                      {
-                        label: "Color",
-                        value: "color",
-                      },
-                      {
-                        label: "Image",
-                        value: "image",
-                      },
-                    ]}
-                    className={"border-0 rounded-none"}
-                    onChange={function (value): void {
-                      updateAt(index, {
-                        ...field,
-                        type: value as any,
-                      });
-                    }}
-                  />
-                </div>
-              ) : (
-                <div style={{ width: "70%", position: "relative" }}>
-                  {Field(index, field)}
-                </div>
-              )}
-              {!disableTrash && (
-                <div className="rounded rounded-s-none border">
-                  <Button
-                    // disabled={items.length === 1}
-                    variant={"outline"}
-                    className="rounded-s-none border-0"
-                    size={"icon"}
-                    onClick={() => {
-                      removeAt(index);
-                    }}
+              <div>
+                <div>
+                  <div
+                    className={`border rounded-md rounded-b-none rounded-e-none border-b-0 border-r-0`}
                   >
-                    <Cross2Icon />
-                  </Button>
+                    <Input
+                      readOnly={!type}
+                      id={`props.${index}.name`}
+                      name={`props.${index}.name`}
+                      placeholder="name"
+                      size="sm"
+                      className={`border-none`}
+                      onChange={(e) =>
+                        updateAt(index, {
+                          ...field,
+                          name: e.target.value,
+                        })
+                      }
+                      defaultValue={field.name}
+                    />
+                  </div>
+                </div>
+                {type ? (
+                  <div
+                    className={`border rounded-md rounded-t-none rounded-e-none border-e-0`}
+                  >
+                    <Select
+                      label="Type"
+                      disabled={false}
+                      value={field.type}
+                      options={[
+                        {
+                          label: "Text",
+                          value: "text",
+                        },
+                        {
+                          label: "Expression",
+                          value: "expression",
+                        },
+                        {
+                          label: "Color",
+                          value: "color",
+                        },
+                        {
+                          label: "Image",
+                          value: "image",
+                        },
+                      ]}
+                      className={"border-0 rounded-none"}
+                      onChange={function (value): void {
+                        updateAt(index, {
+                          ...field,
+                          type: value as any,
+                        });
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div style={{ width: "70%", position: "relative" }}>
+                    {Field(index, field)}
+                  </div>
+                )}
+              </div>
+              {!disableTrash && (
+                <div className="border rounded rounded-s-none">
+                  <div className="rounded rounded-s-none rounded-b-none border-b">
+                    <Button
+                      // disabled={items.length === 1}
+                      variant={"outline"}
+                      className="rounded-md rounded-t-none border-0 cursor-grab"
+                      size={"icon-sm"}
+                      onClick={() => {}}
+                    >
+                      <GripIcon size={16} />
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      // disabled={items.length === 1}
+                      variant={"outline"}
+                      className="rounded-s-none border-0 h-10"
+                      size={"icon-sm"}
+                      onClick={() => {
+                        removeAt(index);
+                      }}
+                    >
+                      <Cross2Icon />
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
