@@ -3,6 +3,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
@@ -155,32 +158,19 @@ export const AddNodeAction = () => {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            size={"sm"}
-            variant={"ghost"}
-            className="hover:bg-gray-200 p-0 h-7 w-7"
-          >
-            <PlusIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {id !== "ROOT" && (
-            <DropdownMenuItem onClick={() => handleAction("before")}>
-              <span>Add Before</span>
-            </DropdownMenuItem>
-          )}
-          <DropdownMenuItem onClick={() => handleAction("child")}>
-            <span>Add Child</span>
-          </DropdownMenuItem>
-          {id !== "ROOT" && (
-            <DropdownMenuItem onClick={() => handleAction("after")}>
-              <span>Add After</span>
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {id !== "ROOT" && (
+        <DropdownMenuItem onClick={() => handleAction("before")}>
+          <span>Add Before</span>
+        </DropdownMenuItem>
+      )}
+      <DropdownMenuItem onClick={() => handleAction("child")}>
+        <span>Add Child</span>
+      </DropdownMenuItem>
+      {id !== "ROOT" && (
+        <DropdownMenuItem onClick={() => handleAction("after")}>
+          <span>Add After</span>
+        </DropdownMenuItem>
+      )}
       <Dialog
         open={isDialogOpen}
         onOpenChange={(open) => {

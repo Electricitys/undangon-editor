@@ -4,6 +4,8 @@ import { useLayer } from "@craftjs/layers";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import React from "react";
 import { LayerTrigger } from "./LayerHeader";
+import { useMediaSizing } from "../../utils/useMediaSizing";
+import { LayerTriggerMinimal } from "./LayerHeaderMinimal";
 
 export const LayerRenderer: React.FC<{ children?: React.ReactNode }> = ({
   children,
@@ -19,7 +21,7 @@ export const LayerRenderer: React.FC<{ children?: React.ReactNode }> = ({
 
   return (
     <Collapsible open={expanded} className="ml-4" ref={layer as any}>
-      <LayerTrigger />
+      <LayerTriggerMinimal />
       <CollapsibleContent>{children}</CollapsibleContent>
     </Collapsible>
   );
