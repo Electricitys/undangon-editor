@@ -8,7 +8,7 @@ import {
   useEditor,
 } from "@craftjs/core";
 export { ViewportFrame } from "./Frames/Frame";
-import { FC, ReactNode, useCallback, useMemo } from "react";
+import { FC, ReactNode, useCallback, useEffect, useMemo } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { getCloneTree } from "../utils/getCloneTree";
 import { useToast } from "@/components/ui/use-toast";
@@ -35,6 +35,10 @@ import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
 import { ProductionRenderNode } from "../Nodes/ProductionRenderNode";
 // import * as ResolverComponents from "../Components";
 import styles from "./viewport.module.css";
+import { useMediaDevices, usePrevious } from "react-use";
+import { useMediaQuery } from "@mantine/hooks";
+import { useMediaSizing } from "../utils/useMediaSizing";
+import { cn } from "@/lib/utils";
 
 type ViewportWrapperProps = {
   children: ReactNode;
@@ -48,7 +52,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   enableToolbar = true,
 }) => {
   const { toast } = useToast();
-  const { media, mode, containerRef } = useViewport();
+  const { media, mode, containerRef, barState } = useViewport();
   const {
     connectors,
     actions,
@@ -172,12 +176,34 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
     return children;
   }
 
+  const mediaSizing = useMediaSizing();
+
+  const previewMediaSizingLG = usePrevious(mediaSizing.lg);
+
+  useEffect(() => {
+    if (previewMediaSizingLG !== mediaSizing.lg) {
+      if (mediaSizing.lg) {
+        barState.left.toggle(true);
+        barState.right.toggle(true);
+      } else {
+        barState.left.toggle(false);
+        barState.right.toggle(false);
+      }
+    }
+  }, [previewMediaSizingLG, mediaSizing.lg]);
+
   return (
     <>
       <div tabIndex={0}>
         <div className="fixed inset-0 bg-gray-200" />
         <div
-          className="page-container pt-16 px-72 min-h-screen relative"
+          className={cn(
+            "page-container pt-16 min-h-screen relative transition-padding duration-500 ease-in-out",
+            mediaSizing.lg && [
+              barState.left.visible && "pl-72",
+              barState.right.visible && "pr-72",
+            ]
+          )}
           ref={(ref) => {
             connectors.select(
               connectors.hover(ref as any, null as any),
@@ -211,14 +237,24 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
             </div>
           </div>
         </div>
-        <div className="fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white">
+        <div
+          className={cn(
+            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white",
+            !barState.left.visible && "invisible"
+          )}
+        >
           <FramesPanel />
           <TemplatesPanel />
           <AdditionalPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />
         </div>
-        <div className="fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white">
+        <div
+          className={cn(
+            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white",
+            !barState.right.visible && "invisible"
+          )}
+        >
           {isSelected ? (
             <SettingPanel />
           ) : mode.current === "advanced" ? (

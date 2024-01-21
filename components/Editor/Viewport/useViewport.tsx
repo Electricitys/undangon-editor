@@ -3,7 +3,7 @@
 import { generateId } from "@/components/utils/generateId";
 import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInternalEditor";
 import { Delete } from "@craftjs/utils";
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { FrameProps } from "./Frames";
 
 const ViewportContext = React.createContext<ViewportValueProps>(null as any);
@@ -29,6 +29,21 @@ export type MediaProps = {
   };
 };
 
+type ViewportBarState = {
+  top: {
+    visible: boolean;
+    toggle: (state?: boolean) => void;
+  };
+  left: {
+    visible: boolean;
+    toggle: (state?: boolean) => void;
+  };
+  right: {
+    visible: boolean;
+    toggle: (state?: boolean) => void;
+  };
+};
+
 export type ViewportProviderProps = {
   children: React.ReactNode;
   isProduction?: boolean;
@@ -50,6 +65,8 @@ export type ViewportProviderProps = {
 
 interface ViewportValueProps
   extends Pick<ViewportProviderProps, "isProduction" | "id"> {
+  barState: ViewportBarState;
+
   containerRef: React.RefObject<HTMLDivElement>;
   mode: {
     current: ViewportProviderProps["defaultMode"];
@@ -86,6 +103,39 @@ interface IViewportProviderProp
   onPublish?: ViewportProviderProps["onPublish"];
 }
 
+const ViewportBarReducer = (
+  state: {
+    top: {
+      visible: boolean;
+    };
+    right: {
+      visible: boolean;
+    };
+    left: {
+      visible: boolean;
+    };
+  },
+  action: {
+    type: "toggle";
+    position: "top" | "right" | "left";
+    value?: boolean;
+  }
+) => {
+  let result = { ...state };
+  switch (action.type) {
+    case "toggle":
+      result[action.position] = {
+        ...state[action.position],
+        visible:
+          typeof action.value !== "undefined"
+            ? action.value
+            : !state[action.position].visible,
+      };
+      break;
+  }
+  return result;
+};
+
 export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   isProduction = false,
 
@@ -113,6 +163,39 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   let [currentMedia, setCurrentMedia] = React.useState(
     availableMedia["mobile"]
   );
+
+  const [viewportBarState, viewportBarHandler] = useReducer(
+    ViewportBarReducer,
+    {
+      top: {
+        visible: false,
+      },
+      left: {
+        visible: false,
+      },
+      right: {
+        visible: false,
+      },
+    }
+  );
+
+  const barState: ViewportBarState = {
+    top: {
+      ...viewportBarState.top,
+      toggle: (value) =>
+        viewportBarHandler({ type: "toggle", position: "top", value }),
+    },
+    left: {
+      ...viewportBarState.left,
+      toggle: (value) =>
+        viewportBarHandler({ type: "toggle", position: "left", value }),
+    },
+    right: {
+      ...viewportBarState.right,
+      toggle: (value) =>
+        viewportBarHandler({ type: "toggle", position: "right", value }),
+    },
+  };
 
   let containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -155,6 +238,8 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   return (
     <ViewportContext.Provider
       value={{
+        barState,
+
         containerRef,
 
         isProduction,

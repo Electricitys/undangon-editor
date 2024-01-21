@@ -65,7 +65,6 @@ export const DialogSettings = () => {
             label="Default Open"
             checked={dialog.defaultValue}
             onChange={(e) => {
-              console.log(e.target.checked);
               _setProps("dialog.defaultValue", e.target.checked);
             }}
           />
