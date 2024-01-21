@@ -51,6 +51,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
   children,
   enableToolbar = true,
 }) => {
+  const mediaSizing = useMediaSizing();
+  const previewMediaSizingLG = usePrevious(mediaSizing.lg);
   const { toast } = useToast();
   const { media, mode, containerRef, barState } = useViewport();
   const {
@@ -172,14 +174,6 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
     }
   });
 
-  if (!enableToolbar) {
-    return children;
-  }
-
-  const mediaSizing = useMediaSizing();
-
-  const previewMediaSizingLG = usePrevious(mediaSizing.lg);
-
   useEffect(() => {
     if (previewMediaSizingLG !== mediaSizing.lg) {
       if (mediaSizing.lg) {
@@ -191,6 +185,10 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
       }
     }
   }, [previewMediaSizingLG, mediaSizing.lg]);
+
+  if (!enableToolbar) {
+    return children;
+  }
 
   return (
     <>

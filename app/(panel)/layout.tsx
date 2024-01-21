@@ -63,10 +63,10 @@ export default function RootLayout(props: React.PropsWithChildren) {
                     clientConfig: {
                       defaultOptions: {
                         queries: {
-                          networkMode: "always",
+                          networkMode: "always" as any,
                         },
                         mutations: {
-                          networkMode: "always",
+                          networkMode: "always" as any,
                         },
                       },
                     },
