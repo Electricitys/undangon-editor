@@ -43,6 +43,22 @@ export interface TemplateSchema extends DefaultDataSchema {
   user: UserSchema;
 }
 
+export interface PresetTypeSchema extends DefaultDataSchema {
+  label: string;
+  description?: string;
+}
+
+export interface PresetSchema extends DefaultDataSchema {
+  label: string;
+  content: string;
+  thumbnail_url: string;
+
+  type_id: number;
+  type: PresetTypeSchema;
+  user_id: number;
+  user: UserSchema;
+}
+
 export interface InvitationSchema extends DefaultDataSchema {
   name: string;
   content: string;

@@ -4,20 +4,9 @@ import { Refine } from "@refinedev/core";
 import routerProvider from "@refinedev/nextjs-router/app";
 import { DocumentTitleHandler } from "@refinedev/nextjs-router";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
-import {
-  ErrorComponent,
-  notificationProvider,
-  RefineThemes,
-  ThemedLayoutV2,
-} from "@refinedev/mantine";
-import {
-  MantineProvider,
-  Global,
-  ColorSchemeProvider,
-  ColorScheme,
-} from "@mantine/core";
+import { RefineThemes } from "@refinedev/mantine";
+import { MantineProvider, Global } from "@mantine/core";
 
 import {
   IconCategory,
@@ -29,6 +18,7 @@ import {
 import { dataProvider } from "@/components/refine-provider";
 import { authProvider } from "@/components/refine-provider/authProvider";
 import { canHandler } from "@/components/refine-provider/accessControl";
+import { PuzzleIcon } from "lucide-react";
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
@@ -101,6 +91,16 @@ export default function RootLayout(props: React.PropsWithChildren) {
                     edit: "/template/edit/:id",
                     meta: {
                       icon: <IconTemplate />,
+                    },
+                  },
+                  {
+                    name: "presets",
+                    list: "/presets",
+                    show: "/preset/:id",
+                    create: "/preset/create",
+                    edit: "/preset/edit/:id",
+                    meta: {
+                      icon: <PuzzleIcon />,
                     },
                   },
                   {

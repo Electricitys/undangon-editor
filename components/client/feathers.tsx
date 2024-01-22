@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { feathers as Feathers } from "@feathersjs/feathers";
 import FeathersAuth from "@feathersjs/authentication-client";
 import rest from "@feathersjs/rest-client";
@@ -15,6 +16,14 @@ export const axiosInstance = axios.create({
     "X-App-Client": "web-browser",
   },
 });
+
+axiosInstance.interceptors.request.use(
+  (response) => response,
+  (error) => {
+    Sentry.captureException(error);
+    throw error;
+  }
+);
 
 export const COOKIE_NAME = "undangon_client";
 
