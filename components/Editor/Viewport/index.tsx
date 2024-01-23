@@ -237,8 +237,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         </div>
         <div
           className={cn(
-            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white",
-            !barState.left.visible && "invisible"
+            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 left-0 bottom-0 pt-14 overflow-auto w-72 border-r border-gray-300 bg-white transition-left duration-500 ease-in-out",
+            !barState.left.visible && "-left-72"
           )}
         >
           <FramesPanel />
@@ -249,8 +249,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         </div>
         <div
           className={cn(
-            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white",
-            !barState.right.visible && "invisible"
+            "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white transition-right duration-500 ease-in-out",
+            !barState.right.visible && "-right-72"
           )}
         >
           {isSelected ? (

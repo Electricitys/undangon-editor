@@ -1,9 +1,11 @@
 "use client";
 
 import { InvitationSchema } from "@/components/interfaces";
-import { Select, TextInput } from "@mantine/core";
+import { ActionIcon, Select, TextInput } from "@mantine/core";
 import { HttpError } from "@refinedev/core";
 import { Create, useForm, useSelect } from "@refinedev/mantine";
+import { ArrowUpDownIcon } from "lucide-react";
+import slugify from "slugify";
 
 type InvitationData = Pick<
   InvitationSchema,
@@ -11,7 +13,7 @@ type InvitationData = Pick<
 >;
 
 const InvitationCreate: React.FC = () => {
-  const { getInputProps, saveButtonProps } = useForm<
+  const { getInputProps, saveButtonProps, setFieldValue, values } = useForm<
     InvitationSchema,
     HttpError,
     InvitationData
@@ -37,10 +39,24 @@ const InvitationCreate: React.FC = () => {
   return (
     <Create saveButtonProps={saveButtonProps}>
       <TextInput mt="sm" label="Name" {...getInputProps("name")} />
-      <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
+      <TextInput
+        mt="sm"
+        label="Slug"
+        {...getInputProps("slug")}
+        rightSection={
+          <ActionIcon
+            onClick={() => {
+              setFieldValue("slug", slugify(values["name"], { lower: true }));
+            }}
+          >
+            <ArrowUpDownIcon size={16} />
+          </ActionIcon>
+        }
+      />
       <Select
         mt="sm"
         label="Category"
+        withinPortal
         {...getInputProps("category_id")}
         {...categorySelectProps}
         filterDataOnExactSearchMatch={false}
@@ -48,6 +64,7 @@ const InvitationCreate: React.FC = () => {
       <Select
         mt="sm"
         label="Package"
+        withinPortal
         {...getInputProps("package_id")}
         {...packageSelectProps}
         filterDataOnExactSearchMatch={false}

@@ -3,8 +3,6 @@ import { useLayer } from "@craftjs/layers";
 // import { useLayerManager } from "@craftjs/layers/lib/manager";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import React from "react";
-import { LayerTrigger } from "./LayerHeader";
-import { useMediaSizing } from "../../utils/useMediaSizing";
 import { LayerTriggerMinimal } from "./LayerHeaderMinimal";
 
 export const LayerRenderer: React.FC<{ children?: React.ReactNode }> = ({

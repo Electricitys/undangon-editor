@@ -42,9 +42,9 @@ const InvitationEdit: React.FC = () => {
 
   const templateUrl = React.useMemo(() => {
     // const auth = feathers.get("authentication");
-    return `/e/invitation/${
-      invitationData && slugify(invitationData?.slug)
-    }/${invitationData?.id}`;
+    return `/e/invitation/${invitationData && slugify(invitationData?.slug)}/${
+      invitationData?.id
+    }`;
   }, [queryResult]);
 
   return (
@@ -70,6 +70,7 @@ const InvitationEdit: React.FC = () => {
       <Select
         mt="sm"
         label="Category"
+        withinPortal
         {...getInputProps("category_id")}
         {...categorySelectProps}
         filterDataOnExactSearchMatch={false}
@@ -77,6 +78,7 @@ const InvitationEdit: React.FC = () => {
       <Select
         mt="sm"
         label="Package"
+        withinPortal
         {...getInputProps("package_id")}
         {...packageSelectProps}
         filterDataOnExactSearchMatch={false}
