@@ -207,17 +207,22 @@ export const ViewportFrame: React.FC<
   >
 > = (props) => {
   const { frames, frameHelper } = useViewportFrame();
+
   const [pushFrameInit, cancel] = useDebounce(() => {
-    if (typeof frames["ROOT_FRAME"] !== "undefined") return;
-    frameHelper.push({
-      id: "ROOT_FRAME",
-      name: "App",
-      content: props.data as string,
-      templates: props.templates || [],
-      properties: props.properties || [],
-      _updatedAt: Date.now(),
-    });
+    if (typeof frames["ROOT_FRAME"] !== "undefined") {
+      frameHelper.update("ROOT_FRAME", props.data as string);
+    } else {
+      frameHelper.push({
+        id: "ROOT_FRAME",
+        name: "App",
+        content: props.data as string,
+        templates: props.templates || [],
+        properties: props.properties || [],
+        _updatedAt: Date.now(),
+      });
+    }
   }, 100);
+
   useEffectOnce(() => {
     pushFrameInit();
   });
