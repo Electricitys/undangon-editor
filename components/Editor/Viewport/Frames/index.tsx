@@ -48,6 +48,8 @@ export const FramesPanel = () => {
     });
   }, [frames]);
 
+  console.log("framePanel", framePanel[0]);
+
   if (!frame) return null;
 
   return (
