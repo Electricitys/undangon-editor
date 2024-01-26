@@ -1,31 +1,13 @@
 import { useLayer } from "@craftjs/layers";
-import {
-  DotsHorizontalIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
-import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEditor } from "@craftjs/core";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuGroup,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSubContent,
-} from "@/components/ui/dropdown-menu";
-import { AddNodeAction } from "./AddNodeAction";
 import { EditTemplateAction } from "./EditTemplateAction";
 import { TemplateNode } from "../../Nodes";
 import React from "react";
+import { LayerActions } from "./LayerActions";
 
 export const LayerTriggerMinimal = () => {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -148,36 +130,7 @@ export const LayerTriggerMinimal = () => {
           )}
         </div>
         {!isEditing && isTemplateNode && <EditTemplateAction />}
-        {!isEditing && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                disabled={id === "ROOT"}
-                size={"sm"}
-                variant={"ghost"}
-                className="hover:bg-gray-200 p-0 h-7 w-7 mr-1"
-              >
-                <DotsHorizontalIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>
-                  <span>Insert</span>
-                </DropdownMenuLabel>
-                <AddNodeAction />
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  color="red"
-                  onClick={() => actions.delete(id)}
-                >
-                  <TrashIcon className="mr-2 h-4 w-4" />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenuPortal>
-          </DropdownMenu>
-        )}
+        {!isEditing && <LayerActions />}
       </div>
     </Button>
   );

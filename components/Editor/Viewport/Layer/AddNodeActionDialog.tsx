@@ -56,7 +56,12 @@ const components = Object.entries(RestComponents).map(([key, value]) => {
   };
 });
 
-export const AddNodeAction = () => {
+export const AddNodeActionDialog: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  target: "before" | "after" | "child";
+}> = ({ isOpen, onClose, onSubmit, target }) => {
   const { id } = useLayer();
   const editor = useEditor((state, query) => ({
     nodes: state.nodes,
@@ -66,9 +71,7 @@ export const AddNodeAction = () => {
 
   const { templates } = useViewportFrameTemplates();
 
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-
-  const onSubmit: FormikConfig<FormProps>["onSubmit"] = (
+  const handleSubmit: FormikConfig<FormProps>["onSubmit"] = (
     values,
     { resetForm }
   ) => {
@@ -130,12 +133,12 @@ export const AddNodeAction = () => {
     }
 
     resetForm();
-    setIsDialogOpen(false);
+    onSubmit();
   };
 
   const formik = useFormik<FormProps>({
     initialValues: {
-      target: "child",
+      target,
       type: "tag",
       component: "",
       template: null as any,
@@ -148,136 +151,116 @@ export const AddNodeAction = () => {
         },
       ],
     },
-    onSubmit,
+    onSubmit: handleSubmit,
   });
 
-  const handleAction = (type: "before" | "after" | "child") => {
-    formik.setFieldValue("target", type);
-    setIsDialogOpen(true);
-  };
-
   return (
-    <>
-      {id !== "ROOT" && (
-        <DropdownMenuItem onClick={() => handleAction("before")}>
-          <span>Add Before</span>
-        </DropdownMenuItem>
-      )}
-      <DropdownMenuItem onClick={() => handleAction("child")}>
-        <span>Add Child</span>
-      </DropdownMenuItem>
-      {id !== "ROOT" && (
-        <DropdownMenuItem onClick={() => handleAction("after")}>
-          <span>Add After</span>
-        </DropdownMenuItem>
-      )}
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          formik.resetForm();
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+        formik.resetForm();
+      }}
+    >
+      <DialogContent
+        tabIndex={-1}
+        onFocus={(e) => {
+          e.preventDefault();
         }}
       >
-        <DialogContent
-          tabIndex={-1}
-          onFocus={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>Add Node</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={formik.handleSubmit}>
-            <Tabs
-              defaultValue={formik.values.type}
-              onValueChange={(value) => {
-                formik.setFieldValue("type", value);
-              }}
-            >
+        <DialogHeader>
+          <DialogTitle>Add Node</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={formik.handleSubmit}>
+          <Tabs
+            defaultValue={formik.values.type}
+            onValueChange={(value) => {
+              formik.setFieldValue("type", value);
+            }}
+          >
+            <div className="flex items-center mb-4">
+              <Label className="w-1/4">Type</Label>
+              <div style={{ width: "75%", marginTop: 0 }}>
+                <TabsList className="!mt-0">
+                  <TabsTrigger value="tag">Tag</TabsTrigger>
+                  <TabsTrigger value="component">Component</TabsTrigger>
+                  <TabsTrigger value="template">Template</TabsTrigger>
+                  <TabsTrigger value="slot">Slot</TabsTrigger>
+                </TabsList>
+              </div>
+            </div>
+            <TabsContent value={"tag"} tabIndex={-1}>
               <div className="flex items-center mb-4">
-                <Label className="w-1/4">Type</Label>
+                <Label className="w-1/4">Tag</Label>
                 <div style={{ width: "75%", marginTop: 0 }}>
-                  <TabsList className="!mt-0">
-                    <TabsTrigger value="tag">Tag</TabsTrigger>
-                    <TabsTrigger value="component">Component</TabsTrigger>
-                    <TabsTrigger value="template">Template</TabsTrigger>
-                    <TabsTrigger value="slot">Slot</TabsTrigger>
-                  </TabsList>
+                  <Input
+                    name="tag"
+                    defaultValue={formik.values.tag}
+                    onChange={(e) =>
+                      formik.setFieldValue("tag", e.target.value)
+                    }
+                  />
                 </div>
               </div>
-              <TabsContent value={"tag"} tabIndex={-1}>
-                <div className="flex items-center mb-4">
-                  <Label className="w-1/4">Tag</Label>
-                  <div style={{ width: "75%", marginTop: 0 }}>
-                    <Input
-                      name="tag"
-                      defaultValue={formik.values.tag}
-                      onChange={(e) =>
-                        formik.setFieldValue("tag", e.target.value)
-                      }
-                    />
-                  </div>
+              {/* <PropsField formik={formik} /> */}
+            </TabsContent>
+            <TabsContent value={"component"} tabIndex={-1}>
+              <div className="flex items-center mb-4">
+                <Label className="w-1/4">Component</Label>
+                <div style={{ width: "75%", marginTop: 0 }}>
+                  <Select
+                    onValueChange={(value) => {
+                      formik.setFieldValue("component", value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select component" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {components.map(({ name }) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <PropsField formik={formik} />
-              </TabsContent>
-              <TabsContent value={"component"} tabIndex={-1}>
-                <div className="flex items-center mb-4">
-                  <Label className="w-1/4">Component</Label>
-                  <div style={{ width: "75%", marginTop: 0 }}>
-                    <Select
-                      onValueChange={(value) => {
-                        formik.setFieldValue("component", value);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select component" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {components.map(({ name }) => (
-                          <SelectItem key={name} value={name}>
-                            {name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              </div>
+              {/* <PropsField formik={formik} /> */}
+            </TabsContent>
+            <TabsContent value={"template"} tabIndex={-1}>
+              <div className="flex items-center mb-4">
+                <Label className="w-1/4">Template</Label>
+                <div style={{ width: "75%", marginTop: 0 }}>
+                  <Select
+                    onValueChange={(value) => {
+                      formik.setFieldValue("template", value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {templates.map(({ id, name }) => (
+                        <SelectItem key={id} value={id}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <PropsField formik={formik} />
-              </TabsContent>
-              <TabsContent value={"template"} tabIndex={-1}>
-                <div className="flex items-center mb-4">
-                  <Label className="w-1/4">Template</Label>
-                  <div style={{ width: "75%", marginTop: 0 }}>
-                    <Select
-                      onValueChange={(value) => {
-                        formik.setFieldValue("template", value);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select template" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {templates.map(({ id, name }) => (
-                          <SelectItem key={id} value={id}>
-                            {name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <PropsField formik={formik} />
-              </TabsContent>
-            </Tabs>
-            <DialogFooter>
-              <Button className="w-full" type="submit">
-                Add Node
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+              </div>
+              {/* <PropsField formik={formik} /> */}
+            </TabsContent>
+          </Tabs>
+          <DialogFooter>
+            <Button className="w-full" type="submit">
+              Add Node
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

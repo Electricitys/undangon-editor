@@ -196,7 +196,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         <div className="fixed inset-0 bg-gray-200" />
         <div
           className={cn(
-            "page-container pt-16 min-h-screen relative transition-padding duration-500 ease-in-out",
+            "page-container pointer-events-auto pt-16 min-h-screen relative transition-padding duration-500 ease-in-out",
             mediaSizing.lg && [
               barState.left.visible && "pl-72",
               barState.right.visible && "pr-72",
