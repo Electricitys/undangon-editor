@@ -19,6 +19,7 @@ import { dataProvider } from "@/components/refine-provider";
 import { authProvider } from "@/components/refine-provider/authProvider";
 import { canHandler } from "@/components/refine-provider/accessControl";
 import { PuzzleIcon } from "lucide-react";
+import { notificationProvider } from "@refinedev/mantine";
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
@@ -36,6 +37,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
                 authProvider={authProvider}
                 dataProvider={dataProvider()}
                 routerProvider={routerProvider}
+                notificationProvider={notificationProvider}
                 accessControlProvider={{
                   can: canHandler,
                   options: {
