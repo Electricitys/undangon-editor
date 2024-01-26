@@ -93,7 +93,7 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm w-full">Color</div>
+          <div className="grow text-xs w-full">Color</div>
           <ColorPicker
             className="shrink-0 w-32 border-transparent hover:border-gray-200 px-3"
             value={_get(typography, "color") || ""}
@@ -106,7 +106,7 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm w-full">Size</div>
+          <div className="grow text-xs w-full">Size</div>
           <CSSUnitInput
             id="typography.fontSize"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
@@ -132,7 +132,7 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm w-full">Line Height</div>
+          <div className="grow text-xs w-full">Line Height</div>
           <CSSUnitInput
             id="typography.lineHeight"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
@@ -158,7 +158,7 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm w-full">Letter Spacing</div>
+          <div className="grow text-xs w-full">Letter Spacing</div>
           <CSSUnitInput
             id="typography.letterSpacing"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
@@ -186,7 +186,7 @@ export const Typography = () => {
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm">Text Decoration</div>
+          <div className="grow text-xs">Text Decoration</div>
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <Toggle
               id="typography.fontStyle"
@@ -242,7 +242,7 @@ export const Typography = () => {
           </div>
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm">Aligment</div>
+          <div className="grow text-xs">Aligment</div>
 
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <ToggleGroup.Root
@@ -280,7 +280,7 @@ export const Typography = () => {
           </div>
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm">Case</div>
+          <div className="grow text-xs">Case</div>
 
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <ToggleGroup.Root
@@ -314,7 +314,7 @@ export const Typography = () => {
           </div>
         </div>
         <div className="flex items-center pl-3 pr-1">
-          <div className="grow text-sm">Wrap</div>
+          <div className="grow text-xs">Wrap</div>
 
           <div className="flex border border-transparent hover:border-gray-200 rounded-md">
             <ToggleGroup.Root
