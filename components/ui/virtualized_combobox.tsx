@@ -10,6 +10,7 @@ interface VirtualizedComboboxProps {
   width?: string;
   height?: string;
   onItemRender?: (option: Option) => React.ReactNode;
+  defaultSelectedOption?: Option;
 }
 
 export function VirtualizedCombobox({
@@ -18,11 +19,12 @@ export function VirtualizedCombobox({
   width = "auto",
   height = "400px",
   onItemRender,
+  defaultSelectedOption,
 }: VirtualizedComboboxProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectedOption, setSelectedOption] = React.useState<
     Option | undefined
-  >();
+  >(defaultSelectedOption);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

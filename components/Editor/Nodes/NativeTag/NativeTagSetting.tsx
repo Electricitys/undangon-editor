@@ -10,6 +10,8 @@ import { Generic } from "../../Settings/Generic";
 import { Fill } from "../../Settings/Fill";
 import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
+import { Select } from "@/components/component/Select";
+import { ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
 
 export const NativeTagSettings = () => {
   const {
@@ -24,14 +26,15 @@ export const NativeTagSettings = () => {
     <>
       <PanelSection text="Properties">
         <div className="px-3">
-          <Input
-            defaultValue={_get(values, "as")}
-            placeholder={"Text"}
+          <Select
+            label={"Tag Name"}
+            value={_get(values, "as")}
             onChange={(e) =>
               setProp((props: any) => {
-                _set(props, "as", e.target.value);
+                _set(props, "as", e);
               }, 2000)
             }
+            options={HTML_TAG_NAMES.map((tag) => ({ label: tag, value: tag }))}
           />
         </div>
       </PanelSection>

@@ -22,6 +22,8 @@ import _pick from "lodash/pick";
 import _set from "lodash/set";
 import _get from "lodash/get";
 import React from "react";
+import { CSSValueInput } from "@/components/ui/css_value_input";
+import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
 
 const POSITION_OPTIONS = [
   {
@@ -84,9 +86,20 @@ export const BoxSizing = () => {
   const {
     actions: { setProp },
     values,
-  } = useNode((node) => ({
-    values: _pick(node.data.props, ["boxSizing"]),
-  }));
+    clientWidth,
+    clientHeight,
+    clientTop,
+    clientLeft,
+  } = useNode((node) => {
+    return {
+      values: _pick(node.data.props, ["boxSizing"]),
+      dom: node.dom,
+      clientWidth: node.dom?.clientWidth,
+      clientHeight: node.dom?.clientHeight,
+      clientTop: node.dom?.clientTop,
+      clientLeft: node.dom?.clientLeft,
+    };
+  });
 
   const boxSizing: BoxSizingProps = values.boxSizing;
 
@@ -106,6 +119,16 @@ export const BoxSizing = () => {
     },
     [setProp]
   );
+  const _setPropsValue = React.useCallback(
+    (path: string, value: string) => {
+      setProp(
+        (props: any) =>
+          _set(props, path, value === undefined ? undefined : value),
+        1000
+      );
+    },
+    [setProp]
+  );
 
   const minMaxHeight = React.useState({
     min: typeof _get(boxSizing, "minHeight") !== "undefined",
@@ -120,29 +143,31 @@ export const BoxSizing = () => {
     <div className="px-2">
       <div className="grid grid-cols-12 pb-2">
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.left"
             className="border-transparent hover:border-gray-200"
+            placeholder={parseIntSafeForInput(clientLeft as any, "0")}
             label={"Left"}
             disabled={_get(boxSizing, "position") !== "absolute"}
             icon={"X"}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.left", raw);
+            onChange={(value: any) => {
+              _setPropsValue("boxSizing.left", value);
             }}
-            initialValue={uncss.parse(boxSizing.left)}
+            value={boxSizing.left}
           />
         </div>
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.top"
             className="border-transparent hover:border-gray-200"
+            placeholder={parseIntSafeForInput(clientTop as any, "0")}
             label={"Top"}
             disabled={_get(boxSizing, "position") !== "absolute"}
             icon={"Y"}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.top", raw);
+            onChange={(value: any) => {
+              _setPropsValue("boxSizing.left", value);
             }}
-            initialValue={uncss.parse(boxSizing.top)}
+            value={boxSizing.top}
           />
         </div>
         <div className="px-1 col-span-2">
@@ -152,7 +177,7 @@ export const BoxSizing = () => {
             withIcon={false}
             style={{
               height: 34,
-              padding: "9px",
+              padding: "9px 0 9px 9px",
             }}
             onChange={function (value: any): void {
               setProp(
@@ -160,11 +185,13 @@ export const BoxSizing = () => {
                 1000
               );
             }}
-            onSelectedItemRender={({ label, value }) => (
-              <div className="mr-2 w-4">
-                {POSITION_OPTIONS.find(({ value: v }) => value === v)?.icon}
-              </div>
-            )}
+            onSelectedItemRender={({ label, value }) => {
+              return (
+                <div className="mr-2 w-4">
+                  {POSITION_OPTIONS.find(({ value: v }) => value === v)?.icon}
+                </div>
+              );
+            }}
             onItemRender={({ label, value }) => (
               <div className="flex capitalize items-center">
                 <div className="mr-2 w-4">
@@ -183,16 +210,17 @@ export const BoxSizing = () => {
       </div>
       <div className="grid grid-cols-12">
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.width"
             className="border-transparent hover:border-gray-200 mb-2"
+            placeholder={parseIntSafeForInput(clientWidth as any, "0")}
             label={"Width"}
             disabled={_get(boxSizing, "h_sizing") !== "fixed"}
             icon={"W"}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.width", raw);
+            onChange={function (value: any): void {
+              _setPropsValue("boxSizing.width", value);
             }}
-            initialValue={uncss.parse(boxSizing.width)}
+            value={boxSizing.width}
             actions={
               <div className="flex flex-col">
                 <button
@@ -221,15 +249,16 @@ export const BoxSizing = () => {
             }
           />
           {minMaxWidth[0].min && (
-            <CSSUnitInput
+            <CSSValueInput
               id="boxSizing.minWidth"
               className="border-transparent hover:border-gray-200 mb-2"
               label={"Min Width"}
-              icon={<AlignCenterHorizontallyIcon className="mr-2 h-4 w-4" />}
-              onChange={function (_value: any, raw): void {
-                _setProps("boxSizing.minWidth", raw);
+              placeholder={"Min W"}
+              icon={<AlignCenterHorizontallyIcon className="h-4 w-4" />}
+              onChange={function (value: any): void {
+                _setPropsValue("boxSizing.minWidth", value);
               }}
-              initialValue={uncss.parse(boxSizing.minWidth)}
+              value={boxSizing.minWidth}
               actions={
                 <div className="flex flex-col">
                   <button className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
@@ -254,15 +283,16 @@ export const BoxSizing = () => {
             />
           )}
           {minMaxWidth[0].max && (
-            <CSSUnitInput
+            <CSSValueInput
               id="boxSizing.maxWidth"
               className="border-transparent hover:border-gray-200 mb-2"
               label={"Max Width"}
-              icon={<SpaceBetweenHorizontallyIcon className="mr-2 h-4 w-4" />}
-              onChange={function (_value: any, raw): void {
-                _setProps("boxSizing.maxWidth", raw);
+              placeholder={"Max W"}
+              icon={<SpaceBetweenHorizontallyIcon className="h-4 w-4" />}
+              onChange={function (value: any): void {
+                _setPropsValue("boxSizing.maxWidth", value);
               }}
-              initialValue={uncss.parse(boxSizing.maxWidth)}
+              value={boxSizing.maxWidth}
               actions={
                 <div className="flex flex-col">
                   <button className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
@@ -288,16 +318,17 @@ export const BoxSizing = () => {
           )}
         </div>
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.height"
             className="border-transparent hover:border-gray-200 mb-2"
             label={"Height"}
+            placeholder={parseIntSafeForInput(clientHeight as any, "0")}
             disabled={_get(boxSizing, "v_sizing") !== "fixed"}
             icon={"H"}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.height", raw);
+            onChange={function (value: any): void {
+              _setProps("boxSizing.height", value);
             }}
-            initialValue={uncss.parse(boxSizing.height)}
+            value={boxSizing.height}
             actions={
               <div className="flex flex-col">
                 <button
@@ -308,7 +339,7 @@ export const BoxSizing = () => {
                     })
                   }
                 >
-                  <AlignCenterVerticallyIcon className="mr-2 h-4 w-4" />
+                  <AlignCenterVerticallyIcon className="h-4 w-4" />
                   <span>Min Height</span>
                 </button>
                 <button
@@ -326,15 +357,16 @@ export const BoxSizing = () => {
             }
           />
           {minMaxHeight[0].min && (
-            <CSSUnitInput
+            <CSSValueInput
               id="boxSizing.minHeight"
               className="border-transparent hover:border-gray-200 mb-2"
               label={"Min Height"}
-              icon={<AlignCenterHorizontallyIcon className="mr-2 h-4 w-4" />}
-              onChange={function (_value: any, raw): void {
-                _setProps("boxSizing.minHeight", raw);
+              placeholder={"Min H"}
+              icon={<AlignCenterHorizontallyIcon className="h-4 w-4" />}
+              onChange={function (value: any): void {
+                _setPropsValue("boxSizing.minHeight", value);
               }}
-              initialValue={uncss.parse(boxSizing.minHeight)}
+              value={boxSizing.minHeight}
               actions={
                 <div className="flex flex-col">
                   <button className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
@@ -359,15 +391,16 @@ export const BoxSizing = () => {
             />
           )}
           {minMaxHeight[0].max && (
-            <CSSUnitInput
+            <CSSValueInput
               id="boxSizing.maxHeight"
               className="border-transparent hover:border-gray-200 mb-2"
               label={"Max Height"}
-              icon={<SpaceBetweenHorizontallyIcon className="mr-2 h-4 w-4" />}
-              onChange={function (_value: any, raw): void {
-                _setProps("boxSizing.maxHeight", raw);
+              placeholder="Max H"
+              icon={<SpaceBetweenHorizontallyIcon className="h-4 w-4" />}
+              onChange={function (value: any): void {
+                _setProps("boxSizing.maxHeight", value);
               }}
-              initialValue={uncss.parse(boxSizing.maxHeight)}
+              value={boxSizing.maxHeight}
               actions={
                 <div className="flex flex-col">
                   <button className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
@@ -427,51 +460,55 @@ export const BoxSizing = () => {
       </div>
       <div className="grid grid-cols-12 pb-2">
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.borderTopLeftRadius"
             className="border-transparent hover:border-gray-200"
             label={"Top Left Radius"}
+            placeholder="0"
             icon={<CornerTopLeftIcon />}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.borderTopLeftRadius", raw);
+            onChange={function (value: any): void {
+              _setPropsValue("boxSizing.borderTopLeftRadius", value);
             }}
-            initialValue={uncss.parse(boxSizing.borderTopLeftRadius)}
+            value={boxSizing.borderTopLeftRadius}
           />
         </div>
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.borderTopRightRadius"
             className="border-transparent hover:border-gray-200"
             label={"Top Right Radius"}
+            placeholder="0"
             icon={<CornerTopRightIcon />}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.borderTopRightRadius", raw);
+            onChange={function (value: any): void {
+              _setPropsValue("boxSizing.borderTopRightRadius", value);
             }}
-            initialValue={uncss.parse(boxSizing.borderTopRightRadius)}
+            value={boxSizing.borderTopRightRadius}
           />
         </div>
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.borderBottomLeftRadius"
             className="border-transparent hover:border-gray-200"
             label={"Bottom Left Radius"}
+            placeholder="0"
             icon={<CornerBottomLeftIcon />}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.borderBottomLeftRadius", raw);
+            onChange={function (value: any): void {
+              _setPropsValue("boxSizing.borderBottomLeftRadius", value);
             }}
-            initialValue={uncss.parse(boxSizing.borderBottomLeftRadius)}
+            value={boxSizing.borderBottomLeftRadius}
           />
         </div>
         <div className="px-1 col-span-5">
-          <CSSUnitInput
+          <CSSValueInput
             id="boxSizing.borderBottomRightRadius"
             className="border-transparent hover:border-gray-200"
             label={"Bottom Right Radius"}
+            placeholder="0"
             icon={<CornerBottomRightIcon />}
-            onChange={function (_value: any, raw): void {
-              _setProps("boxSizing.borderBottomRightRadius", raw);
+            onChange={function (value: any): void {
+              _setPropsValue("boxSizing.borderBottomRightRadius", value);
             }}
-            initialValue={uncss.parse(boxSizing.borderTopRightRadius)}
+            value={boxSizing.borderTopRightRadius}
           />
         </div>
       </div>

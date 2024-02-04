@@ -70,6 +70,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "codemirror": "^6.0.1",
+    "css-tree": "^2.3.1",
     "currency.js": "^2.0.4",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
@@ -109,6 +110,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/css-tree": "^2.3.5",
     "@types/jexl": "^2.3.1",
     "@types/lodash": "^4.14.196",
     "@types/node": "20.4.2",
