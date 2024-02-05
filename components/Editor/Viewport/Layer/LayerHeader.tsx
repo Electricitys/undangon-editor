@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { AddNodeAction } from "./AddNodeAction";
+// import { AddNodeAction } from "./AddNodeAction";
 import { EditTemplateAction } from "./EditTemplateAction";
 import { TemplateNode } from "../../Nodes";
 import React from "react";
@@ -138,7 +138,7 @@ export const LayerTrigger = () => {
         {isTemplateNode && <EditTemplateAction />}
         {!isEditing && (
           <>
-            <AddNodeAction />
+            {/* <AddNodeAction /> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
