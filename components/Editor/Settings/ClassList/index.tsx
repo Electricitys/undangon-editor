@@ -9,6 +9,15 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const Scheme = yup
+  .object()
+  .shape({
+    className: yup.string().required(),
+  })
+  .required();
 
 type ConditionalClass = {
   className: string;
@@ -31,6 +40,7 @@ export const ClassList = () => {
     defaultValues: {
       className: "",
     },
+    resolver: yupResolver(Scheme),
   });
 
   const handleAddClassName = (values: { className: string }) => {

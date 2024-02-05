@@ -1,5 +1,9 @@
+"use client";
+
+import { LoadingOverlay } from "@mantine/core";
+
 const Loading = () => {
-  return <section>Loading</section>;
+  return <LoadingOverlay visible={true} />;
 };
 
 export default Loading;

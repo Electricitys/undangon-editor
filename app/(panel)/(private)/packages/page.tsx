@@ -10,7 +10,7 @@ import {
 } from "@refinedev/mantine";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Group, Pagination } from "@mantine/core";
+import { Group, LoadingOverlay, Pagination } from "@mantine/core";
 import currency from "currency.js";
 import { PackageSchema } from "@/components/interfaces";
 import { Table } from "@/components/component/Table";
@@ -81,7 +81,7 @@ const PackageList: React.FC = () => {
   });
 
   if (tableQueryResult?.isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingOverlay visible={true} />;
   }
 
   return (
