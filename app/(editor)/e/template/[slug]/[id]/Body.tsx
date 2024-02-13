@@ -4,13 +4,17 @@ import lz from "lzutf8";
 import { Viewport, ViewportFrame } from "@/components/Editor/Viewport";
 import { ViewportProviderProps } from "@/components/Editor/Viewport/useViewport";
 import { useRouter } from "next/navigation";
-import React, { useCallback } from "react";
+import React from "react";
 import { useClient } from "@/components/client";
 import { useToast } from "@/components/ui/use-toast";
 import { FrameProps } from "@/components/Editor/Viewport/Frames";
-import { Element } from "@craftjs/core";
+import { Element, Node } from "@craftjs/core";
 import { Container, NativeTag, Text } from "@/components/Editor/Nodes";
 import { feathers } from "@/components/client/feathers";
+import { toPng as hToPNG } from "html-to-image";
+import { useInternalEditorReturnType } from "@craftjs/core/lib/editor/useInternalEditor";
+import { imagekit } from "@/components/utils/imagekit";
+import { generateId } from "@/components/utils/generateId";
 
 interface EditorPageProps {
   id: string;
@@ -24,15 +28,48 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const onPublish = useCallback<ViewportProviderProps["onPublish"]>(
-    async (frame, query, { setLoading, setSaved }) => {
+  const takeSnapshot = React.useCallback(
+    async (query: useInternalEditorReturnType<any>["query"]) => {
+      const ROOT = query.getNodes().ROOT as Node;
+      const dom = ROOT.dom;
+      let image = null;
+      if (!dom) return image;
+      try {
+        image = await hToPNG(dom);
+      } catch (err) {
+        console.error(err);
+      }
+      return image;
+    },
+    []
+  );
+
+  const onPublish = React.useCallback<ViewportProviderProps["onPublish"]>(
+    async (...args) => {
+      const [frame, query, { setLoading, setSaved }] = args;
       setLoading(true);
+      const current = toast({
+        title: "Publishing",
+        description: "Generating thumbnail",
+      });
+      const thumbnail = await takeSnapshot(query);
+      const thumbnail_url = await imagekit.upload({
+        file: thumbnail as string,
+        fileName: `${props.id}.png`,
+        folder: `thumbnails/${type}s`,
+      });
+      current.update({
+        id: current.id,
+        description: "Compressing and saving the project.",
+      });
       const json = JSON.stringify(frame);
       const content = lz.encodeBase64(lz.compress(json));
       try {
-        await feathers.service(`${type}s`).patch(props.id, { content });
+        await feathers
+          .service(`${type}s`)
+          .patch(props.id, { content, thumbnail_url: thumbnail_url.url });
         toast({
-          title: "Publish",
+          title: "Published",
           description: "Project is saved.",
         });
         setSaved(true);
@@ -40,6 +77,7 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
         toast({
           title: "Publish",
           description: "Error while saving the project.",
+          variant: "destructive",
         });
         setSaved(false);
         console.error(err);
@@ -49,11 +87,11 @@ const Body: React.FC<EditorPageProps> = ({ content, type, ...props }) => {
     []
   );
 
-  const onClose = useCallback(() => {
+  const onClose = React.useCallback(() => {
     router.replace(`/${type}/edit/${props.id}`);
   }, [props.id]);
 
-  const constructPreviewUrl = useCallback(() => {
+  const constructPreviewUrl = React.useCallback(() => {
     return `/i/p/${props.slug}`;
   }, [props.slug]);
 

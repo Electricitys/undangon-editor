@@ -52,9 +52,9 @@ export const dataProvider = (): Omit<
   getMany: async ({ resource, meta }) => {
     const service = feathers.service(resource);
 
-    const { headers } = meta ?? {};
+    const { headers, query } = meta ?? {};
 
-    const { data } = await service.find({ headers });
+    const { data } = await service.find({ headers, query });
 
     return {
       data,

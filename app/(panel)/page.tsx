@@ -47,7 +47,7 @@ export default function Home() {
         </section>
         <Box component="section" mt={"lg"} pb={"md"}>
           <Box>
-            <HomepageCarousel />
+            {/* <HomepageCarousel /> */}
           </Box>
         </Box>
       </main>

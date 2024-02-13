@@ -42,7 +42,7 @@ export function VirtualizedCombobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0" style={{ width: width }}>
+      <PopoverContent className="p-0" style={{ width: width, zIndex: 100 }}>
         <VirtualizedCommand
           onItemRender={onItemRender}
           height={height}

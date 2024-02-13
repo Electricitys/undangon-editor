@@ -1,7 +1,11 @@
 "use client";
 
-import TinySlider from "tiny-slider-react";
+import dynamic from "next/dynamic";
 import "tiny-slider/dist/tiny-slider.css";
+
+const TinySlider = dynamic(() => import("tiny-slider-react"), {
+  ssr: false,
+});
 
 const settings = {
   lazyload: true,
@@ -12,10 +16,11 @@ const settings = {
 const imgs = [
   "http://d2ji2mue1p384z.cloudfront.net/img/480x360/162951.jpg",
   "http://d2ji2mue1p384z.cloudfront.net/img/480x360/162465.jpg",
-  "http://d2ji2mue1p384z.cloudfront.net/img/480x360/220048.jpg"
+  "http://d2ji2mue1p384z.cloudfront.net/img/480x360/220048.jpg",
 ];
 
-const loadingImage = "data:image/gif;base64,R0lGODlhAQABAPAAAMzMzAAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
+const loadingImage =
+  "data:image/gif;base64,R0lGODlhAQABAPAAAMzMzAAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
 export const HomepageCarousel = () => {
   return (
@@ -30,7 +35,7 @@ export const HomepageCarousel = () => {
             style={{
               width: "100%",
               height: "320px",
-              objectFit: "cover"
+              objectFit: "cover",
             }}
           />
         </div>

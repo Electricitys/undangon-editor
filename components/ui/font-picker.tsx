@@ -105,7 +105,10 @@ const FontPicker: FC<FontPickerProps> = ({
           </Button>
         </PopoverTrigger>
         <PopoverPortal>
-          <PopoverContent className="p-0" style={{ width: "275px" }}>
+          <PopoverContent
+            className="p-0"
+            style={{ width: "275px", zIndex: 100 }}
+          >
             <VirtualizedCommand
               onItemRender={(option) => {
                 return (

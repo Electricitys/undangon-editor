@@ -57,7 +57,7 @@ export type ViewportProviderProps = {
       setLoading: (value: boolean) => void;
       isSaved: boolean;
       setSaved: (value: boolean) => void;
-    }
+    },
   ) => void;
   constructPreviewUrl?: () => void;
   id?: string;

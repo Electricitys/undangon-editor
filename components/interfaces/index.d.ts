@@ -71,6 +71,19 @@ export interface InvitationSchema extends DefaultDataSchema {
 
   package_id: number;
   package: PackageSchema;
+
+  metadata_id: number;
+  metadata: number;
+}
+
+export interface MetadataSchema extends DefaultDataSchema {
+  title: string;
+  description?: string;
+  url: string;
+
+  image?: string;
+  image_width?: string;
+  image_height?: string;
 }
 
 export interface FeathersFindResult<T> {

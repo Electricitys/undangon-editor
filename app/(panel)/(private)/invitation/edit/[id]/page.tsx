@@ -1,12 +1,14 @@
 "use client";
 
 import { InvitationSchema } from "@/components/interfaces";
-import { Button, Select, TextInput } from "@mantine/core";
-import { HttpError } from "@refinedev/core";
-import { Edit, useForm, useSelect } from "@refinedev/mantine";
-import { IconEdit } from "@tabler/icons-react";
+import { Edit } from "@/components/page/Edit";
+import { Button, Card, Group, Select, TextInput } from "@mantine/core";
+import { HttpError, useOne, useResource } from "@refinedev/core";
+import { SaveButton, useForm, useSelect } from "@refinedev/mantine";
+import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import React from "react";
 import slugify from "slugify";
+import { MetadataForm } from "./MetadataForm";
 
 type InvitationData = Pick<
   InvitationSchema,
@@ -17,7 +19,9 @@ const InvitationEdit: React.FC = () => {
   const {
     getInputProps,
     saveButtonProps,
-    refineCore: { queryResult },
+    isDirty,
+    values,
+    refineCore: { queryResult, onFinish },
   } = useForm<InvitationSchema, HttpError, InvitationData>({
     initialValues: {
       name: "",
@@ -25,9 +29,16 @@ const InvitationEdit: React.FC = () => {
       category_id: 0,
       package_id: 0,
     },
+    refineCoreProps: {
+      redirect: false,
+    },
   });
 
-  const invitationData = queryResult?.data?.data;
+  const handleSubmit = async () => {
+    await onFinish(values);
+  };
+
+  const invitationData = queryResult?.data?.data as InvitationSchema;
 
   const { selectProps: categorySelectProps } = useSelect({
     resource: "categories",
@@ -65,24 +76,43 @@ const InvitationEdit: React.FC = () => {
         </>
       )}
     >
-      <TextInput mt="sm" label="Name" {...getInputProps("name")} />
-      <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
-      <Select
-        mt="sm"
-        label="Category"
-        withinPortal
-        {...getInputProps("category_id")}
-        {...categorySelectProps}
-        filterDataOnExactSearchMatch={false}
-      />
-      <Select
-        mt="sm"
-        label="Package"
-        withinPortal
-        {...getInputProps("package_id")}
-        {...packageSelectProps}
-        filterDataOnExactSearchMatch={false}
-      />
+      <Card mb="sm">
+        <Edit.Header />
+        <TextInput mt="sm" label="Name" {...getInputProps("name")} />
+        <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
+        <Select
+          mt="sm"
+          label="Category"
+          withinPortal
+          {...getInputProps("category_id")}
+          {...categorySelectProps}
+          filterDataOnExactSearchMatch={false}
+        />
+        <Select
+          mt="sm"
+          label="Package"
+          withinPortal
+          {...getInputProps("package_id")}
+          {...packageSelectProps}
+          filterDataOnExactSearchMatch={false}
+        />
+        <Group position="right">
+          <Button
+            type="button"
+            mt="md"
+            disabled={!isDirty()}
+            onClick={handleSubmit}
+            leftIcon={<IconDeviceFloppy size={18} />}
+          >
+            Save
+          </Button>
+        </Group>
+      </Card>
+      <Card mb="sm">
+        {invitationData?.metadata_id && (
+          <MetadataForm id={invitationData.metadata_id} />
+        )}
+      </Card>
     </Edit>
   );
 };
