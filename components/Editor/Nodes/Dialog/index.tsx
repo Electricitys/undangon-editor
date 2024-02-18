@@ -4,7 +4,7 @@ import { UserComponent, useEditor, useNode } from "@craftjs/core";
 import React from "react";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
-import { TypographyProps } from "../../Settings/Typogrphy";
+import { TypographyProps } from "../../Settings/Typography";
 import { CSSProperties } from "react";
 import { Generic, GenericProps } from "../../Settings/Generic";
 import { SpacingHandler } from "../../Settings/Spacing/handler";

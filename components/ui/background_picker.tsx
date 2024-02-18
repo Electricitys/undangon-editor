@@ -19,11 +19,13 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 
 export function BackgroundPicker({
   value,
+  defaultValue,
   onChange,
   className,
 }: {
   value: string;
-  onChange: (value: string) => void;
+  defaultValue?: string;
+  onChange: (value?: string) => void;
   className?: string;
 }) {
   const solids = [
@@ -165,7 +167,7 @@ export function BackgroundPicker({
               size={"icon"}
               className="px-2 h-8"
               onClick={() => {
-                onChange("inherit");
+                onChange(defaultValue);
               }}
             >
               <Cross1Icon height={16} width={16} />

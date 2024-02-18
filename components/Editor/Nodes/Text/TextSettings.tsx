@@ -1,7 +1,7 @@
 import { PanelSection } from "../../Viewport/PanelSection";
 import { Spacing } from "../../Settings/Spacing";
 import { ClassList } from "../../Settings/ClassList";
-import { Typography } from "../../Settings/Typogrphy";
+import { Typography } from "../../Settings/Typography";
 import { useNode } from "@craftjs/core";
 import _pick from "lodash/pick";
 import _set from "lodash/set";

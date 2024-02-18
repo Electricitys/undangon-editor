@@ -7,7 +7,7 @@ import { useFontFace } from "./FontFaceProvider";
 import { TextSettings } from "./TextSettings";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
-import { Typography, TypographyProps } from "../../Settings/Typogrphy";
+import { Typography, TypographyProps } from "../../Settings/Typography";
 import { CSSProperties } from "react";
 import { cx } from "class-variance-authority";
 import { isEmpty } from "lodash";

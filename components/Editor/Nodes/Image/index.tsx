@@ -1,7 +1,7 @@
 import React from "react";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
-import { Typography, TypographyProps } from "../../Settings/Typogrphy";
+import { Typography, TypographyProps } from "../../Settings/Typography";
 import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
 import { UserComponent, useNode } from "@craftjs/core";
 import { cx } from "class-variance-authority";

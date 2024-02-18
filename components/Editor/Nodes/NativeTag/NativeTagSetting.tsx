@@ -5,7 +5,7 @@ import { BoxSizing } from "../../Settings/BoxSizing";
 import { Spacing } from "../../Settings/Spacing";
 import { ClassList } from "../../Settings/ClassList";
 import { PanelSection } from "../../Viewport/PanelSection";
-import { Typography } from "../../Settings/Typogrphy";
+import { Typography } from "../../Settings/Typography";
 import { Generic } from "../../Settings/Generic";
 import { Fill } from "../../Settings/Fill";
 import { Input } from "@/components/ui/input";

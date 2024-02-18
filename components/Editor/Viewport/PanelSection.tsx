@@ -18,7 +18,7 @@ import {
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface PanelSectionProps {
   children: React.ReactNode;
