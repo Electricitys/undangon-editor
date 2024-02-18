@@ -21,7 +21,7 @@ import {
   UnderlineIcon,
 } from "@radix-ui/react-icons";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
-import { CSSProperties } from "react";
+import React, { CSSProperties } from "react";
 import { useForm } from "react-hook-form";
 import {
   CSSUnitInput,
@@ -31,6 +31,8 @@ import {
 import { FontPicker, WebfontsFontResponse } from "@/components/ui/font-picker";
 import { WrapTextIcon } from "lucide-react";
 import { ColorPicker } from "@/components/ui/color_picker";
+import { CSSValueInput } from "@/components/ui/css_value_input";
+import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
 
 export interface TypographyProps
   extends Pick<
@@ -74,6 +76,17 @@ export const Typography = () => {
   }));
   const typography: TypographyProps = values.typography;
 
+  const _setPropsValue = React.useCallback(
+    (path: string, value: string) => {
+      setProp(
+        (props: any) =>
+          _set(props, path, value === undefined ? undefined : value),
+        1000
+      );
+    },
+    [setProp]
+  );
+
   return (
     <div className="px-1">
       <Form {...form}>
@@ -107,81 +120,51 @@ export const Typography = () => {
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-xs w-full">Size</div>
-          <CSSUnitInput
+          <CSSValueInput
             id="typography.fontSize"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
+            placeholder={parseIntSafeForInput(typography.fontSize as any, "0")}
             label={"size"}
             icon={<FontSizeIcon />}
-            initialValue={uncss.parse(typography.fontSize)}
-            defaultValue={{
-              value: 12,
-              unit: "px",
-            }}
-            unitOptions={["px"]}
-            onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp(
-                (props: any) =>
-                  _set(
-                    props,
-                    "typography.fontSize",
-                    uncss.compile(raw.value, raw.unit)
-                  ),
-                1000
-              );
+            value={typography.fontSize}
+            onChange={function (value) {
+              _setPropsValue("typography.fontSize", value);
             }}
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-xs w-full">Line Height</div>
-          <CSSUnitInput
+          <CSSValueInput
             id="typography.lineHeight"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
+            placeholder={parseIntSafeForInput(
+              typography.lineHeight as any,
+              "0"
+            )}
             label={"size"}
             icon={<LineHeightIcon />}
-            initialValue={uncss.parse(typography.lineHeight)}
-            defaultValue={{
-              value: 1,
-              unit: "",
-            }}
-            unitOptions={["", "px"]}
-            onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp(
-                (props: any) =>
-                  _set(
-                    props,
-                    "typography.lineHeight",
-                    uncss.compile(raw.value, raw.unit)
-                  ),
-                1000
-              );
+            value={typography.lineHeight}
+            onChange={function (value) {
+              _setPropsValue("typography.lineHeight", value);
             }}
           />
         </div>
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-xs w-full">Letter Spacing</div>
-          <CSSUnitInput
+          <CSSValueInput
             id="typography.letterSpacing"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
+            placeholder={parseIntSafeForInput(
+              typography.letterSpacing as any,
+              "0"
+            )}
             label={"size"}
             icon={<LetterSpacingIcon />}
-            initialValue={uncss.parse(typography.letterSpacing)}
+            value={typography.letterSpacing}
             min={-255}
             max={255}
-            defaultValue={{
-              value: 0,
-              unit: "px",
-            }}
-            unitOptions={["px"]}
-            onChange={function (_value: any, raw: CSSUnitValue): void {
-              setProp(
-                (props: any) =>
-                  _set(
-                    props,
-                    "typography.letterSpacing",
-                    uncss.compile(raw.value, raw.unit)
-                  ),
-                1000
-              );
+            onChange={function (value) {
+              _setPropsValue("typography.letterSpacing", value);
             }}
           />
         </div>

@@ -5,7 +5,6 @@ import { cx } from "class-variance-authority";
 import { parseIntSafeForInput } from "../utils/parseIntSafe";
 import { Input } from "./input";
 import * as csstree from "css-tree";
-import * as Select from "@radix-ui/react-select";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ChevronDownIcon } from "lucide-react";
 import { PopoverAnchor } from "@radix-ui/react-popover";
@@ -16,7 +15,7 @@ interface CSSValueInputProps {
   label?: string;
   disabled?: boolean;
   icon: React.ReactNode;
-  value: string;
+  value: string | number | undefined;
   min?: number;
   max?: number;
   onChange: (value: any) => void;
@@ -46,7 +45,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
   actions,
 }) => {
   const transformedValue = React.useMemo(() => {
-    const temp = csstree.parse(value, {
+    const temp = csstree.parse(value as string, {
       context: "value",
     }) as csstree.Value;
     return temp.children.first;
@@ -129,11 +128,12 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
             }}
             value={value || ""}
             onKeyDown={(e) => {
+              const val = value as number;
               if (e.code === "ArrowUp") {
-                ChangeHandler(value + 1, true);
+                ChangeHandler(val + 1, true);
               }
               if (e.code === "ArrowDown") {
-                ChangeHandler(value + 1, true);
+                ChangeHandler(val + 1, true);
               }
             }}
             onChange={(e) => {

@@ -8,6 +8,8 @@ import {
   CSSUnitInput,
   uncss,
 } from "@/components/ui/css_unit_input";
+import { CSSValueInput } from "@/components/ui/css_value_input";
+import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
 import { useNode } from "@craftjs/core";
 import { MarginIcon, PaddingIcon } from "@radix-ui/react-icons";
 import { OnlyStringNumeric } from "@stitches/react/types/css";
@@ -63,6 +65,16 @@ export const Spacing = () => {
     },
     [setProp]
   );
+  const _setPropsValue = React.useCallback(
+    (path: string, value: string) => {
+      setProp(
+        (props: any) =>
+          _set(props, path, value === undefined ? undefined : value),
+        1000
+      );
+    },
+    [setProp]
+  );
 
   return (
     <>
@@ -77,56 +89,66 @@ export const Spacing = () => {
         </div>
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.marginLeft"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(spacing.marginLeft as any, "0")}
               label={"Margin Left"}
               disabled={false}
               icon={<PaddingLeftIcon />}
-              initialValue={uncss.parse(spacing.marginLeft)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.marginLeft", raw);
+              value={spacing.marginLeft}
+              onChange={function (value) {
+                _setPropsValue("spacing.marginLeft", value);
               }}
             />
           </div>
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.marginTop"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(spacing.marginTop as any, "0")}
               label={"Margin Top"}
               disabled={false}
               icon={<PaddingTopIcon />}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.marginTop", raw);
+              value={spacing.marginTop}
+              onChange={function (value) {
+                _setPropsValue("spacing.marginTop", value);
               }}
-              initialValue={uncss.parse(spacing.marginTop)}
             />
           </div>
         </div>
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.marginRight"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(
+                spacing.marginRight as any,
+                "0"
+              )}
               label={"Margin Right"}
               disabled={false}
               icon={<PaddingRightIcon />}
-              initialValue={uncss.parse(spacing.marginRight)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.marginRight", raw);
+              value={spacing.marginRight}
+              onChange={function (value) {
+                _setPropsValue("spacing.marginRight", value);
               }}
             />
           </div>
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.marginButton"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(
+                spacing.marginBottom as any,
+                "0"
+              )}
               label={"Margin Bottom"}
               disabled={false}
               icon={<PaddingBottomIcon />}
-              initialValue={uncss.parse(spacing.marginBottom)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.marginBottom", raw);
+              value={spacing.marginBottom}
+              onChange={function (value): void {
+                _setPropsValue("spacing.marginBottom", value);
               }}
             />
           </div>
@@ -143,56 +165,69 @@ export const Spacing = () => {
         </div>
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.paddingLeft"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(
+                spacing.paddingLeft as any,
+                "0"
+              )}
               label={"Padding Left"}
               disabled={false}
               icon={<PaddingLeftIcon />}
-              initialValue={uncss.parse(spacing.paddingLeft)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.paddingLeft", raw);
+              value={spacing.paddingLeft}
+              onChange={function (value) {
+                _setPropsValue("spacing.paddingLeft", value);
               }}
             />
           </div>
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.paddingTop"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(spacing.paddingTop as any, "0")}
               label={"Padding Top"}
               disabled={false}
               icon={<PaddingTopIcon />}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.paddingTop", raw);
+              onChange={function (value) {
+                _setPropsValue("spacing.paddingTop", value);
               }}
-              initialValue={uncss.parse(spacing.paddingTop)}
+              value={spacing.paddingTop}
             />
           </div>
         </div>
         <div className="flex pb-2">
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.paddingRight"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(
+                spacing.paddingRight as any,
+                "0"
+              )}
               label={"Padding Right"}
               disabled={false}
               icon={<PaddingRightIcon />}
-              initialValue={uncss.parse(spacing.paddingRight)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.paddingRight", raw);
+              value={spacing.paddingRight}
+              onChange={function (value) {
+                _setPropsValue("spacing.paddingRight", value);
               }}
             />
           </div>
           <div className="px-1 w-1/2">
-            <CSSUnitInput
+            <CSSValueInput
               id="spacing.paddingBottom"
               className="border-transparent hover:border-gray-200"
+              placeholder={parseIntSafeForInput(
+                spacing.paddingBottom as any,
+                "0"
+              )}
               label={"Padding Bottom"}
               disabled={false}
               icon={<PaddingBottomIcon />}
-              initialValue={uncss.parse(spacing.paddingBottom)}
-              onChange={function (_value: any, raw): void {
-                _setProps("spacing.paddingBottom", raw);
+              value={spacing.paddingBottom}
+              onChange={function (value) {
+                _setPropsValue("spacing.paddingBottom", value);
               }}
             />
           </div>
