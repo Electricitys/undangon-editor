@@ -11,12 +11,14 @@ type ColorPickerProps = {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  placeholder?: string;
 };
 
 export const ColorPicker = ({
   value,
   onChange,
   className,
+  placeholder = "Pick a color",
 }: ColorPickerProps) => {
   return (
     <Popover>
@@ -38,9 +40,7 @@ export const ColorPicker = ({
             ) : (
               <Paintbrush className="h-4 w-4" />
             )}
-            <div className="truncate flex-1">
-              {value ? value : "Pick a color"}
-            </div>
+            <div className="truncate flex-1">{value ? value : placeholder}</div>
           </div>
         </Button>
       </PopoverTrigger>
@@ -59,6 +59,7 @@ export const ColorPicker = ({
           <div className="flex">
             <Input
               value={value}
+              placeholder={placeholder}
               onChange={(e) => {
                 onChange(e.target.value);
               }}

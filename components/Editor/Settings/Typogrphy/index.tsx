@@ -23,16 +23,10 @@ import {
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import React, { CSSProperties } from "react";
 import { useForm } from "react-hook-form";
-import {
-  CSSUnitInput,
-  CSSUnitValue,
-  uncss,
-} from "@/components/ui/css_unit_input";
 import { FontPicker, WebfontsFontResponse } from "@/components/ui/font-picker";
 import { WrapTextIcon } from "lucide-react";
 import { ColorPicker } from "@/components/ui/color_picker";
 import { CSSValueInput } from "@/components/ui/css_value_input";
-import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
 
 export interface TypographyProps
   extends Pick<
@@ -54,15 +48,15 @@ export interface TypographyProps
 const defaultValue: Partial<TypographyProps> = {
   color: "inherit",
   fontFamily: "Roboto",
-  fontSize: "12px",
+  fontSize: undefined,
   fontStyle: undefined,
-  fontWeight: "normal",
-  letterSpacing: "0px",
-  lineHeight: 1,
-  textAlign: "left",
+  fontWeight: undefined,
+  letterSpacing: undefined,
+  lineHeight: undefined,
+  textAlign: undefined,
   textShadow: undefined,
   textDecoration: undefined,
-  whiteSpace: "pre-wrap",
+  whiteSpace: undefined,
 };
 
 export const Typography = () => {
@@ -71,9 +65,27 @@ export const Typography = () => {
   const {
     actions: { setProp },
     values,
-  } = useNode((node) => ({
-    values: _pick(node.data.props, ["typography"]),
-  }));
+    computedTypographyStyle,
+  } = useNode((node) => {
+    const computedStyle = window.getComputedStyle(
+      node.dom as HTMLElement,
+      null
+    );
+    return {
+      values: _pick(node.data.props, ["typography"]),
+      dom: node.dom,
+      computedTypographyStyle: {
+        color: computedStyle.color,
+        fontFamily: computedStyle.fontFamily,
+        fontSize: computedStyle.fontSize,
+        fontStyle: computedStyle.fontStyle,
+        fontWeight: computedStyle.fontWeight,
+        letterSpacing: computedStyle.letterSpacing,
+        lineHeight: computedStyle.lineHeight,
+      } as TypographyProps,
+    };
+  });
+
   const typography: TypographyProps = values.typography;
 
   const _setPropsValue = React.useCallback(
@@ -110,6 +122,7 @@ export const Typography = () => {
           <ColorPicker
             className="shrink-0 w-32 border-transparent hover:border-gray-200 px-3"
             value={_get(typography, "color") || ""}
+            placeholder={computedTypographyStyle.color}
             onChange={(value: any) => {
               setProp(
                 (props: any) => _set(props, "typography.color", value),
@@ -123,7 +136,7 @@ export const Typography = () => {
           <CSSValueInput
             id="typography.fontSize"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
-            placeholder={parseIntSafeForInput(typography.fontSize as any, "0")}
+            placeholder={computedTypographyStyle.fontSize}
             label={"size"}
             icon={<FontSizeIcon />}
             value={typography.fontSize}
@@ -137,10 +150,7 @@ export const Typography = () => {
           <CSSValueInput
             id="typography.lineHeight"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
-            placeholder={parseIntSafeForInput(
-              typography.lineHeight as any,
-              "0"
-            )}
+            placeholder={computedTypographyStyle.lineHeight}
             label={"size"}
             icon={<LineHeightIcon />}
             value={typography.lineHeight}
@@ -154,10 +164,7 @@ export const Typography = () => {
           <CSSValueInput
             id="typography.letterSpacing"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
-            placeholder={parseIntSafeForInput(
-              typography.letterSpacing as any,
-              "0"
-            )}
+            placeholder={computedTypographyStyle.letterSpacing}
             label={"size"}
             icon={<LetterSpacingIcon />}
             value={typography.letterSpacing}
