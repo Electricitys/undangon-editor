@@ -29,7 +29,7 @@ export const HomepageCarousel = () => {
         <div key={index} style={{ position: "relative" }}>
           <img
             className={`tns-lazy-img`}
-            // src={loadingImage}
+            src={loadingImage}
             data-src={el}
             alt=""
             style={{

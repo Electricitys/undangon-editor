@@ -20,7 +20,7 @@ interface CSSValueInputProps {
   max?: number;
   onChange: (value: any) => void;
 
-  placeholder?: string;
+  placeholder?: string | number | undefined;
   className?: string;
   style?: React.CSSProperties;
 
@@ -117,7 +117,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
             id={id}
             name={name}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={placeholder as string}
             style={{
               height: 32,
               boxShadow: "none",

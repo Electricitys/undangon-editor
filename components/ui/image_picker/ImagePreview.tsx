@@ -23,7 +23,7 @@ export const ImagePreview = () => {
   return (
     <Box>
       <Box maw="50%" mx="auto">
-        <Image withPlaceholder src={previewImage} />
+        <Image alt="Preview Image" withPlaceholder src={previewImage} />
       </Box>
       <Group mt="lg" position="center">
         <Button

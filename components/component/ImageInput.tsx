@@ -30,6 +30,7 @@ export const ImageInput: React.FC<
           }}
         >
           <Image
+            alt="Manjo Image"
             height={"100%"}
             withPlaceholder={true}
             src={previewImage || image}
