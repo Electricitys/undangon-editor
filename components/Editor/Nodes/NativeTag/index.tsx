@@ -13,6 +13,7 @@ import _pick from "lodash/pick";
 import _get from "lodash/get";
 import { SpacingHandler } from "../../Settings/Spacing/handler";
 import { Fill, FillProps } from "../../Settings/Fill";
+import { AutoLayout, AutoLayoutProps } from "../../Settings/AutoLayout";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -22,6 +23,7 @@ interface NativeTagProps<T = any> {
   classList: ClassListProps;
   typography: TypographyProps;
   fill: FillProps;
+  autoLayout: AutoLayoutProps;
 
   generic: GenericProps;
 
@@ -34,6 +36,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   classList,
   typography,
   fill,
+  autoLayout,
 
   generic,
 
@@ -53,6 +56,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     ...SpacingHandler(spacing as SpacingProps, { media, isProduction }),
     ...BoxSizingHandler(boxSizing as BoxSizingProps, { media, isProduction }),
     ...typography,
+    ...autoLayout,
     ...fill,
   };
 
@@ -82,6 +86,7 @@ NativeTag.craft = {
     typography: Typography.defaultValue,
     classList: ClassList.defaultValue,
     fill: Fill.defaultValue,
+    autoLayout: AutoLayout.defaultValue,
   },
   related: {
     settings: NativeTagSettings,

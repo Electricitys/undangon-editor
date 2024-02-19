@@ -24,6 +24,7 @@ import _get from "lodash/get";
 import React from "react";
 import { CSSValueInput } from "@/components/ui/css_value_input";
 import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 const POSITION_OPTIONS = [
   {
@@ -222,29 +223,33 @@ export const BoxSizing = () => {
             }}
             value={boxSizing.width}
             actions={
-              <div className="flex flex-col">
-                <button
-                  className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
-                  onClick={() =>
-                    minMaxWidth[1]((s) => {
-                      return { ...s, min: true };
-                    })
-                  }
-                >
-                  <AlignCenterHorizontallyIcon className="mr-2 h-4 w-4" />
-                  <span>Min Width</span>
-                </button>
-                <button
-                  className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
-                  onClick={() =>
-                    minMaxWidth[1]((s) => {
-                      return { ...s, max: true };
-                    })
-                  }
-                >
-                  <SpaceBetweenHorizontallyIcon className="mr-2 h-4 w-4" />
-                  <span>Max Width</span>
-                </button>
+              <div className="flex flex-col pointer-events-auto">
+                <PopoverClose asChild>
+                  <button
+                    className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
+                    onClick={() => {
+                      minMaxWidth[1]((s) => {
+                        return { ...s, min: true };
+                      });
+                    }}
+                  >
+                    <AlignCenterHorizontallyIcon className="mr-2 h-4 w-4" />
+                    <span>Min Width</span>
+                  </button>
+                </PopoverClose>
+                <PopoverClose asChild>
+                  <button
+                    className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
+                    onClick={() =>
+                      minMaxWidth[1]((s) => {
+                        return { ...s, max: true };
+                      })
+                    }
+                  >
+                    <SpaceBetweenHorizontallyIcon className="mr-2 h-4 w-4" />
+                    <span>Max Width</span>
+                  </button>
+                </PopoverClose>
               </div>
             }
           />
@@ -326,33 +331,38 @@ export const BoxSizing = () => {
             disabled={_get(boxSizing, "v_sizing") !== "fixed"}
             icon={"H"}
             onChange={function (value: any): void {
-              _setProps("boxSizing.height", value);
+              _setPropsValue("boxSizing.height", value);
             }}
             value={boxSizing.height}
             actions={
               <div className="flex flex-col">
-                <button
-                  className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
-                  onClick={() =>
-                    minMaxHeight[1]((s) => {
-                      return { ...s, min: true };
-                    })
-                  }
-                >
-                  <AlignCenterVerticallyIcon className="h-4 w-4" />
-                  <span>Min Height</span>
-                </button>
-                <button
-                  className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
-                  onClick={() =>
-                    minMaxHeight[1]((s) => {
-                      return { ...s, max: true };
-                    })
-                  }
-                >
-                  <SpaceBetweenVerticallyIcon className="mr-2 h-4 w-4" />
-                  <span>Max Height</span>
-                </button>
+                <PopoverClose asChild>
+                  <button
+                    className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
+                    onClick={() =>
+                      minMaxHeight[1]((s) => {
+                        return { ...s, min: true };
+                      })
+                    }
+                  >
+                    <AlignCenterVerticallyIcon className="mr-2 h-4 w-4" />
+                    <span>Min Height</span>
+                  </button>
+                </PopoverClose>
+
+                <PopoverClose asChild>
+                  <button
+                    className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
+                    onClick={() =>
+                      minMaxHeight[1]((s) => {
+                        return { ...s, max: true };
+                      })
+                    }
+                  >
+                    <SpaceBetweenVerticallyIcon className="mr-2 h-4 w-4" />
+                    <span>Max Height</span>
+                  </button>
+                </PopoverClose>
               </div>
             }
           />

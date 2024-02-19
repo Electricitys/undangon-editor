@@ -75,6 +75,7 @@ export const AddNodeActionDialog: React.FC<{
     values,
     { resetForm }
   ) => {
+    console.log(values);
     let element: React.ReactElement;
 
     if (values.type === "tag") {

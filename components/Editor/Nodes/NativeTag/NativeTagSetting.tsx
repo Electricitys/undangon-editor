@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
 import { Select } from "@/components/component/Select";
 import { ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
+import { AutoLayout } from "../../Settings/AutoLayout";
 
 export const NativeTagSettings = () => {
   const {
@@ -44,6 +45,9 @@ export const NativeTagSettings = () => {
       </PanelSection>
       <PanelSection text="Typography">
         <Typography />
+      </PanelSection>
+      <PanelSection text="Auto Layout">
+        <AutoLayout />
       </PanelSection>
       <PanelSection text="Fill">
         <Fill />

@@ -38,7 +38,6 @@ export const LayerActions = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            disabled={id === "ROOT"}
             size={"sm"}
             variant={"ghost"}
             className="hover:bg-gray-200 p-0 h-7 w-7 mr-1"
@@ -57,6 +56,7 @@ export const LayerActions = () => {
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     <DropdownMenuItem
+                      disabled={id === "ROOT"}
                       onClick={() => {
                         setAddNodeTarget("before");
                         setIsDialogOpen("action");
@@ -73,6 +73,7 @@ export const LayerActions = () => {
                       <span>Child</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      disabled={id === "ROOT"}
                       onClick={() => {
                         setAddNodeTarget("after");
                         setIsDialogOpen("action");
@@ -86,24 +87,30 @@ export const LayerActions = () => {
             </DropdownMenuGroup>
             {/* <AddNodeAction /> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem color="red" onClick={() => actions.delete(id)}>
+            <DropdownMenuItem
+              color="red"
+              onClick={() => actions.delete(id)}
+              disabled={id === "ROOT"}
+            >
               <TrashIcon className="mr-2 h-4 w-4" />
               <span>Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenuPortal>
       </DropdownMenu>
-      <AddNodeActionDialog
-        isOpen={isDialogOpen === "action"}
-        onClose={() => {
-          setIsDialogOpen(null);
-        }}
-        onSubmit={() => {
-          setAddNodeTarget(null);
-          setIsDialogOpen(null);
-        }}
-        target={"before"}
-      />
+      {addNodeTarget && (
+        <AddNodeActionDialog
+          isOpen={addNodeTarget != null}
+          onClose={() => {
+            setIsDialogOpen(null);
+          }}
+          onSubmit={() => {
+            setAddNodeTarget(null);
+            setIsDialogOpen(null);
+          }}
+          target={addNodeTarget}
+        />
+      )}
     </>
   );
 };
