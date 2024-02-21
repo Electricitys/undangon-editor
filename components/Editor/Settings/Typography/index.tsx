@@ -151,6 +151,7 @@ export const Typography = () => {
             id="typography.lineHeight"
             className="shrink-0 w-32 border-transparent hover:border-gray-200"
             placeholder={computedTypographyStyle.lineHeight}
+            defaultUnit=""
             label={"size"}
             icon={<LineHeightIcon />}
             value={typography.lineHeight}

@@ -21,6 +21,8 @@ interface CSSValueInputProps {
   max?: number;
   onChange: (value: any) => void;
 
+  defaultUnit?: string;
+
   placeholder?: string | number | undefined;
   className?: string;
   style?: React.CSSProperties;
@@ -38,6 +40,8 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
   min = -999999,
   max = 999999,
   onChange,
+
+  defaultUnit = "px",
 
   readOnly = false,
 
@@ -61,7 +65,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
       if (number) {
         if (valueType === "Dimension")
           return onChange(`${value}${transformedValue?.unit}`);
-        if (valueType === "Number") return onChange(value);
+        if (valueType === "Number") return onChange(`${value}${defaultUnit}`);
       }
       onChange(value);
     },
@@ -142,7 +146,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
               }
             }}
             onChange={(e) => {
-              onChange(e.target.value);
+              ChangeHandler(e.target.value);
             }}
           />
         </div>

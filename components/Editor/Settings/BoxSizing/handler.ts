@@ -17,7 +17,7 @@ export type TransformProps = {
 export const BoxSizingHandler = (
   props: BoxSizingProps,
   context: Context
-): BoxSizingProps => {
+): Omit<BoxSizingProps, "transform"> => {
   let result: any = { ...props };
 
   for (const [key, value] of Object.entries(props)) {
@@ -33,7 +33,7 @@ export const BoxSizingHandler = (
     else if (value === "fixed") result[targetKey] = result[targetKey];
   }
 
-  return _omit(result, ["transform"]) as BoxSizingProps;
+  return _omit(result, ["transform"]) as Omit<BoxSizingProps, "transform">;
 };
 
 export const BoxSizingPropertyHandler = (

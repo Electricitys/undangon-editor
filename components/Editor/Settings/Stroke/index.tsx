@@ -1,6 +1,7 @@
 import _pick from "lodash/pick";
 import _set from "lodash/set";
 import _get from "lodash/get";
+import _isEmpty from "lodash/isEmpty";
 import { useNode } from "@craftjs/core";
 import { BackgroundPicker } from "@/components/ui/background_picker";
 import { ColorPicker } from "@/components/ui/color_picker";
@@ -21,20 +22,20 @@ export interface StrokeProps
   extends Pick<
     CSSProperties,
     | "borderColor"
-    | "borderWidth"
-    | "borderTop"
-    | "borderLeft"
-    | "borderRight"
-    | "borderBottom"
     | "borderStyle"
+    | "borderTopWidth"
+    | "borderLeftWidth"
+    | "borderRightWidth"
+    | "borderBottomWidth"
   > {}
 
 const defaultValue: Partial<StrokeProps> = {
   borderColor: undefined,
-  borderTop: undefined,
-  borderLeft: undefined,
-  borderBottom: undefined,
-  borderRight: undefined,
+  borderStyle: undefined,
+  borderTopWidth: undefined,
+  borderLeftWidth: undefined,
+  borderBottomWidth: undefined,
+  borderRightWidth: undefined,
 };
 
 export const Stroke = () => {
@@ -48,10 +49,10 @@ export const Stroke = () => {
 
   const [isMixed, setIsMixed] = React.useState(
     ![
-      _get(stroke, "borderTop"),
-      _get(stroke, "borderRight"),
-      _get(stroke, "borderBottom"),
-      _get(stroke, "borderLeft"),
+      _get(stroke, "borderTopWidth"),
+      _get(stroke, "borderRightWidth"),
+      _get(stroke, "borderBottomWidth"),
+      _get(stroke, "borderLeftWidth"),
     ].every((value, _index, array) => value === array[0])
   );
 
@@ -69,9 +70,9 @@ export const Stroke = () => {
   return (
     <div className="px-1">
       <div className="grid grid-cols-12 pb-2">
-        <div className="px-1 col-span-6">
+        <div className="px-1 col-span-5">
           <ColorPicker
-            className="w-full border-transparent hover:border-gray-200 px-2"
+            className="w-full border-transparent hover:border-gray-200 px-2 h-8"
             value={_get(stroke, "borderColor") || ""}
             onChange={(value: any) => {
               setProp(
@@ -96,17 +97,29 @@ export const Stroke = () => {
             onChange={function (value) {}}
           /> */}
         </div>
-        <div className="px-1 col-span-4">
+        <div className="px-1 col-span-5">
           <CSSValueInput
             id="stroke.borderWidth"
             readOnly={isMixed}
             className="border-transparent hover:border-gray-200"
             icon={<BorderAllIcon />}
             onChange={function (value: any): void {
-              _setPropsValue("stroke.borderWidth", value);
+              setProp((prop: any) => {
+                if (!stroke.borderStyle) {
+                  _set(prop, "stroke.borderStyle", "solid");
+                }
+                _set(prop, "stroke.borderTopWidth", value);
+                _set(prop, "stroke.borderRightWidth", value);
+                _set(prop, "stroke.borderBottomWidth", value);
+                _set(prop, "stroke.borderLeftWidth", value);
+                if (_isEmpty(value)) {
+                  _set(prop, "stroke.borderStyle", undefined);
+                  _set(prop, "stroke.borderStyle", undefined);
+                }
+              }, 1000);
             }}
             placeholder={isMixed ? "Mixed" : "0"}
-            value={isMixed ? "" : _get(stroke, "borderWidth")}
+            value={isMixed ? "Mixed" : _get(stroke, "borderTopWidth")}
           />
         </div>
         <div className="px-1 col-span-2">
