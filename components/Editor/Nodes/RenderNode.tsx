@@ -54,10 +54,6 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     isHover,
     dom,
     name,
-    duplicatable,
-    moveable,
-    deletable,
-    connectors: { drag },
     parent,
 
     props,

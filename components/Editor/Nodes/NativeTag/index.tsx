@@ -7,13 +7,18 @@ import { BoxSizing, BoxSizingProps } from "../../Settings/BoxSizing";
 import { UserComponent, useNode } from "@craftjs/core";
 import { cx } from "class-variance-authority";
 import { Generic, GenericProps } from "../../Settings/Generic";
-import { BoxSizingHandler } from "../../Settings/BoxSizing/handler";
+import {
+  BoxSizingHandler,
+  TransformHandler,
+} from "../../Settings/BoxSizing/handler";
 import { useViewport } from "../../Viewport/useViewport";
+import _merge from "lodash/merge";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
 import { SpacingHandler } from "../../Settings/Spacing/handler";
 import { Fill, FillProps } from "../../Settings/Fill";
 import { AutoLayout, AutoLayoutProps } from "../../Settings/AutoLayout";
+import { StrokeProps } from "../../Settings/Stroke";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -23,6 +28,7 @@ interface NativeTagProps<T = any> {
   classList: ClassListProps;
   typography: TypographyProps;
   fill: FillProps;
+  stroke: StrokeProps;
   autoLayout: AutoLayoutProps;
 
   generic: GenericProps;
@@ -36,6 +42,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   classList,
   typography,
   fill,
+  stroke,
   autoLayout,
 
   generic,
@@ -58,6 +65,10 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     ...typography,
     ...autoLayout,
     ...fill,
+    ...stroke,
+    transform: TransformHandler({
+      ...(_pick(boxSizing as BoxSizingProps, ["transform"]).transform as {}),
+    }),
   };
 
   const className = cx(

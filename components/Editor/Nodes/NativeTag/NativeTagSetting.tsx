@@ -13,6 +13,7 @@ import { useNode } from "@craftjs/core";
 import { Select } from "@/components/component/Select";
 import { ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
 import { AutoLayout } from "../../Settings/AutoLayout";
+import { Stroke } from "../../Settings/Stroke";
 
 export const NativeTagSettings = () => {
   const {
@@ -51,6 +52,9 @@ export const NativeTagSettings = () => {
       </PanelSection>
       <PanelSection text="Fill">
         <Fill />
+      </PanelSection>
+      <PanelSection text="Stroke">
+        <Stroke />
       </PanelSection>
       <PanelSection text="Class List">
         <ClassList />

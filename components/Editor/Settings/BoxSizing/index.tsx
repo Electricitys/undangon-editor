@@ -8,11 +8,13 @@ import { useEditor, useNode } from "@craftjs/core";
 import {
   AlignCenterHorizontallyIcon,
   AlignCenterVerticallyIcon,
+  AngleIcon,
   BoxIcon,
   CornerBottomLeftIcon,
   CornerBottomRightIcon,
   CornerTopLeftIcon,
   CornerTopRightIcon,
+  CornersIcon,
   Crosshair1Icon,
   Crosshair2Icon,
   SpaceBetweenHorizontallyIcon,
@@ -25,6 +27,7 @@ import React from "react";
 import { CSSValueInput } from "@/components/ui/css_value_input";
 import { parseIntSafeForInput } from "@/components/utils/parseIntSafe";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { Button } from "@/components/ui/button";
 
 const POSITION_OPTIONS = [
   {
@@ -60,6 +63,9 @@ export interface BoxSizingProps {
   borderTopRightRadius: string;
   borderBottomLeftRadius: string;
   borderBottomRightRadius: string;
+  transform: {
+    rotate?: string;
+  };
 }
 
 const defaultValue: Partial<BoxSizingProps> = {
@@ -78,6 +84,9 @@ const defaultValue: Partial<BoxSizingProps> = {
   borderTopRightRadius: undefined,
   borderBottomLeftRadius: undefined,
   borderBottomRightRadius: undefined,
+  transform: {
+    rotate: undefined,
+  },
 };
 
 export const BoxSizing = () => {
@@ -121,7 +130,7 @@ export const BoxSizing = () => {
     [setProp]
   );
   const _setPropsValue = React.useCallback(
-    (path: string, value: string) => {
+    (path: string, value?: string) => {
       setProp(
         (props: any) =>
           _set(props, path, value === undefined ? undefined : value),
@@ -139,6 +148,15 @@ export const BoxSizing = () => {
     min: typeof _get(boxSizing, "minWidth") !== "undefined",
     max: typeof _get(boxSizing, "maxWidth") !== "undefined",
   });
+
+  const [isMixed, setIsMixed] = React.useState(
+    ![
+      _get(boxSizing, "borderTopLeftRadius"),
+      _get(boxSizing, "borderTopRightRadius"),
+      _get(boxSizing, "borderBottomLeftRadius"),
+      _get(boxSizing, "borderBottomRightRadius"),
+    ].every((value, _index, array) => value === array[0])
+  );
 
   return (
     <div className="px-2">
@@ -166,7 +184,7 @@ export const BoxSizing = () => {
             disabled={_get(boxSizing, "position") !== "absolute"}
             icon={"Y"}
             onChange={(value: any) => {
-              _setPropsValue("boxSizing.left", value);
+              _setPropsValue("boxSizing.top", value);
             }}
             value={boxSizing.top}
           />
@@ -223,7 +241,7 @@ export const BoxSizing = () => {
             }}
             value={boxSizing.width}
             actions={
-              <div className="flex flex-col pointer-events-auto">
+              <div className="flex flex-col">
                 <PopoverClose asChild>
                   <button
                     className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
@@ -306,10 +324,7 @@ export const BoxSizing = () => {
                   <button
                     className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
                     onClick={() => {
-                      _setProps("boxSizing.maxWidth", {
-                        value: undefined,
-                        unit: undefined,
-                      });
+                      _setPropsValue("boxSizing.maxWidth", undefined);
                       minMaxWidth[1]((s) => {
                         return { ...s, max: false };
                       });
@@ -385,10 +400,7 @@ export const BoxSizing = () => {
                   <button
                     className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
                     onClick={() => {
-                      _setProps("boxSizing.minHeight", {
-                        value: undefined,
-                        unit: undefined,
-                      });
+                      _setPropsValue("boxSizing.minHeight", undefined);
                       minMaxHeight[1]((s) => {
                         return { ...s, min: false };
                       });
@@ -408,7 +420,7 @@ export const BoxSizing = () => {
               placeholder="Max H"
               icon={<SpaceBetweenHorizontallyIcon className="h-4 w-4" />}
               onChange={function (value: any): void {
-                _setProps("boxSizing.maxHeight", value);
+                _setPropsValue("boxSizing.maxHeight", value);
               }}
               value={boxSizing.maxHeight}
               actions={
@@ -419,10 +431,7 @@ export const BoxSizing = () => {
                   <button
                     className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700"
                     onClick={() => {
-                      _setProps("boxSizing.maxHeight", {
-                        value: undefined,
-                        unit: undefined,
-                      });
+                      _setPropsValue("boxSizing.maxHeight", undefined);
                       minMaxHeight[1]((s) => {
                         return { ...s, max: false };
                       });
@@ -468,59 +477,108 @@ export const BoxSizing = () => {
           />
         </div>
       </div>
+
       <div className="grid grid-cols-12 pb-2">
+        <div className="px-1 col-span-5">
+          <CSSValueInput
+            id="boxSizing.transform.rotate"
+            className="border-transparent hover:border-gray-200"
+            label={"Rotation"}
+            placeholder="0"
+            icon={<AngleIcon />}
+            onChange={function (value) {
+              _setPropsValue("boxSizing.transform.rotate", value);
+            }}
+            value={_get(boxSizing, "transform.rotate")}
+          />
+        </div>
         <div className="px-1 col-span-5">
           <CSSValueInput
             id="boxSizing.borderTopLeftRadius"
             className="border-transparent hover:border-gray-200"
-            label={"Top Left Radius"}
+            label={"Border Radius"}
+            readOnly={isMixed}
             placeholder="0"
             icon={<CornerTopLeftIcon />}
             onChange={function (value: any): void {
-              _setPropsValue("boxSizing.borderTopLeftRadius", value);
+              setProp((prop: any) => {
+                _set(prop, "boxSizing.borderTopLeftRadius", value);
+                _set(prop, "boxSizing.borderTopRightRadius", value);
+                _set(prop, "boxSizing.borderBottomLeftRadius", value);
+                _set(prop, "boxSizing.borderBottomRightRadius", value);
+              }, 1000);
             }}
-            value={boxSizing.borderTopLeftRadius}
+            value={isMixed ? "Mixed" : boxSizing.borderTopLeftRadius}
           />
         </div>
-        <div className="px-1 col-span-5">
-          <CSSValueInput
-            id="boxSizing.borderTopRightRadius"
+        <div className="px-1 col-span-2">
+          <Button
             className="border-transparent hover:border-gray-200"
-            label={"Top Right Radius"}
-            placeholder="0"
-            icon={<CornerTopRightIcon />}
-            onChange={function (value: any): void {
-              _setPropsValue("boxSizing.borderTopRightRadius", value);
+            size={"icon-sm"}
+            variant={"outline"}
+            onClick={() => {
+              setIsMixed((s) => !s);
             }}
-            value={boxSizing.borderTopRightRadius}
-          />
+          >
+            <CornersIcon />
+          </Button>
         </div>
-        <div className="px-1 col-span-5">
-          <CSSValueInput
-            id="boxSizing.borderBottomLeftRadius"
-            className="border-transparent hover:border-gray-200"
-            label={"Bottom Left Radius"}
-            placeholder="0"
-            icon={<CornerBottomLeftIcon />}
-            onChange={function (value: any): void {
-              _setPropsValue("boxSizing.borderBottomLeftRadius", value);
-            }}
-            value={boxSizing.borderBottomLeftRadius}
-          />
-        </div>
-        <div className="px-1 col-span-5">
-          <CSSValueInput
-            id="boxSizing.borderBottomRightRadius"
-            className="border-transparent hover:border-gray-200"
-            label={"Bottom Right Radius"}
-            placeholder="0"
-            icon={<CornerBottomRightIcon />}
-            onChange={function (value: any): void {
-              _setPropsValue("boxSizing.borderBottomRightRadius", value);
-            }}
-            value={boxSizing.borderTopRightRadius}
-          />
-        </div>
+        {isMixed && (
+          <>
+            <div className="px-1 col-span-5">
+              <CSSValueInput
+                id="boxSizing.borderTopLeftRadius"
+                className="border-transparent hover:border-gray-200"
+                label={"Top Left Radius"}
+                placeholder="0"
+                icon={<CornerTopLeftIcon />}
+                onChange={function (value: any): void {
+                  _setPropsValue("boxSizing.borderTopLeftRadius", value);
+                }}
+                value={boxSizing.borderTopLeftRadius}
+              />
+            </div>
+            <div className="px-1 col-span-5">
+              <CSSValueInput
+                id="boxSizing.borderTopRightRadius"
+                className="border-transparent hover:border-gray-200"
+                label={"Top Right Radius"}
+                placeholder="0"
+                icon={<CornerTopRightIcon />}
+                onChange={function (value: any): void {
+                  _setPropsValue("boxSizing.borderTopRightRadius", value);
+                }}
+                value={boxSizing.borderTopRightRadius}
+              />
+            </div>
+            <div className="px-1 col-span-5">
+              <CSSValueInput
+                id="boxSizing.borderBottomLeftRadius"
+                className="border-transparent hover:border-gray-200"
+                label={"Bottom Left Radius"}
+                placeholder="0"
+                icon={<CornerBottomLeftIcon />}
+                onChange={function (value: any): void {
+                  _setPropsValue("boxSizing.borderBottomLeftRadius", value);
+                }}
+                value={boxSizing.borderBottomLeftRadius}
+              />
+            </div>
+            <div className="px-1 col-span-5">
+              <CSSValueInput
+                id="boxSizing.borderBottomRightRadius"
+                className="border-transparent hover:border-gray-200"
+                label={"Bottom Right Radius"}
+                placeholder="0"
+                icon={<CornerBottomRightIcon />}
+                onChange={function (value: any): void {
+                  _setPropsValue("boxSizing.borderBottomRightRadius", value);
+                }}
+                value={boxSizing.borderBottomRightRadius}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ interface CSSValueInputProps {
   name?: string;
   label?: string;
   disabled?: boolean;
+  readOnly?: boolean;
   icon: React.ReactNode;
   value: string | number | undefined;
   min?: number;
@@ -37,6 +38,8 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
   min = -999999,
   max = 999999,
   onChange,
+
+  readOnly = false,
 
   placeholder,
   className,
@@ -73,6 +76,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
     <Popover>
       <div
         className={cx(
+          readOnly ? "pointer-events-none" : "",
           "flex group border relative border-gray-200 rounded-md",
           className
         )}
@@ -128,12 +132,13 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
             }}
             value={value || ""}
             onKeyDown={(e) => {
-              const val = value as number;
+              if (!isNumber) return;
+              const val = parseInt((transformedValue as any).value) as number;
               if (e.code === "ArrowUp") {
                 ChangeHandler(val + 1, true);
               }
               if (e.code === "ArrowDown") {
-                ChangeHandler(val + 1, true);
+                ChangeHandler(val - 1, true);
               }
             }}
             onChange={(e) => {
@@ -161,7 +166,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
         )}
       </div>
       <PopoverAnchor />
-      <PopoverContent align="start" className="p-0 w-48">
+      <PopoverContent align="start" className="pointer-events-auto p-0 w-48">
         {actions}
       </PopoverContent>
     </Popover>

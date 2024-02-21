@@ -106,7 +106,7 @@ const FontPicker: FC<FontPickerProps> = ({
         </PopoverTrigger>
         <PopoverPortal>
           <PopoverContent
-            className="p-0"
+            className="pointer-events-auto p-0"
             style={{ width: "275px", zIndex: 100 }}
           >
             <VirtualizedCommand

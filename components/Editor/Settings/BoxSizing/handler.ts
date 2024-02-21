@@ -1,12 +1,17 @@
 import { BoxSizing, BoxSizingProps } from ".";
+import _omit from "lodash/omit";
 import _get from "lodash/get";
 import { ProcessUnitForViewport } from "../../utils/processViewportUnit";
 import { MediaProps } from "../../Viewport/useViewport";
-import { uncss } from "@/components/ui/css_unit_input";
+import _isEmpty from "lodash/isEmpty";
 
 type Context = {
   media?: MediaProps;
   isProduction?: boolean;
+};
+
+export type TransformProps = {
+  rotate?: string;
 };
 
 export const BoxSizingHandler = (
@@ -14,9 +19,11 @@ export const BoxSizingHandler = (
   context: Context
 ): BoxSizingProps => {
   let result: any = { ...props };
+
   for (const [key, value] of Object.entries(props)) {
     result[key] = BoxSizingPropertyHandler(key, value, context);
   }
+
   for (const [key, value] of Object.entries(props)) {
     let targetKey = key;
     if ("h_sizing" === key) targetKey = "width";
@@ -25,7 +32,8 @@ export const BoxSizingHandler = (
     else if (value === "hug") result[targetKey] = undefined;
     else if (value === "fixed") result[targetKey] = result[targetKey];
   }
-  return result as BoxSizingProps;
+
+  return _omit(result, ["transform"]) as BoxSizingProps;
 };
 
 export const BoxSizingPropertyHandler = (
@@ -34,6 +42,7 @@ export const BoxSizingPropertyHandler = (
   context?: Context
 ): any => {
   let result = value;
+
   if (!context) return result;
   if (Object.keys(BoxSizing.defaultValue).indexOf(path) < 0) return result;
   if (
@@ -46,5 +55,20 @@ export const BoxSizingPropertyHandler = (
       width: context.media.currentMedia.width,
     });
   }
+
+  return result;
+};
+
+export const TransformHandler = (
+  props: Partial<TransformProps>,
+  context?: Context
+): string => {
+  const result = Object.keys(props).reduce((p, c) => {
+    let value = (props as any)[c];
+    if (!_isEmpty(value)) {
+      p += `${c}(${value})`;
+    }
+    return p;
+  }, "");
   return result;
 };

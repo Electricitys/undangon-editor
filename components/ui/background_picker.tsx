@@ -98,7 +98,7 @@ export function BackgroundPicker({
         </Button>
       </PopoverTrigger>
       <PopoverPortal>
-        <PopoverContent>
+        <PopoverContent className="pointer-events-auto">
           <Tabs defaultValue={defaultTab} className="w-full">
             <TabsList className="w-full mb-4">
               <TabsTrigger className="flex-1" value="solid">

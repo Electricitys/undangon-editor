@@ -45,7 +45,7 @@ export const ColorPicker = ({
         </Button>
       </PopoverTrigger>
       <PopoverPortal>
-        <PopoverContent>
+        <PopoverContent className="pointer-events-auto">
           <HexColorPicker
             className="mb-3"
             style={{

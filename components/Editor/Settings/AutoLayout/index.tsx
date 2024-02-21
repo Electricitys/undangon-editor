@@ -7,6 +7,8 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import {
   AlignHorizontalSpaceAroundIcon,
   AlignVerticalSpaceAroundIcon,
+  FoldHorizontalIcon,
+  FoldVerticalIcon,
   MoveDownIcon,
   MoveRightIcon,
   Undo2Icon,
@@ -17,7 +19,14 @@ import React, { CSSProperties } from "react";
 export interface AutoLayoutProps
   extends Pick<
     CSSProperties,
-    "display" | "rowGap" | "columnGap" | "flexWrap" | "flexDirection"
+    | "display"
+    | "rowGap"
+    | "columnGap"
+    | "flexWrap"
+    | "flexDirection"
+    | "flexFlow"
+    | "justifyContent"
+    | "alignItems"
   > {}
 
 const defaultValue: Partial<AutoLayoutProps> = {
@@ -26,6 +35,7 @@ const defaultValue: Partial<AutoLayoutProps> = {
   columnGap: undefined,
   flexWrap: undefined,
   flexDirection: undefined,
+  flexFlow: undefined,
 };
 
 export const AutoLayout = () => {
@@ -56,23 +66,13 @@ export const AutoLayout = () => {
           <ToggleGroup.Root
             id="autoLayout.flexDirection"
             type="single"
-            value={
-              _get(autoLayout, "flexDirection") ||
-              _get(autoLayout, "flexWrap") ||
-              ""
-            }
+            value={_get(autoLayout, "flexFlow") || ""}
             onValueChange={(value) => {
               setProp((props: any) => {
-                _set(props, "autoLayout.flexWrap", undefined);
-                _set(props, "autoLayout.flexDirection", undefined);
                 _set(props, "autoLayout.display", undefined);
+                _set(props, "autoLayout.flexFlow", value);
                 if (value) {
                   _set(props, "autoLayout.display", "flex");
-                  if (value === "wrap") {
-                    _set(props, "autoLayout.flexWrap", "wrap");
-                  } else {
-                    _set(props, "autoLayout.flexDirection", value);
-                  }
                 } else {
                   _set(props, "autoLayout.rowGap", undefined);
                   _set(props, "autoLayout.columnGap", undefined);
@@ -80,12 +80,12 @@ export const AutoLayout = () => {
               }, 1000);
             }}
           >
-            <ToggleGroup.Item asChild value="row">
+            <ToggleGroup.Item asChild value="column">
               <Toggle>
                 <MoveDownIcon size={15} />
               </Toggle>
             </ToggleGroup.Item>
-            <ToggleGroup.Item asChild value="column">
+            <ToggleGroup.Item asChild value="row">
               <Toggle>
                 <MoveRightIcon size={15} />
               </Toggle>
@@ -103,8 +103,7 @@ export const AutoLayout = () => {
           </ToggleGroup.Root>
         </div>
       </div>
-      {(_get(autoLayout, "flexWrap") === "wrap" ||
-        _get(autoLayout, "flexDirection") === "column") && (
+      {["wrap", "row"].indexOf(_get(autoLayout, "flexFlow") || "") > -1 && (
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-xs w-full">Horizontal Gap</div>
           <CSSValueInput
@@ -120,8 +119,7 @@ export const AutoLayout = () => {
           />
         </div>
       )}
-      {(_get(autoLayout, "flexWrap") === "wrap" ||
-        _get(autoLayout, "flexDirection") === "row") && (
+      {["wrap", "column"].indexOf(_get(autoLayout, "flexFlow") || "") > -1 && (
         <div className="flex items-center pl-3 pr-1">
           <div className="grow text-xs w-full">Vertical Gap</div>
           <CSSValueInput
@@ -136,6 +134,34 @@ export const AutoLayout = () => {
             value={autoLayout.rowGap}
           />
         </div>
+      )}
+      {_get(autoLayout, "flexFlow") && (
+        <>
+          <div className="flex items-center pl-3 pr-1">
+            <div className="grow text-xs w-full">Justify Content</div>
+            <CSSValueInput
+              id="autoLayout.justifyContent"
+              className="shrink-0 w-32 border-transparent hover:border-gray-200"
+              icon={<FoldHorizontalIcon size={15} />}
+              onChange={function (value: any): void {
+                _setPropsValue("autoLayout.justifyContent", value);
+              }}
+              value={autoLayout.justifyContent}
+            />
+          </div>
+          <div className="flex items-center pl-3 pr-1">
+            <div className="grow text-xs w-full">Align Items</div>
+            <CSSValueInput
+              id="autoLayout.alignItems"
+              className="shrink-0 w-32 border-transparent hover:border-gray-200"
+              icon={<FoldVerticalIcon size={15} />}
+              onChange={function (value: any): void {
+                _setPropsValue("autoLayout.alignItems", value);
+              }}
+              value={autoLayout.alignItems}
+            />
+          </div>
+        </>
       )}
     </div>
   );
