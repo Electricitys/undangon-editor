@@ -8,9 +8,7 @@ import { InvitationSchema } from "@/components/interfaces";
 import { Divider, Flex } from "@mantine/core";
 import { Box, Button, TextInput, Textarea } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { useUpdate } from "@refinedev/core";
-import { Formik, FormikHelpers, FormikValues, useFormik } from "formik";
-import { Omit } from "lodash";
+import { useFormik } from "formik";
 import React from "react";
 
 const default_share_message = `Demikianlah mereka bukan lagi dua, melainkan satu. Karena itu, apa yang telah dipersatukan Allah, tidak boleh diceraikan manusia. (Matius 19:6)\n\nTanpa mengurangi rasa hormat, perkenankan kami menginformasikan kepada Bapak/Ibu/Saudara/i, teman sekaligus sahabat acara pernikahan kami:\n\n*Nama Mempelai & Nama Mempelai*\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i untuk memberikan doa restu kepada kami.\nJangan lupa isi Guestbook ya..\n\nTerima Kasih..\n\nWith pray & love,\n*Nama Panggilan & Nama Panggilan*\n#Manjo`;
