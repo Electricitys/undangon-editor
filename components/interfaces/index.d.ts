@@ -63,6 +63,9 @@ export interface InvitationSchema extends DefaultDataSchema {
   name: string;
   content: string;
   slug: string;
+  
+  share_message: string;
+  thumbnail_url: string;
 
   category_id: number;
   category: CategorySchema;
@@ -73,7 +76,7 @@ export interface InvitationSchema extends DefaultDataSchema {
   package: PackageSchema;
 
   metadata_id: number;
-  metadata: number;
+  metadata: MetadataSchema;
 }
 
 export interface MetadataSchema extends DefaultDataSchema {

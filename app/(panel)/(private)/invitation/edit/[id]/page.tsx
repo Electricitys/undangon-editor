@@ -9,6 +9,7 @@ import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import React from "react";
 import slugify from "slugify";
 import { MetadataForm } from "./MetadataForm";
+import Link from "next/link";
 
 type InvitationData = Pick<
   InvitationSchema,
@@ -65,7 +66,7 @@ const InvitationEdit: React.FC = () => {
         <>
           {defaultButtons}
           <Button
-            component="a"
+            component={Link}
             href={templateUrl}
             variant="outline"
             size="sm"

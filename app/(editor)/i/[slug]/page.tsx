@@ -43,15 +43,15 @@ export async function generateMetadata({ params }: Props) {
   if (!data) return "Page not Found";
 
   return {
-    title: `Invitation Editor - ${data.name}`,
+    title: `${data.name} - Manjo`,
+    metadataBase: new URL(`https://${CONSTANTS.APP_DOMAIN}/i/${params.slug}`),
     twitter: {
       card: "summary",
     },
     openGraph: {
-      title: `${data.name} - ${CONSTANTS.APP_NAME}`,
-      description: `You are invited`,
+      title: data.metadata.title || `${data.name} - ${CONSTANTS.APP_NAME}`,
+      description: data.metadata.description || "You are invited.",
       site_name: CONSTANTS.APP_NAME,
-      url: `https://${CONSTANTS.APP_DOMAIN}/i/${params.slug}`,
     },
   };
 }

@@ -5,6 +5,7 @@ import { FrameProps } from "@/components/Editor/Viewport/Frames";
 import lz from "lzutf8";
 import { generateId } from "@/components/utils/generateId";
 import Body from "../../../template/[slug]/[id]/Body";
+import { CONSTANTS } from "@/components/Constants";
 
 type Props = {
   params: {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props) {
     });
 
   return {
-    title: `Invitation Editor - ${data.name}`,
+    title: `Invitation Editor - ${data.name} - ${CONSTANTS.APP_NAME}`,
   };
 }
 
