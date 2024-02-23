@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: Props) {
 
   return {
     title: `Invitation Editor - ${data.name}`,
+    metadataBase: new URL(`https://${CONSTANTS.APP_DOMAIN}/i/${params.slug}`),
     twitter: {
       card: "summary",
     },
@@ -37,7 +38,6 @@ export async function generateMetadata({ params }: Props) {
       title: `${data.name} - ${CONSTANTS.APP_NAME}`,
       description: `You are invited`,
       site_name: CONSTANTS.APP_NAME,
-      url: `https://${CONSTANTS.APP_DOMAIN}/i/${params.slug}`,
     },
   };
 }
