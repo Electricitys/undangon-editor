@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { NativeTagSettings } from "./NativeTagSetting";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
@@ -19,6 +19,9 @@ import { SpacingHandler } from "../../Settings/Spacing/handler";
 import { Fill, FillProps } from "../../Settings/Fill";
 import { AutoLayout, AutoLayoutProps } from "../../Settings/AutoLayout";
 import { StrokeProps } from "../../Settings/Stroke";
+import { MotionProps } from "../../Settings/Motion";
+import { useAnimate } from "framer-motion";
+import { useHandleMotion } from "../../Settings/Motion/hook";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -30,6 +33,7 @@ interface NativeTagProps<T = any> {
   fill: FillProps;
   stroke: StrokeProps;
   autoLayout: AutoLayoutProps;
+  motion: MotionProps;
 
   generic: GenericProps;
 
@@ -44,6 +48,7 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   fill,
   stroke,
   autoLayout,
+  motion,
 
   generic,
 
@@ -56,6 +61,8 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
   } = useNode((node) => ({
     tag: node.data.custom.name,
   }));
+
+  const { scope } = useHandleMotion(motion!);
 
   const { isProduction, media } = useViewport();
 
@@ -77,7 +84,15 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
 
   return React.createElement(
     as || tag || "div",
-    { style, className, ref: (ref: any) => connect(ref as any), ...generic },
+    {
+      style,
+      className,
+      ref: (ref: any) => {
+        connect(ref as any);
+        (scope as any).current = ref;
+      },
+      ...generic,
+    },
     children
   );
 };

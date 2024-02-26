@@ -14,6 +14,7 @@ import { Select } from "@/components/component/Select";
 import { ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
 import { AutoLayout } from "../../Settings/AutoLayout";
 import { Stroke } from "../../Settings/Stroke";
+import { Motion } from "../../Settings/Motion";
 
 export const NativeTagSettings = () => {
   const {
@@ -59,8 +60,12 @@ export const NativeTagSettings = () => {
       <PanelSection text="Class List">
         <ClassList />
       </PanelSection>
-      <PanelSection text="Generic Properties" separator={false}>
+      <PanelSection text="Generic Properties">
         <Generic />
+      </PanelSection>
+
+      <PanelSection text="Animation" separator={false}>
+        <Motion />
       </PanelSection>
     </>
   );

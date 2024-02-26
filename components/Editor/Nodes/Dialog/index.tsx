@@ -78,7 +78,7 @@ export const Dialog: UserComponent<Partial<DialogProps>> = ({
     <UIDialog.Root
       // defaultOpen={dialog?.defaultValue}
       defaultOpen={true}
-      open={isProduction ? (dialog?.stayOpen ? true : undefined) : undefined}
+      open={!isProduction ? (dialog?.stayOpen ? true : undefined) : undefined}
       modal={isProduction}
     >
       {dialogTriggerButton?.hide ? null : (

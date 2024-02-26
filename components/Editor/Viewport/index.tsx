@@ -250,7 +250,8 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
         <div
           className={cn(
             "fixed pointer-events-auto z-50 scrollbar-thin hover:scrollbar-thumb-gray-300 scrollbar-thumb-gray-200 top-0 right-0 bottom-0 pt-14 overflow-auto w-72 border-l border-gray-300 bg-white transition-right duration-500 ease-in-out",
-            !barState.right.visible && "-right-72"
+            !barState.right.visible && "-right-72",
+            "pb-48"
           )}
         >
           {isSelected ? (
