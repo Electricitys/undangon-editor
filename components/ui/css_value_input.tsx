@@ -83,28 +83,21 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
             return onChange(`${value}${cssValue?.unit}`);
           if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
         } else {
-          if (cssValue) {
-            if (cssType === "Dimension") return onChange(value);
-            if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
-            if (cssType === "Identifier") {
-              if (allowedIdentifier) {
-                if (allowedIdentifier.indexOf(value) != -1) {
-                  return onChange(value);
-                } else {
-                  throw new Error(
-                    `Identifier doesn't match \`${allowedIdentifier.join(
-                      ", "
-                    )}\``
-                  );
-                }
-              } else {
-                return onChange(value);
-              }
-            }
-            throw new Error("Value not allowed");
-          } else {
-            return onChange(undefined);
+          if (!cssValue) return onChange(undefined);
+
+          if (cssType === "Dimension") return onChange(value);
+
+          if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
+
+          if (cssType === "Identifier") {
+            if (!allowedIdentifier || allowedIdentifier.includes(value))
+              return onChange(value);
+
+            throw new Error(
+              `Identifier doesn't match \`${allowedIdentifier.join(", ")}\``
+            );
           }
+          throw new Error("Value not allowed");
         }
       } catch (err: any) {
         setTempValue(prevValue);
@@ -169,6 +162,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
           <Input
             id={id}
             name={name}
+            autoComplete="off"
             disabled={disabled}
             placeholder={placeholder as string}
             style={{
@@ -186,13 +180,18 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
                 el.blur();
               }
               if (!isTypeNumber) return;
-              const val = parseInt((transformedValue as any).value) as number;
+              const val = parseNumber(
+                (transformedValue as any).value
+              ) as number;
               if (e.code === "ArrowUp") {
                 ChangeHandler(val + 1, true);
               }
               if (e.code === "ArrowDown") {
                 ChangeHandler(val - 1, true);
               }
+            }}
+            onFocus={(e) => {
+              e.currentTarget.select();
             }}
             onChange={(e) => {
               setTempValue(e.target.value);
