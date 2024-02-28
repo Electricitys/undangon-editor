@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DragValue } from "./drag_value";
 import { Button } from "./button";
 import { cx } from "class-variance-authority";
@@ -8,6 +8,9 @@ import * as csstree from "css-tree";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ChevronDownIcon } from "lucide-react";
 import { PopoverAnchor } from "@radix-ui/react-popover";
+import { isNumber } from "../utils/isNumber";
+import { usePrevious } from "react-use";
+import { parseNumber } from "../utils/parseNumber";
 
 interface CSSValueInputProps {
   id?: string;
@@ -22,6 +25,7 @@ interface CSSValueInputProps {
   onChange: (value: any) => void;
 
   defaultUnit?: string;
+  allowedIdentifier?: string[];
 
   placeholder?: string | number | undefined;
   className?: string;
@@ -42,6 +46,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
   onChange,
 
   defaultUnit = "px",
+  allowedIdentifier = [],
 
   readOnly = false,
 
@@ -51,6 +56,9 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
 
   actions,
 }) => {
+  const prevValue = usePrevious(value);
+  const [tempValue, setTempValue] = React.useState(value);
+
   const transformedValue = React.useMemo(() => {
     const temp = csstree.parse(value as string, {
       context: "value",
@@ -62,19 +70,56 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
 
   const ChangeHandler = React.useCallback(
     (value: any, number: boolean = false) => {
-      if (number) {
-        if (valueType === "Dimension")
-          return onChange(`${value}${transformedValue?.unit}`);
-        if (valueType === "Number") return onChange(`${value}${defaultUnit}`);
+      if (value === prevValue) return;
+      try {
+        const temp = csstree.parse(value as string, {
+          context: "value",
+        }) as csstree.Value;
+        const cssValue = temp.children.first;
+        const cssType = cssValue?.type;
+
+        if (number) {
+          if (cssType === "Dimension")
+            return onChange(`${value}${cssValue?.unit}`);
+          if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
+        } else {
+          if (cssValue) {
+            if (cssType === "Dimension") return onChange(value);
+            if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
+            if (cssType === "Identifier") {
+              if (allowedIdentifier) {
+                if (allowedIdentifier.indexOf(value) != -1) {
+                  return onChange(value);
+                } else {
+                  throw new Error(
+                    `Identifier doesn't match \`${allowedIdentifier.join(
+                      ", "
+                    )}\``
+                  );
+                }
+              } else {
+                return onChange(value);
+              }
+            }
+            throw new Error("Value not allowed");
+          } else {
+            return onChange(undefined);
+          }
+        }
+      } catch (err: any) {
+        setTempValue(prevValue);
       }
-      onChange(value);
     },
-    [onChange]
+    [onChange, transformedValue]
   );
 
-  const isNumber = valueType
+  const isTypeNumber = valueType
     ? ["Dimension", "Number"].indexOf(valueType as string) > -1
     : false;
+
+  useEffect(() => {
+    setTempValue(value);
+  }, [value]);
 
   return (
     <Popover>
@@ -93,7 +138,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
           friction={5}
           value={parseInt(
             parseIntSafeForInput(
-              isNumber && (transformedValue as any).value,
+              isTypeNumber && (transformedValue as any).value,
               "0"
             )
           )}
@@ -134,9 +179,13 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
               paddingLeft: 0,
               border: 0,
             }}
-            value={value || ""}
+            value={tempValue || ""}
             onKeyDown={(e) => {
-              if (!isNumber) return;
+              const el = e.currentTarget;
+              if (e.code === "Enter") {
+                el.blur();
+              }
+              if (!isTypeNumber) return;
               const val = parseInt((transformedValue as any).value) as number;
               if (e.code === "ArrowUp") {
                 ChangeHandler(val + 1, true);
@@ -146,6 +195,9 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
               }
             }}
             onChange={(e) => {
+              setTempValue(e.target.value);
+            }}
+            onBlur={(e) => {
               ChangeHandler(e.target.value);
             }}
           />
