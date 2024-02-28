@@ -11,7 +11,7 @@ import { Fill } from "../../Settings/Fill";
 import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
 import { Select } from "@/components/component/Select";
-import { ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
+import { ALLOWED_HTML_TAGS, ALLOWED_HTML_TAGS as HTML_TAG_NAMES } from "../../utils/constants/HTML_TAG_NAMES";
 import { AutoLayout } from "../../Settings/AutoLayout";
 import { Stroke } from "../../Settings/Stroke";
 import { Motion } from "../../Settings/Motion";
@@ -37,7 +37,7 @@ export const NativeTagSettings = () => {
                 _set(props, "as", e);
               }, 2000)
             }
-            options={HTML_TAG_NAMES.map((tag) => ({ label: tag, value: tag }))}
+            options={ALLOWED_HTML_TAGS.map((tag) => ({ label: tag, value: tag }))}
           />
         </div>
       </PanelSection>

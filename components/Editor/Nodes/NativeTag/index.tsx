@@ -20,8 +20,11 @@ import { Fill, FillProps } from "../../Settings/Fill";
 import { AutoLayout, AutoLayoutProps } from "../../Settings/AutoLayout";
 import { StrokeProps } from "../../Settings/Stroke";
 import { MotionProps } from "../../Settings/Motion";
-import { useAnimate } from "framer-motion";
+import { motion as FMotion } from "framer-motion";
 import { useHandleMotion } from "../../Settings/Motion/hook";
+import _concat from "lodash/concat";
+import { MotionHandler } from "../../Settings/Motion/handler";
+import { rest } from "lodash";
 
 interface NativeTagProps<T = any> {
   children?: React.ReactNode;
@@ -62,8 +65,6 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     tag: node.data.custom.name,
   }));
 
-  const { scope } = useHandleMotion(motion!);
-
   const { isProduction, media } = useViewport();
 
   let style: Record<string, any> = {
@@ -82,19 +83,26 @@ export const NativeTag: UserComponent<Partial<NativeTagProps>> = ({
     (classList as ClassListProps).map(({ className }) => className)
   );
 
-  return React.createElement(
-    as || tag || "div",
-    {
-      style,
-      className,
-      ref: (ref: any) => {
-        connect(ref as any);
-        (scope as any).current = ref;
-      },
-      ...generic,
+  let renderComponent = as || tag || "div";
+
+  let renderProps = {
+    style,
+    className,
+    ref: (ref: any) => {
+      connect(ref as any);
     },
-    children
-  );
+    ...generic,
+  };
+
+  if (motion && motion?.keyframes) {
+    renderComponent = FMotion(as || tag || "div");
+    renderProps = {
+      ...renderProps,
+      ...MotionHandler(motion!, { media, isProduction }),
+    };
+  }
+
+  return React.createElement(renderComponent, renderProps, children);
 };
 
 NativeTag.craft = {

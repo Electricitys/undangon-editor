@@ -56,6 +56,7 @@ export const MotionTransformInput: React.FC<
               label={"Anchor Y"}
               placeholder={_get(placeholders, "originY") || "0"}
               icon={"Y"}
+              defaultUnit=""
               onChange={function (value) {
                 handleChange("originY", value);
               }}
@@ -76,36 +77,39 @@ export const MotionTransformInput: React.FC<
             <CSSValueInput
               className="border-transparent hover:border-gray-200"
               label={"Transform X"}
-              placeholder={_get(placeholders, "x") || "0"}
+              placeholder={_get(placeholders, "translateX") || "0"}
               icon={"X"}
+              defaultUnit=""
               onChange={function (value) {
-                handleChange("x", value);
+                handleChange("translateX", value);
               }}
-              value={_get(values, "x") as string}
+              value={_get(values, "translateX") as string}
             />
           </div>
           <div className="px-1 col-span-4">
             <CSSValueInput
               className="border-transparent hover:border-gray-200"
               label={"Transform Y"}
-              placeholder={_get(placeholders, "y") || "0"}
+              placeholder={_get(placeholders, "translateY") || "0"}
               icon={"Y"}
+              defaultUnit=""
               onChange={function (value) {
-                handleChange("y", value);
+                handleChange("translateY", value);
               }}
-              value={_get(values, "y") as string}
+              value={_get(values, "translateY") as string}
             />
           </div>
           <div className="px-1 col-span-4">
             <CSSValueInput
               className="border-transparent hover:border-gray-200"
               label={"Transform Z"}
-              placeholder={_get(placeholders, "z") || "0"}
+              placeholder={_get(placeholders, "translateZ") || "0"}
               icon={"Z"}
+              defaultUnit=""
               onChange={function (value) {
-                handleChange("z", value);
+                handleChange("translateZ", value);
               }}
-              value={_get(values, "z") as string}
+              value={_get(values, "translateZ") as string}
             />
           </div>
         </div>
@@ -123,6 +127,7 @@ export const MotionTransformInput: React.FC<
               label={"Scale X"}
               placeholder={_get(placeholders, "scaleX") || "0"}
               icon={"X"}
+              defaultUnit=""
               onChange={function (value) {
                 handleChange("scaleX", value);
               }}
@@ -135,6 +140,7 @@ export const MotionTransformInput: React.FC<
               label={"Scale Y"}
               placeholder={_get(placeholders, "scaleY") || "0"}
               icon={"Y"}
+              defaultUnit=""
               onChange={function (value) {
                 handleChange("scaleY", value);
               }}
@@ -155,7 +161,7 @@ export const MotionTransformInput: React.FC<
               className="border-transparent hover:border-gray-200"
               label={"Rotate"}
               placeholder={_get(placeholders, "rotate") || "0"}
-              defaultUnit="deg"
+              defaultUnit=""
               icon={<CircleSlash2Icon size={15} />}
               onChange={function (value) {
                 handleChange("rotate", value);
