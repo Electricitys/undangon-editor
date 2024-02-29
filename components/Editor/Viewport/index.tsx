@@ -242,7 +242,7 @@ export const ViewportWrapper: FC<ViewportWrapperProps> = ({
           )}
         >
           <FramesPanel />
-          <TemplatesPanel />
+          {/* <TemplatesPanel /> */}
           <AdditionalPanel />
           {/* <ComponentPanel /> */}
           <LayerPanel />

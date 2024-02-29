@@ -185,7 +185,7 @@ export const AddNodeActionDialog: React.FC<{
                 <TabsList className="!mt-0">
                   <TabsTrigger value="tag">Tag</TabsTrigger>
                   <TabsTrigger value="component">Component</TabsTrigger>
-                  <TabsTrigger value="template">Template</TabsTrigger>
+                  <TabsTrigger disabled={true} value="template">Template</TabsTrigger>
                   <TabsTrigger value="slot">Slot</TabsTrigger>
                 </TabsList>
               </div>
