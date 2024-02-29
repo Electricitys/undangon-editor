@@ -2,7 +2,16 @@
 
 import { InvitationSchema } from "@/components/interfaces";
 import { Edit } from "@/components/page/Edit";
-import { Button, Card, Group, Select, TextInput } from "@mantine/core";
+import {
+  AspectRatio,
+  Button,
+  Card,
+  Group,
+  Image,
+  ScrollArea,
+  Select,
+  TextInput,
+} from "@mantine/core";
 import { HttpError, useOne, useResource } from "@refinedev/core";
 import { SaveButton, useForm, useSelect } from "@refinedev/mantine";
 import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
@@ -13,7 +22,7 @@ import Link from "next/link";
 
 type InvitationData = Pick<
   InvitationSchema,
-  "name" | "category_id" | "slug" | "package_id"
+  "name" | "category_id" | "slug" | "package_id" | "thumbnail_url"
 >;
 
 const InvitationEdit: React.FC = () => {
@@ -29,6 +38,7 @@ const InvitationEdit: React.FC = () => {
       slug: "",
       category_id: 0,
       package_id: 0,
+      thumbnail_url: "",
     },
     refineCoreProps: {
       redirect: false,
@@ -79,34 +89,54 @@ const InvitationEdit: React.FC = () => {
     >
       <Card mb="sm">
         <Edit.Header />
-        <TextInput mt="sm" label="Name" {...getInputProps("name")} />
-        <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
-        <Select
-          mt="sm"
-          label="Category"
-          withinPortal
-          {...getInputProps("category_id")}
-          {...categorySelectProps}
-          filterDataOnExactSearchMatch={false}
-        />
-        <Select
-          mt="sm"
-          label="Package"
-          withinPortal
-          {...getInputProps("package_id")}
-          {...packageSelectProps}
-          filterDataOnExactSearchMatch={false}
-        />
-        <Group position="right">
-          <Button
-            type="button"
-            mt="md"
-            disabled={!isDirty()}
-            onClick={handleSubmit}
-            leftIcon={<IconDeviceFloppy size={18} />}
-          >
-            Save
-          </Button>
+
+        <Group>
+          <div style={{ flexGrow: 1 }}>
+            <TextInput mt="sm" label="Name" {...getInputProps("name")} />
+            <TextInput mt="sm" label="Slug" {...getInputProps("slug")} />
+            <Select
+              mt="sm"
+              label="Category"
+              withinPortal
+              {...getInputProps("category_id")}
+              {...categorySelectProps}
+              filterDataOnExactSearchMatch={false}
+            />
+            <Select
+              mt="sm"
+              label="Package"
+              withinPortal
+              {...getInputProps("package_id")}
+              {...packageSelectProps}
+              filterDataOnExactSearchMatch={false}
+            />
+            <Group position="right">
+              <Button
+                type="button"
+                mt="md"
+                disabled={!isDirty()}
+                onClick={handleSubmit}
+                leftIcon={<IconDeviceFloppy size={18} />}
+              >
+                Save
+              </Button>
+            </Group>
+          </div>
+          <div>
+            <Card style={{ width: 250 }} p={0} shadow="md" withBorder={true}>
+              <AspectRatio ratio={3/4}>
+                <Image
+                  src={values.thumbnail_url}
+                  alt={values.name}
+                  withPlaceholder={true}
+                  fit="cover"
+                  style={{
+                    alignItems: "baseline",
+                  }}
+                />
+              </AspectRatio>
+            </Card>
+          </div>
         </Group>
       </Card>
       <Card mb="sm">

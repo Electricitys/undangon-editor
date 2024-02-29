@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DragValue } from "./drag_value";
 import { Button } from "./button";
 import { cx } from "class-variance-authority";
@@ -110,7 +110,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
     ? ["Dimension", "Number"].indexOf(valueType as string) > -1
     : false;
 
-  useEffect(() => {
+  React.useEffect(() => {
     setTempValue(value);
   }, [value]);
 

@@ -14,8 +14,8 @@ import {
 } from "framer-motion";
 import { transformObjectsToArray } from "./transformObjectsToArray";
 import { MotionKeyframeProperties } from "./MotionTransformInput";
-import { parseIntSafe } from "@/components/utils/parseIntSafe";
 import * as csstree from "css-tree";
+import { parseNumber } from "@/components/utils/parseNumber";
 
 type Context = {
   media?: MediaProps;
@@ -67,6 +67,7 @@ export const MotionHandler = (
   } else if (props.while === "inView") {
     result.whileInView = "animate";
   }
+  console.log(result);
   return result;
 };
 
@@ -88,8 +89,9 @@ const MotionKeyframeValueParser = (
       context: "value",
     }) as csstree.Value;
     const cssvalue = temp.children.first;
+    const numberValue = parseNumber((cssvalue as any)?.value);
 
-    result[key] = parseIntSafe((cssvalue as any)?.value);
+    result[key] = typeof numberValue === "number" ? numberValue : undefined;
   }
   return result;
 };
