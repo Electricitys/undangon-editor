@@ -7,3 +7,5 @@ export { Text } from "./Text";
 export { Container } from "./Container";
 export { Dialog } from "./Dialog";
 export { DialogTrigger } from "./DialogTrigger";
+
+export { URLParameter } from "./URLParameter";

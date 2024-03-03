@@ -112,7 +112,7 @@ export const LayerTrigger = () => {
             <>
               <div
                 style={{ minWidth: 1 }}
-                className="shrink text-sm text-ellipsis overflow-hidden"
+                className="shrink whitespace-nowrap text-sm text-ellipsis overflow-hidden"
                 title={displayName}
               >
                 {displayName}

@@ -108,19 +108,32 @@ export const Text: UserComponent<Partial<TextProps>> = ({
   //   );
   // }
 
+  const renderProps: any = {
+    ref: (ref: any) => connect(ref as any),
+    ...(generic as any),
+    style: style as any,
+    className: className,
+  };
+
+  if (children) {
+    return (
+      <div
+        {...renderProps}
+        // onDoubleClick={() => {
+        //   setIsEditable(true);
+        // }}
+        // onBlur={() => {
+        //   setIsEditable(false);
+        // }}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div
-      ref={(ref) => connect(ref as any)}
-      {...(generic as any)}
-      style={style as any}
-      className={className}
-      // onDoubleClick={() => {
-      //   setIsEditable(true);
-      // }}
-      // onBlur={() => {
-      //   setIsEditable(false);
-      // }}
-
+      {...renderProps}
       dangerouslySetInnerHTML={{
         __html: (text?.value || "Some text") as string,
       }}

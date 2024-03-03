@@ -1,9 +1,8 @@
 import _get from "lodash/get";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
-import { ProcessUnitForViewport } from "../../utils/processViewportUnit";
 import { MediaProps } from "../../Viewport/useViewport";
-import { Motion, MotionProps } from ".";
+import { MotionProps } from ".";
 import {
   AnimationControls,
   Target,
@@ -67,7 +66,6 @@ export const MotionHandler = (
   } else if (props.while === "inView") {
     result.whileInView = "animate";
   }
-  console.log(result);
   return result;
 };
 
@@ -92,23 +90,6 @@ const MotionKeyframeValueParser = (
     const numberValue = parseNumber((cssvalue as any)?.value);
 
     result[key] = typeof numberValue === "number" ? numberValue : undefined;
-  }
-  return result;
-};
-
-export const MotionPropertyHandler = (
-  path: string,
-  value: any,
-  context?: Context
-): any => {
-  let result = value;
-  if (!context) return result;
-  if (Object.keys(Motion.defaultValue).indexOf(path) < 0) return result;
-  if (!context.isProduction && context.media) {
-    result = ProcessUnitForViewport(value, {
-      height: context.media.currentMedia.height,
-      width: context.media.currentMedia.width,
-    });
   }
   return result;
 };
