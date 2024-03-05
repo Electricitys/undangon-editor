@@ -17,3 +17,13 @@ export function parseIntSafeForInput(inputString: string, defaultValue: string):
       return defaultValue;
   }
 }
+
+export function parseNumberSafeForInput(inputString: string, defaultValue: string): string {
+  const parsedInteger = parseFloat(inputString);
+  
+  if (!isNaN(parsedInteger)) {
+      return parsedInteger.toString();
+  } else {
+      return defaultValue;
+  }
+}

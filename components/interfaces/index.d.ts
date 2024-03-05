@@ -63,7 +63,7 @@ export interface InvitationSchema extends DefaultDataSchema {
   name: string;
   content: string;
   slug: string;
-  
+
   share_message: string;
   thumbnail_url: string;
 
@@ -87,6 +87,12 @@ export interface MetadataSchema extends DefaultDataSchema {
   image?: string;
   image_width?: string;
   image_height?: string;
+}
+
+export interface MessageSchema extends DefaultDataSchema {
+  title: string;
+  message: string;
+  token: string;
 }
 
 export interface FeathersFindResult<T> {

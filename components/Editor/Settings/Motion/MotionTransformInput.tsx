@@ -1,18 +1,20 @@
 import { CSSValueInput } from "@/components/ui/css_value_input";
-import React from "react";
+import React, { useState } from "react";
 import _get from "lodash/get";
-import { TransformProperties } from "./types";
+import { StyleProperties, TransformProperties } from "./types";
 import { Button } from "@/components/ui/button";
-import { AnchorIcon, CircleSlash2Icon } from "lucide-react";
+import { CircleSlash2Icon } from "lucide-react";
 import {
   AngleIcon,
   Crosshair1Icon,
   Crosshair2Icon,
+  TransparencyGridIcon,
 } from "@radix-ui/react-icons";
 
-export type MotionKeyframeProperties = TransformProperties & {
-  id: string;
-};
+export type MotionKeyframeProperties = TransformProperties &
+  StyleProperties & {
+    id: string;
+  };
 
 export type MotionTransformInputProps = {
   values: Partial<MotionKeyframeProperties>;
@@ -28,6 +30,9 @@ export const MotionTransformInput: React.FC<
     onValueChange?.(path, value);
     onChange?.({ ...values, [path]: value });
   };
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       <div className="flex pb-2 items-center">
@@ -65,7 +70,6 @@ export const MotionTransformInput: React.FC<
           </div>
         </div>
       </div>
-
       <div className="flex pb-2 items-center">
         <div className="pl-1">
           <Button size={"icon-sm"} variant="ghost" title="Transform">
@@ -149,12 +153,7 @@ export const MotionTransformInput: React.FC<
           </div>
         </div>
       </div>
-      <div className="flex pb-2 items-center">
-        <div className="pl-1">
-          <Button size={"icon-sm"} variant="ghost" title="Rotate">
-            <AngleIcon />
-          </Button>
-        </div>
+      <div className="flex pb-2 items-center px-1">
         <div className="grid grid-cols-12">
           <div className="pr-1 col-span-4">
             <CSSValueInput
@@ -162,11 +161,30 @@ export const MotionTransformInput: React.FC<
               label={"Rotate"}
               placeholder={_get(placeholders, "rotate") || "0"}
               defaultUnit=""
-              icon={<CircleSlash2Icon size={15} />}
+              max={360}
+              min={-360}
+              icon={<AngleIcon />}
               onChange={function (value) {
                 handleChange("rotate", value);
               }}
               value={_get(values, "rotate") as string}
+            />
+          </div>
+
+          <div className="pr-1 col-span-4">
+            <CSSValueInput
+              className="border-transparent hover:border-gray-200"
+              label={"Opacity"}
+              placeholder={_get(placeholders, "opacity") || "1"}
+              defaultUnit=""
+              icon={<TransparencyGridIcon />}
+              max={1}
+              min={0}
+              step={0.01}
+              onChange={function (value) {
+                handleChange("opacity", value);
+              }}
+              value={_get(values, "opacity") as string}
             />
           </div>
         </div>

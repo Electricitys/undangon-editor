@@ -2,7 +2,10 @@ import React from "react";
 import { DragValue } from "./drag_value";
 import { Button } from "./button";
 import { cx } from "class-variance-authority";
-import { parseIntSafeForInput } from "../utils/parseIntSafe";
+import {
+  parseIntSafeForInput,
+  parseNumberSafeForInput,
+} from "../utils/parseIntSafe";
 import { Input } from "./input";
 import * as csstree from "css-tree";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -22,6 +25,7 @@ interface CSSValueInputProps {
   value: string | number | undefined;
   min?: number;
   max?: number;
+  step?: number;
   onChange: (value: any) => void;
 
   defaultUnit?: string;
@@ -43,6 +47,7 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
   value,
   min = -999999,
   max = 999999,
+  step = 1,
   onChange,
 
   defaultUnit = "px",
@@ -85,10 +90,9 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
         } else {
           if (!cssValue) return onChange(undefined);
 
-          if (cssType === "Dimension") return onChange(value);
-
+          if (cssType === "Dimension") return onChange(`${value}`);
+          if (cssType === "Percentage") return onChange(`${value}`);
           if (cssType === "Number") return onChange(`${value}${defaultUnit}`);
-
           if (cssType === "Identifier") {
             if (!allowedIdentifier || allowedIdentifier.includes(value))
               return onChange(value);
@@ -128,13 +132,10 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
           disabled={disabled}
           min={min}
           max={max}
-          friction={5}
-          value={parseInt(
-            parseIntSafeForInput(
-              isTypeNumber && (transformedValue as any).value,
-              "0"
-            )
-          )}
+          step={step}
+          value={
+            parseNumber(isTypeNumber && (transformedValue as any).value) || 0
+          }
           onChange={(value) => {
             ChangeHandler(value, true);
           }}
@@ -184,10 +185,10 @@ export const CSSValueInput: React.FC<CSSValueInputProps> = ({
                 (transformedValue as any).value
               ) as number;
               if (e.code === "ArrowUp") {
-                ChangeHandler(val + 1, true);
+                ChangeHandler(val + step, true);
               }
               if (e.code === "ArrowDown") {
-                ChangeHandler(val - 1, true);
+                ChangeHandler(val - step, true);
               }
             }}
             onFocus={(e) => {

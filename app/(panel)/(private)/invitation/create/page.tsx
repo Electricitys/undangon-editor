@@ -38,6 +38,10 @@ const InvitationCreate: React.FC = () => {
       package_id: undefined,
       content: " ",
     },
+    transformValues(values: any) {
+      delete values["template_id"];
+      return values;
+    },
     validate: yupResolver(Schema),
   });
 
@@ -53,7 +57,6 @@ const InvitationCreate: React.FC = () => {
     resource: "templates",
     optionLabel: "name",
   });
-  console.log(getInputProps("category_id").error);
 
   return (
     <Create saveButtonProps={saveButtonProps}>

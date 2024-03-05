@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
@@ -67,6 +69,7 @@ export const Typography = () => {
     values,
     computedTypographyStyle,
   } = useNode((node) => {
+    // console.log(node);
     const computedStyle = window.getComputedStyle(
       node.dom as HTMLElement,
       null

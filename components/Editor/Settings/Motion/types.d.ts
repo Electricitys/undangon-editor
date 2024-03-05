@@ -22,3 +22,7 @@ export interface TransformProperties {
   perspective?: string | number;
   transformPerspective?: string | number;
 }
+
+export interface StyleProperties {
+  opacity?: string | number;
+}

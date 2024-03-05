@@ -81,6 +81,7 @@ const MotionKeyframeValueParser = (
     "originX",
     "originY",
     "rotate",
+    "opacity",
   ]);
   for (let [key, value] of Object.entries(result)) {
     const temp = csstree.parse(value as string, {

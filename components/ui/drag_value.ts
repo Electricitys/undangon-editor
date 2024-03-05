@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 type DragValueProps = {
   min: number;
   max: number;
-  friction: number;
+  friction?: number;
+  step?: number;
   value: number;
   onChange: (value: number) => void;
   children: (props: {
@@ -17,6 +18,7 @@ export const DragValue = ({
   min = -255,
   max = 255,
   friction = 1,
+  step = 1,
   value,
   onChange,
   children,
@@ -49,7 +51,7 @@ export const DragValue = ({
     const onUpdate = (event: any) => {
       if (startVal) {
         const increment = Math.round((event.clientX - startVal) / friction);
-        const filtered = value_limit(snapshot + increment, min, max);
+        const filtered = value_limit(snapshot + increment * step, min, max);
         onChange(filtered);
       }
     };

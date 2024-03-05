@@ -2,6 +2,7 @@ import { PanelSection } from "../../Viewport/PanelSection";
 import { useNode } from "@craftjs/core";
 import _pick from "lodash/pick";
 import _set from "lodash/set";
+import _get from "lodash/get";
 import { Input } from "@/components/ui/input";
 
 export const URLParameterSettings = () => {
@@ -20,6 +21,7 @@ export const URLParameterSettings = () => {
           <div className="px-1 col-span-10">
             <Input
               placeholder="Type the field name"
+              value={_get(values, "fieldName")}
               onChange={(e) => {
                 setProp((p: any) => _set(p, "fieldName", e.target.value), 1000);
               }}

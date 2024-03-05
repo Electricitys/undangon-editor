@@ -9,3 +9,9 @@ export { Dialog } from "./Dialog";
 export { DialogTrigger } from "./DialogTrigger";
 
 export { URLParameter } from "./URLParameter";
+export { GuestBook } from "./Guestbook";
+export { GuestBookForm } from "./GuestbookForm";
+export { GuestBookFormButton } from "./GuestbookFormButton";
+export { GuestBookFormInput } from "./GuestbookFormInput";
+export { GuestBookLoop } from "./GuestbookLoop";
+export { GuestBookLoopContent } from "./GuestbookLoopContent";

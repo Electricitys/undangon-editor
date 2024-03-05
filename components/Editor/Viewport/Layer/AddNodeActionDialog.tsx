@@ -34,6 +34,7 @@ import { uniqueId } from "lodash";
 import * as Components from "../../Nodes";
 import { useViewport } from "../useViewport";
 import { useViewportFrameTemplates } from "../Frames/Frame";
+import { generateId } from "@/components/utils/generateId";
 
 const { NativeTag, Slot, TemplateNode, ...RestComponents } = Components;
 
@@ -75,7 +76,6 @@ export const AddNodeActionDialog: React.FC<{
     values,
     { resetForm }
   ) => {
-    console.log(values);
     let element: React.ReactElement;
 
     if (values.type === "tag") {
@@ -104,11 +104,104 @@ export const AddNodeActionDialog: React.FC<{
         (r, { name, value }) => ({ ...r, [name]: value }),
         {}
       );
-      element = React.createElement(Element, {
-        is: SelectedComponent,
-        canvas: true,
-        ...props,
-      });
+      if (SelectedComponent === Components.GuestBook) {
+        element = React.createElement(
+          Element,
+          {
+            is: SelectedComponent,
+            canvas: true,
+            ...props,
+          },
+          [
+            React.createElement(
+              Element,
+              {
+                key: generateId(),
+                is: Components.GuestBookLoop,
+                canvas: true,
+              },
+              React.createElement(
+                Element,
+                {
+                  is: Components.NativeTag,
+                  canvas: true,
+                },
+                [
+                  React.createElement(Element, {
+                    key: generateId(),
+                    is: Components.GuestBookLoopContent,
+                    canvas: true,
+                    part: "title",
+                  }),
+                  React.createElement(Element, {
+                    key: generateId(),
+                    is: Components.GuestBookLoopContent,
+                    canvas: true,
+                    part: "message",
+                  }),
+                  React.createElement(Element, {
+                    key: generateId(),
+                    is: Components.GuestBookLoopContent,
+                    canvas: true,
+                    part: "date",
+                  }),
+                ]
+              )
+            ),
+            React.createElement(
+              Element,
+              {
+                key: generateId(),
+                is: Components.GuestBookForm,
+                canvas: true,
+              },
+              React.createElement(
+                Element,
+                {
+                  is: Components.NativeTag,
+                  canvas: true,
+                },
+                [
+                  React.createElement(Element, {
+                    key: generateId(),
+                    is: Components.GuestBookFormInput,
+                    canvas: true,
+                    part: "title",
+                  }),
+                  React.createElement(Element, {
+                    key: generateId(),
+                    is: Components.GuestBookFormInput,
+                    canvas: true,
+                    part: "message",
+                  }),
+                  React.createElement(
+                    Element,
+                    {
+                      key: generateId(),
+                      is: Components.GuestBookFormButton,
+                      canvas: true,
+                    },
+                    React.createElement(Element, {
+                      is: Components.Text,
+                      canvas: true,
+                      text: {
+                        type: "text",
+                        value: "Submit",
+                      },
+                    })
+                  ),
+                ]
+              )
+            ),
+          ]
+        );
+      } else {
+        element = React.createElement(Element, {
+          is: SelectedComponent,
+          canvas: true,
+          ...props,
+        });
+      }
     }
 
     let freshNode: NodeTree = query.parseReactElement(element).toNodeTree();
@@ -185,7 +278,9 @@ export const AddNodeActionDialog: React.FC<{
                 <TabsList className="!mt-0">
                   <TabsTrigger value="tag">Tag</TabsTrigger>
                   <TabsTrigger value="component">Component</TabsTrigger>
-                  <TabsTrigger disabled={true} value="template">Template</TabsTrigger>
+                  <TabsTrigger disabled={true} value="template">
+                    Template
+                  </TabsTrigger>
                   <TabsTrigger value="slot">Slot</TabsTrigger>
                 </TabsList>
               </div>
