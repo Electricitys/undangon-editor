@@ -5,10 +5,15 @@ import axios from "axios";
 
 export const host = new URL(CONSTANTS.SERVER_URL);
 
-export const featherRestApp = feathers();
+const f = feathers()
 
 // Connect to a different URL
 const restClient = rest(host.origin);
 
 // Configure an AJAX library (see below) with that client
-featherRestApp.configure(restClient.axios(axios));
+f.configure(restClient.axios(axios));
+
+console.log(CONSTANTS);
+
+export const featherRestApp = f;
+
