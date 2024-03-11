@@ -30,8 +30,6 @@ export const UploadFile = () => {
       onDrop={handleDrop}
       accept={["image/jpeg", "image/png"]}
       maxFiles={1}
-      size="lg"
-      label="Drop files here or click to select"
     >
       <Group
         position="center"
