@@ -13,13 +13,11 @@ export const FileUpload: React.FC<FileUploadProps> = () => {
     let file = files[0];
     console.log(file);
     let upload = new tus.Upload(file, {
-      // headers: {
-      //   "access-control-allow-origin": "*",
-      // },
-      // endpoint: "https://drop.manjo.space/files",
+      metadata: {
+        filetype: file.type,
+        filename: file.name,
+      },
       endpoint: `/api/drop/files`,
-      // endpoint: "http://localhost:1080/files",
-      // retryDelays: [0, 3000, 5000, 10000, 20000],
       onError: function (error) {
         console.log("Failed because: " + error);
       },
