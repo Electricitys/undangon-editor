@@ -16,8 +16,8 @@ export const FileUpload: React.FC<FileUploadProps> = () => {
       // headers: {
       //   "access-control-allow-origin": "*",
       // },
-      endpoint: "https://drop.manjo.space/files",
-      // endpoint: `/api/drop/files`,
+      // endpoint: "https://drop.manjo.space/files",
+      endpoint: `/api/drop/files`,
       // endpoint: "http://localhost:1080/files",
       // retryDelays: [0, 3000, 5000, 10000, 20000],
       onError: function (error) {
