@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { VariableIcon } from "lucide-react";
 import { useState } from "react";
 import { TextIcon } from "@radix-ui/react-icons";
+import { DebugSetting } from "../DebugSetting";
 
 export const TextSettings = () => {
   const {
@@ -34,6 +35,7 @@ export const TextSettings = () => {
 
   return (
     <>
+      <DebugSetting />
       <PanelSection text="Properties">
         <div className="grid grid-cols-12 pb-2 px-2">
           <div className="px-1 col-span-10">

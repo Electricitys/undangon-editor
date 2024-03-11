@@ -1,6 +1,6 @@
 "use client";
 
-import { UserComponent, useNode } from "@craftjs/core";
+import { Element, UserComponent, useNode } from "@craftjs/core";
 import React from "react";
 import _get from "lodash/get";
 import { GuestBookSettings } from "./GuestBookSettings";
@@ -21,6 +21,9 @@ import {
 } from "../../Settings/BoxSizing/handler";
 import _pick from "lodash/pick";
 import { useViewport } from "../../Viewport/useViewport";
+import { generateId } from "@/components/utils/generateId";
+
+import * as Components from "../";
 
 type GuestBookProps = {
   children?: React.ReactNode;
@@ -35,7 +38,9 @@ type GuestBookProps = {
   autoLayout: AutoLayoutProps;
 };
 
-export const GuestBook: UserComponent<Partial<GuestBookProps>> = ({
+export const GuestBook: UserComponent<Partial<GuestBookProps>> & {
+  defaultComponent: (component: any, props: any) => React.ReactElement;
+} = ({
   children,
   token = "example-message",
   boxSizing,
@@ -107,3 +112,95 @@ GuestBook.craft = {
     settings: GuestBookSettings,
   },
 };
+
+GuestBook.defaultComponent = (component, props) =>
+  React.createElement(
+    Element,
+    {
+      is: component,
+      canvas: true,
+      ...props,
+    },
+    [
+      React.createElement(
+        Element,
+        {
+          key: generateId(),
+          is: Components.GuestBookLoop,
+          canvas: true,
+        },
+        React.createElement(
+          Element,
+          {
+            is: Components.NativeTag,
+            canvas: true,
+          },
+          [
+            React.createElement(Element, {
+              key: generateId(),
+              is: Components.GuestBookLoopContent,
+              canvas: true,
+              part: "title",
+            }),
+            React.createElement(Element, {
+              key: generateId(),
+              is: Components.GuestBookLoopContent,
+              canvas: true,
+              part: "message",
+            }),
+            React.createElement(Element, {
+              key: generateId(),
+              is: Components.GuestBookLoopContent,
+              canvas: true,
+              part: "date",
+            }),
+          ]
+        )
+      ),
+      React.createElement(
+        Element,
+        {
+          key: generateId(),
+          is: Components.GuestBookForm,
+          canvas: true,
+        },
+        React.createElement(
+          Element,
+          {
+            is: Components.NativeTag,
+            canvas: true,
+          },
+          [
+            React.createElement(Element, {
+              key: generateId(),
+              is: Components.GuestBookFormInput,
+              canvas: true,
+              part: "title",
+            }),
+            React.createElement(Element, {
+              key: generateId(),
+              is: Components.GuestBookFormInput,
+              canvas: true,
+              part: "message",
+            }),
+            React.createElement(
+              Element,
+              {
+                key: generateId(),
+                is: Components.GuestBookFormButton,
+                canvas: true,
+              },
+              React.createElement(Element, {
+                is: Components.Text,
+                canvas: true,
+                text: {
+                  type: "text",
+                  value: "Submit",
+                },
+              })
+            ),
+          ]
+        )
+      ),
+    ]
+  );

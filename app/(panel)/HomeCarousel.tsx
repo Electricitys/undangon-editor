@@ -27,11 +27,12 @@ export const HomepageCarousel = () => {
     <TinySlider settings={settings}>
       {imgs.map((el, index) => (
         <div key={index} style={{ position: "relative" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            alt="Preview image"
             className={`tns-lazy-img`}
             src={loadingImage}
             data-src={el}
-            alt=""
             style={{
               width: "100%",
               height: "320px",

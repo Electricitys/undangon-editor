@@ -1,5 +1,9 @@
 import ShareForm from "./Form";
-import { FeathersFindResult, InvitationSchema } from "@/components/interfaces";
+import {
+  FeathersFindResult,
+  InvitationSchema,
+  MetadataSchema,
+} from "@/components/interfaces";
 import { featherRestApp } from "@/components/client/restClient";
 import { CONSTANTS } from "@/components/Constants";
 import { metadata } from "@/app/(editor)/e/layout";
@@ -38,10 +42,11 @@ export async function generateMetadata({ params }: Props) {
         slug: params.slug,
       },
     });
-
   let data: InvitationSchema = res.data[0];
 
   if (!data) return "Page not Found";
+
+  const metadata: MetadataSchema = data.metadata || {};
 
   return {
     title: `Share Invitation - ${data.name} - ${CONSTANTS.APP_NAME}`,
@@ -53,7 +58,7 @@ export async function generateMetadata({ params }: Props) {
       title: `${data.name} - ${CONSTANTS.APP_NAME}`,
       description: "Share your invitation from here",
       site_name: CONSTANTS.APP_NAME,
-      images: data.metadata.image,
+      images: metadata.image,
     },
   };
 }

@@ -143,6 +143,19 @@ export const AutoLayout = () => {
               id="autoLayout.justifyContent"
               className="shrink-0 w-32 border-transparent hover:border-gray-200"
               icon={<FoldHorizontalIcon size={15} />}
+              allowedIdentifier={[
+                "baseline",
+                "center",
+                "flex-end",
+                "flex-start",
+                "normal",
+                "self-end",
+                "self-start",
+                "start",
+                "end",
+                "revert",
+                "unset",
+              ]}
               onChange={function (value: any): void {
                 _setPropsValue("autoLayout.justifyContent", value);
               }}

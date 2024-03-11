@@ -102,6 +102,7 @@ export const LayerActions = () => {
         <AddNodeActionDialog
           isOpen={addNodeTarget != null}
           onClose={() => {
+            setAddNodeTarget(null);
             setIsDialogOpen(null);
           }}
           onSubmit={() => {

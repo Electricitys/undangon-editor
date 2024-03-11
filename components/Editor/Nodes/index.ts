@@ -9,6 +9,9 @@ export { Dialog } from "./Dialog";
 export { DialogTrigger } from "./DialogTrigger";
 
 export { URLParameter } from "./URLParameter";
+export { Script } from "./Script";
+export { Audio } from "./Audio";
+
 export { GuestBook } from "./Guestbook";
 export { GuestBookForm } from "./GuestbookForm";
 export { GuestBookFormButton } from "./GuestbookFormButton";

@@ -1,6 +1,6 @@
 "use client";
 
-import { UserComponent, useEditor, useNode } from "@craftjs/core";
+import { Element, UserComponent, useNode } from "@craftjs/core";
 import React from "react";
 import { Spacing, SpacingProps } from "../../Settings/Spacing";
 import { ClassList, ClassListProps } from "../../Settings/ClassList";
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import * as UIDialog from "./ui";
 import { Portal } from "@radix-ui/react-portal";
 import { generateId } from "@/components/utils/generateId";
+import * as Components from "../";
 
 type DialogType = {
   defaultValue: boolean;
@@ -43,7 +44,9 @@ export type DialogProps = {
   dialogTriggerButton: DialogTriggerButtonType;
 };
 
-export const Dialog: UserComponent<Partial<DialogProps>> = ({
+export const Dialog: UserComponent<Partial<DialogProps>> & {
+  defaultComponent: (component: any, props: any) => React.ReactElement;
+} = ({
   children,
 
   boxSizing,
@@ -133,3 +136,113 @@ Dialog.craft = {
     settings: DialogSettings,
   },
 };
+
+Dialog.defaultComponent = (component, props) =>
+  React.createElement(
+    Element,
+    {
+      is: component,
+      canvas: true,
+      ...props,
+    },
+    React.createElement(
+      Element,
+      {
+        key: generateId(),
+        is: Components.NativeTag,
+        canvas: true,
+        generic: {},
+        boxSizing: {
+          height: "100vh",
+          maxHeight: "100vh",
+          h_sizing: "hug",
+          v_sizing: "fixed",
+          transform: {},
+        },
+        spacing: {
+          paddingRight: "12px",
+          paddingLeft: "12px",
+        },
+        typography: {
+          color: "inherit",
+          fontFamily: "Roboto",
+        },
+        classList: [],
+        fill: {},
+        autoLayout: {
+          display: "flex",
+          flexFlow: "column",
+          justifyContent: "center",
+        },
+      },
+      React.createElement(
+        Element,
+        {
+          key: generateId(),
+          is: Components.DialogTrigger,
+          canvas: true,
+        },
+
+        React.createElement(
+          Element,
+          {
+            key: generateId(),
+            is: Components.NativeTag,
+            canvas: true,
+            generic: {
+              id: "OPEN_BUTTON",
+            },
+            boxSizing: {
+              h_sizing: "hug",
+              v_sizing: "hug",
+              borderTopLeftRadius: "9px",
+              borderTopRightRadius: "9px",
+              borderBottomLeftRadius: "9px",
+              borderBottomRightRadius: "9px",
+              transform: {},
+            },
+            spacing: {
+              paddingTop: "12px",
+              paddingRight: "12px",
+              paddingBottom: "12px",
+              paddingLeft: "12px",
+            },
+            typography: {
+              color: "inherit",
+              fontFamily: "Roboto",
+              textAlign: "center",
+            },
+            classList: [],
+            fill: {
+              background: "#ffffff",
+            },
+            autoLayout: {},
+            stroke: {
+              borderColor: "#000000",
+              borderStyle: "solid",
+              borderTopWidth: "1px",
+              borderRightWidth: "1px",
+              borderBottomWidth: "1px",
+              borderLeftWidth: "1px",
+            },
+          },
+          React.createElement(Element, {
+            key: generateId(),
+            is: Components.Text,
+            canvas: true,
+            text: {
+              type: "text",
+              value: "Buka Invitation",
+            },
+            spacing: {},
+            typography: {
+              color: "inherit",
+              fontFamily: "Roboto",
+            },
+            classList: [],
+            generic: {},
+          })
+        )
+      )
+    )
+  );

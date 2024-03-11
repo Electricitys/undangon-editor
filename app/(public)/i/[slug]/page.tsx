@@ -1,5 +1,5 @@
 import { featherRestApp } from "@/components/client/restClient";
-import { FeathersFindResult, InvitationSchema } from "@/components/interfaces";
+import { FeathersFindResult, InvitationSchema, MetadataSchema } from "@/components/interfaces";
 import { FrameProps } from "@/components/Editor/Viewport/Frames";
 
 import lz from "lzutf8";
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props) {
     .service("invitations")
     .find({
       query: {
-        $select: ["name", "slug"],
+        $select: ["name", "slug", "metadata"],
         slug: params.slug,
       },
     });
@@ -42,6 +42,8 @@ export async function generateMetadata({ params }: Props) {
 
   if (!data) return "Page not Found";
 
+  const metadata: MetadataSchema = data.metadata || {};
+
   return {
     title: `${data.name} - Manjo`,
     metadataBase: new URL(`https://${CONSTANTS.APP_DOMAIN}/i/${params.slug}`),
@@ -49,8 +51,8 @@ export async function generateMetadata({ params }: Props) {
       card: "summary",
     },
     openGraph: {
-      title: data.metadata.title || `${data.name} - ${CONSTANTS.APP_NAME}`,
-      description: data.metadata.description || "You are invited.",
+      title: metadata.title || `${data.name} - ${CONSTANTS.APP_NAME}`,
+      description: metadata.description || "You are invited.",
       site_name: CONSTANTS.APP_NAME,
     },
   };

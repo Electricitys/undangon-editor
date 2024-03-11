@@ -1,13 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Element, Node, NodeTree, useEditor } from "@craftjs/core";
 import { useLayer } from "@craftjs/layers";
@@ -105,96 +96,12 @@ export const AddNodeActionDialog: React.FC<{
         {}
       );
       if (SelectedComponent === Components.GuestBook) {
-        element = React.createElement(
-          Element,
-          {
-            is: SelectedComponent,
-            canvas: true,
-            ...props,
-          },
-          [
-            React.createElement(
-              Element,
-              {
-                key: generateId(),
-                is: Components.GuestBookLoop,
-                canvas: true,
-              },
-              React.createElement(
-                Element,
-                {
-                  is: Components.NativeTag,
-                  canvas: true,
-                },
-                [
-                  React.createElement(Element, {
-                    key: generateId(),
-                    is: Components.GuestBookLoopContent,
-                    canvas: true,
-                    part: "title",
-                  }),
-                  React.createElement(Element, {
-                    key: generateId(),
-                    is: Components.GuestBookLoopContent,
-                    canvas: true,
-                    part: "message",
-                  }),
-                  React.createElement(Element, {
-                    key: generateId(),
-                    is: Components.GuestBookLoopContent,
-                    canvas: true,
-                    part: "date",
-                  }),
-                ]
-              )
-            ),
-            React.createElement(
-              Element,
-              {
-                key: generateId(),
-                is: Components.GuestBookForm,
-                canvas: true,
-              },
-              React.createElement(
-                Element,
-                {
-                  is: Components.NativeTag,
-                  canvas: true,
-                },
-                [
-                  React.createElement(Element, {
-                    key: generateId(),
-                    is: Components.GuestBookFormInput,
-                    canvas: true,
-                    part: "title",
-                  }),
-                  React.createElement(Element, {
-                    key: generateId(),
-                    is: Components.GuestBookFormInput,
-                    canvas: true,
-                    part: "message",
-                  }),
-                  React.createElement(
-                    Element,
-                    {
-                      key: generateId(),
-                      is: Components.GuestBookFormButton,
-                      canvas: true,
-                    },
-                    React.createElement(Element, {
-                      is: Components.Text,
-                      canvas: true,
-                      text: {
-                        type: "text",
-                        value: "Submit",
-                      },
-                    })
-                  ),
-                ]
-              )
-            ),
-          ]
+        element = Components.GuestBook.defaultComponent(
+          SelectedComponent,
+          props
         );
+      } else if (SelectedComponent === Components.Dialog) {
+        element = Components.Dialog.defaultComponent(SelectedComponent, props);
       } else {
         element = React.createElement(Element, {
           is: SelectedComponent,

@@ -20,6 +20,15 @@ const nextConfig = {
     });
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/drop/:path*',
+        // destination: 'https://tus.manjo.space/:path*' // Proxy to Backend
+        destination: 'https://drop.manjo.space/:path*' // Proxy to Backend
+      }
+    ]
+  }
 };
 
 module.exports = nextConfig;
