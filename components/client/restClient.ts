@@ -13,7 +13,5 @@ const restClient = rest(host.origin);
 // Configure an AJAX library (see below) with that client
 f.configure(restClient.axios(axios));
 
-console.log(CONSTANTS);
-
 export const featherRestApp = f;
 
