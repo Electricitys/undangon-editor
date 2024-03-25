@@ -1,29 +1,59 @@
 "use client";
 
+import _omit from "lodash/omit";
+import _pick from "lodash/pick";
 import { UserComponent, useNode } from "@craftjs/core";
 import React from "react";
 import { Generic, GenericProps } from "../../Settings/Generic";
 import { AudioSettings } from "./AudioSetting";
 import { useViewport } from "../../Viewport/useViewport";
 import { MusicIcon } from "lucide-react";
+import { FileProp } from "@/components/ui/file_picker/file_picker";
 
-type AudioProps = {
-  src: string;
+export type AudioProps = {
+  src: Omit<FileProp, "file">;
+
+  autoPlay: boolean;
+  controls: boolean;
+  loop: boolean;
+  muted: boolean;
+};
+
+type AudioComponentProps = {
+  audio: Partial<AudioProps>;
 
   generic: GenericProps;
 };
 
-export const Audio: UserComponent<Partial<AudioProps>> = ({ src, generic }) => {
+const defaultValue: Partial<AudioProps> = {
+  src: undefined,
+  autoPlay: false,
+  controls: false,
+  loop: false,
+  muted: false,
+};
+
+export const Audio: UserComponent<Partial<AudioComponentProps>> = ({
+  audio,
+  generic,
+}) => {
   const {
     connectors: { connect },
   } = useNode((node) => ({
     isActive: node.events.selected,
   }));
-  const { isProduction } = useViewport();
 
-  const render = <audio {...(generic as any)} src={src}></audio>;
+  const { isProduction, pseudoElement } = useViewport();
 
-  if (isProduction) return render;
+  const render = (
+    <audio
+      {..._pick(audio, ["autoPlay", "controls", "loop", "muted"])}
+      {...(generic as any)}
+      src={audio?.src?.url}
+    />
+  );
+
+  if (!(pseudoElement.hide) || isProduction) return render;
 
   return (
     <div
@@ -43,7 +73,7 @@ Audio.craft = {
     name: "Audio",
     type: "component",
   },
-  props: { src: undefined, generic: Generic.defaultValue },
+  props: { audio: defaultValue as any, generic: Generic.defaultValue },
   related: {
     settings: AudioSettings,
   },

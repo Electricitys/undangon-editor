@@ -24,8 +24,10 @@ import { useViewportFrame } from "./Frames/Frame";
 import {
   CheckCircleIcon,
   CircleDashedIcon,
+  DotIcon,
   PanelLeftIcon,
   PanelRightIcon,
+  RadioIcon,
   RocketIcon,
   UploadIcon,
 } from "lucide-react";
@@ -37,6 +39,7 @@ export const Toolbar = () => {
     saveStatus,
     handler,
     barState,
+    pseudoElement: { hide: hidePseudoElement, toggle: toggleHidePseudoElement },
   } = useViewport();
 
   const { canUndo, canRedo, actions, query } = useEditor((state, query) => ({
@@ -84,6 +87,15 @@ export const Toolbar = () => {
             size="icon"
           >
             <ResetIcon className="transform -scale-x-100" />
+          </Button>
+          <Button
+            title="Show/Hide Pseudo Node"
+            className="ml-2"
+            onClick={() => toggleHidePseudoElement()}
+            variant="outline"
+            size="icon"
+          >
+            {hidePseudoElement ? <RadioIcon /> : <DotIcon />}
           </Button>
         </div>
       </div>

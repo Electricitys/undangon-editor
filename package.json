@@ -9,6 +9,9 @@
     "start": "next start --port ${PORT-3002}",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@casl/ability": "^6.5.0",
     "@codemirror/basic-setup": "^0.20.0",
@@ -46,6 +49,7 @@
     "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-portal": "^1.0.4",
     "@radix-ui/react-presence": "^1.0.1",
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
@@ -63,7 +67,7 @@
     "@refinedev/simple-rest": "^4.5.0",
     "@sentry/nextjs": "^7.94.1",
     "@stitches/react": "^1.2.8",
-    "@tabler/icons-react": "^2.34.0",
+    "@tabler/icons-react": "^3.0.0",
     "@tanstack/react-query": "^4.32.0",
     "@tanstack/react-table": "^8.10.0",
     "@tanstack/react-virtual": "^3.0.1",
@@ -121,6 +125,7 @@
     "@types/css-tree": "^2.3.5",
     "@types/jexl": "^2.3.1",
     "@types/lodash": "^4.14.196",
+    "@types/mime-types": "^2.1.4",
     "@types/node": "20.4.2",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.7",

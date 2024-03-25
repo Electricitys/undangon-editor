@@ -57,7 +57,7 @@ export type ViewportProviderProps = {
       setLoading: (value: boolean) => void;
       isSaved: boolean;
       setSaved: (value: boolean) => void;
-    },
+    }
   ) => void;
   constructPreviewUrl?: () => void;
   id?: string;
@@ -95,6 +95,10 @@ interface ViewportValueProps
         ) => void)
       | undefined;
     constructPreviewUrl: (() => void) | undefined;
+  };
+  pseudoElement: {
+    hide: boolean;
+    toggle: (value?: boolean) => void;
   };
 }
 
@@ -200,6 +204,9 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
   let containerRef = React.useRef<HTMLDivElement>(null);
 
   const [unsave, setUnsave] = React.useState(false);
+  const [hidePseudoElement, setHidePseudoElement] = React.useState<boolean>(
+    isProduction || false
+  );
 
   let [mode, setMode] = React.useState<"advanced" | "simple">(defaultMode);
 
@@ -245,6 +252,14 @@ export const ViewportProvider: React.FC<IViewportProviderProp> = ({
         isProduction,
         handler,
         media,
+        pseudoElement: {
+          hide: hidePseudoElement,
+          toggle(value) {
+            setHidePseudoElement((s) =>
+              typeof value === "boolean" ? value : !s
+            );
+          },
+        },
         saveStatus: {
           unsave,
           setUnsave,

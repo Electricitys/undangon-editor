@@ -15,9 +15,9 @@ import {
   IconTemplate,
   IconUsers,
 } from "@tabler/icons-react";
-import { dataProvider } from "@/components/refine-provider";
-import { authProvider } from "@/components/refine-provider/authProvider";
-import { canHandler } from "@/components/refine-provider/accessControl";
+import { dataProvider } from "@/components/provider";
+import { authProvider } from "@/components/provider/authProvider";
+import { canHandler } from "@/components/provider/accessControl";
 import { PuzzleIcon } from "lucide-react";
 import { notificationProvider } from "@refinedev/mantine";
 

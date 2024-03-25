@@ -25,7 +25,7 @@ export const Script: UserComponent<Partial<ScriptProps>> = ({
     isActive: node.events.selected,
   }));
 
-  const { isProduction } = useViewport();
+  const { isProduction, pseudoElement } = useViewport();
   const cleanupFunc = React.useRef<any>();
   const debounceFunc = React.useRef<ReturnType<typeof _debounce>>(
     _debounce((content) => {
@@ -59,7 +59,7 @@ export const Script: UserComponent<Partial<ScriptProps>> = ({
     };
   }, [content]);
 
-  if (isProduction) return null;
+  if (!pseudoElement.hide || isProduction) return null;
 
   return (
     <div
