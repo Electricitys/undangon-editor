@@ -101,7 +101,7 @@ export const dataProvider = (): Omit<
     };
   },
 
-  deleteOne: async ({ resource, id, variables, meta }) => {
+  deleteOne: async ({ resource, id, meta }) => {
     const service = feathers.service(resource);
 
     const { headers } = meta ?? {};
