@@ -9,7 +9,11 @@ export default function ProtectedLayout({
   children: React.ReactElement;
 }) {
   return (
-    <Authenticated redirectOnFail="/login">
+    <Authenticated
+      key="private_route"
+      v3LegacyAuthProviderCompatible={false}
+      redirectOnFail="/login"
+    >
       <ThemedLayoutV2>{children}</ThemedLayoutV2>
     </Authenticated>
   );

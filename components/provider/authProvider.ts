@@ -1,12 +1,12 @@
-import { AuthBindings } from "@refinedev/core";
+import { AuthProvider } from "@refinedev/core";
 import {
   AuthActionResponse,
   CheckResponse,
   IdentityResponse,
-} from "@refinedev/core/dist/interfaces";
+} from "@refinedev/core";
 import { feathers } from "../client/feathers";
 
-interface IAuthBindings extends Omit<AuthBindings, "getIdentity"> {
+interface IAuthBindings extends Omit<AuthProvider, "getIdentity"> {
   getIdentity: (params?: any) => Promise<IdentityResponse>;
 }
 

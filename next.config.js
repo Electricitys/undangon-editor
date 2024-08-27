@@ -7,7 +7,6 @@ const nextConfig = {
     appDomain: process.env.APP_DOMAIN,
     currentHostName: process.env.CURRENT_HOSTNAME,
     googleApiKey: process.env.GOOGLE_API_KEY,
-    mapboxApiKey: process.env.MAPBOX_API_KEY,
     imagekitUrl: process.env.IMAGEKIT_URL,
     imagekitPublicKey: process.env.IMAGEKIT_PUBLIC_KEY,
     imagekitPrivateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -23,18 +22,17 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/drop/:path*',
+        source: "/api/drop/:path*",
         // destination: 'https://cc91-36-85-220-232.ngrok-free.app/:path*' // Proxy to Backend
-        destination: 'http://localhost:3020/:path*' // Proxy to Backend
+        destination: "http://localhost:3020/:path*", // Proxy to Backend
         // destination: 'https://drop.manjo.space/:path*' // Proxy to Backend
         // destination: 'http://drop.manjo.space/:path*' // Proxy to Backend
-      }
-    ]
-  }
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
-
 
 // Injected content via Sentry wizard below
 

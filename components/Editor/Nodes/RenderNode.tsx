@@ -1,30 +1,9 @@
 "use client";
 
 import { NodeElement, NodeId, useEditor, useNode } from "@craftjs/core";
-import { ROOT_NODE } from "@craftjs/utils";
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
-import ReactDOM, { render } from "react-dom";
+import React, { ReactElement, useCallback, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import { getCloneTree } from "../utils/getCloneTree";
-import {
-  ArrowUpIcon,
-  CopyIcon,
-  DragHandleDots2Icon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
-import {
-  DropdownMenu,
-  DropdownMenuSeparator,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import { styled } from "@stitches/react";
 import { TemplateNode } from "./Template";
 import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
@@ -32,9 +11,7 @@ import { Context } from "jexl/Expression";
 import jexl from "jexl";
 import { useViewportFrame } from "../Viewport/Frames/Frame";
 import _debounce from "lodash/debounce";
-import _set from "lodash/set";
 import _fpset from "lodash/fp/set";
-import _merge from "lodash/merge";
 import _get from "lodash/get";
 import { useDebouncedValue } from "@mantine/hooks";
 import * as ResolvedNodes from "../Nodes";

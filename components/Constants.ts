@@ -4,7 +4,6 @@ export const SERVER_URL = process.env.serverUrl as string;
 export const SERVER_API_KEY = process.env.serverApiKey as string;
 export const CURRENT_HOSTNAME = process.env.currentHostName as string;
 export const GOOGLE_API_KEY = process.env.googleApiKey as string;
-export const MAPBOX_API_KEY = process.env.mapboxApiKey as string;
 export const IMAGEKIT_URL = process.env.imagekitUrl as string;
 export const IMAGEKIT_PUBLIC_KEY = process.env.imagekitPublicKey as string;
 export const IMAGEKIT_PRIVATE_KEY = process.env.imagekitPrivateKey as string;
@@ -16,7 +15,6 @@ export const CONSTANTS = {
   SERVER_API_KEY,
   CURRENT_HOSTNAME,
   GOOGLE_API_KEY,
-  MAPBOX_API_KEY,
   IMAGEKIT_URL,
   IMAGEKIT_PUBLIC_KEY,
   IMAGEKIT_PRIVATE_KEY,
