@@ -128,7 +128,7 @@ export const ALLOWED_HTML_TAGS = [
   "h3",
   "h4",
   "h5",
-  "img",
+  // "img",
   "input",
   "label",
   "li",

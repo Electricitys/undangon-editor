@@ -3,18 +3,19 @@
 import { NodeElement, NodeId, useEditor, useNode } from "@craftjs/core";
 import React, { ReactElement, useCallback, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
-import { getCloneTree } from "../utils/getCloneTree";
+import { getCloneTree } from "../../utils/getCloneTree";
 import { styled } from "@stitches/react";
-import { TemplateNode } from "./Template";
-import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
+import { TemplateNode } from "./../Template";
+import { useTemplateNodeManager } from "./../Template/useTemplateNodeManager";
 import { Context } from "jexl/Expression";
 import jexl from "jexl";
-import { useViewportFrame } from "../Viewport/Frames/Frame";
+import { useViewportFrame } from "../../Viewport/Frames/Frame";
 import _debounce from "lodash/debounce";
 import _fpset from "lodash/fp/set";
 import _get from "lodash/get";
 import { useDebouncedValue } from "@mantine/hooks";
-import * as ResolvedNodes from "../Nodes";
+import * as ResolvedNodes from "../../Nodes";
+import { IndicatorBorderDiv, IndicatorDiv } from "./Indicator";
 
 const debounceFunction = _debounce((fn: () => void) => {
   return fn();
@@ -32,6 +33,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     dom,
     name,
     parent,
+    moveable,
 
     props,
     type,
@@ -180,6 +182,7 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
       {isHover || isActive
         ? ReactDOM.createPortal(
             <>
+              <div></div>
               <IndicatorDiv
                 ref={currentRef as any}
                 className="bg-blue-400 px-2 py-1 flex"
@@ -208,29 +211,6 @@ export const RenderNode = ({ render }: { render: ReactElement }) => {
     </>
   );
 };
-
-const IndicatorDiv = styled("div", {
-  position: "fixed",
-  zIndex: 49,
-
-  alignItems: "center",
-  marginTop: "-20px",
-  fontSize: "10px",
-  lineHeight: "10px",
-  color: "white",
-  height: "20px",
-
-  svg: {
-    fill: "#fff",
-  },
-});
-
-const IndicatorBorderDiv = styled("div", {
-  zIndex: 49,
-  position: "fixed",
-  border: "1px dashed red",
-  pointerEvents: "none",
-});
 
 const compileProps = (value: string, context: Context = {}) => {
   let result = value || "null";

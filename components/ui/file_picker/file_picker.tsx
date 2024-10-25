@@ -1,5 +1,12 @@
 import { Button } from "../button";
-import { Dialog, DialogContent, DialogTrigger } from "../dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
 import { IconFile } from "@tabler/icons-react";
 import React from "react";
 import { Accept } from "react-dropzone";
@@ -57,6 +64,10 @@ export const FilePicker: React.FC<FilePickerProps> = (props) => {
         )}
       </div>
       <DialogContent className="p-0">
+        <VisuallyHidden.Root>
+          <DialogTitle>File Picker</DialogTitle>
+          <DialogDescription>choose or upload your file here</DialogDescription>
+        </VisuallyHidden.Root>
         <FilePickerDialog
           onClose={function (): void {
             toggle();

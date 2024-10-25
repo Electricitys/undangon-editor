@@ -32,7 +32,7 @@ import { PropertiesPanel } from "./PropertiesPanel";
 import { Toaster } from "@/components/ui/toaster";
 import { TemplateNodeManagerProvider } from "../Nodes/Template/useTemplateNodeManager";
 import { PropertiesPanelSimple } from "./PropertiesPanel/simple";
-import { ProductionRenderNode } from "../Nodes/ProductionRenderNode";
+import { ProductionRenderNode } from "../Nodes/RenderNode/ProductionRenderNode";
 // import * as ResolverComponents from "../Components";
 import styles from "./viewport.module.css";
 import { useMediaDevices, usePrevious } from "react-use";

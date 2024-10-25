@@ -2,18 +2,18 @@
 
 import { NodeElement, NodeId, useEditor, useNode } from "@craftjs/core";
 import React, { ReactElement } from "react";
-import { TemplateNode } from "./Template";
-import { useTemplateNodeManager } from "./Template/useTemplateNodeManager";
+import { TemplateNode } from "../Template";
+import { useTemplateNodeManager } from "../Template/useTemplateNodeManager";
 import { Context } from "jexl/Expression";
 import jexl from "jexl";
-import { useViewportFrame } from "../Viewport/Frames/Frame";
+import { useViewportFrame } from "../../Viewport/Frames/Frame";
 import _debounce from "lodash/debounce";
 import _set from "lodash/set";
 import _fpset from "lodash/fp/set";
 import _merge from "lodash/merge";
 import _get from "lodash/get";
 import { useDebouncedValue } from "@mantine/hooks";
-import * as ResolvedNodes from "../Nodes";
+import * as ResolvedNodes from "..";
 
 const debounceFunction = _debounce((fn: () => void) => {
   return fn();

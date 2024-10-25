@@ -50,7 +50,7 @@ const CategoryList: React.FC = () => {
         enableSorting: false,
         cell: function render({ getValue }) {
           return (
-            <Group spacing="xs" noWrap>
+            <Group gap="xs">
               <ShowButton hideText recordItemId={getValue() as string} />
               <EditButton hideText recordItemId={getValue() as string} />
               <DeleteButton hideText recordItemId={getValue() as string} />
@@ -77,12 +77,7 @@ const CategoryList: React.FC = () => {
     <List>
       <Table getHeaderGroups={getHeaderGroups} getRowModel={getRowModel} />
       <br />
-      <Pagination
-        position="right"
-        total={pageCount}
-        page={current}
-        onChange={setCurrent}
-      />
+      <Pagination total={pageCount} value={current} onChange={setCurrent} />
     </List>
   );
 };

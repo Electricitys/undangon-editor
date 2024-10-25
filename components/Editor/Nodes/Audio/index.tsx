@@ -53,7 +53,7 @@ export const Audio: UserComponent<Partial<AudioComponentProps>> = ({
     />
   );
 
-  if (!(pseudoElement.hide) || isProduction) return render;
+  if (!pseudoElement.hide || isProduction) return render;
 
   return (
     <div
@@ -76,5 +76,10 @@ Audio.craft = {
   props: { audio: defaultValue as any, generic: Generic.defaultValue },
   related: {
     settings: AudioSettings,
+  },
+  rules: {
+    canMoveIn() {
+      return false;
+    },
   },
 };

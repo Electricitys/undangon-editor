@@ -24,7 +24,7 @@ const nextConfig = {
       {
         source: "/api/drop/:path*",
         // destination: 'https://cc91-36-85-220-232.ngrok-free.app/:path*' // Proxy to Backend
-        destination: "http://localhost:3020/:path*", // Proxy to Backend
+        destination: "http://localhost:3030/:path*", // Proxy to Backend
         // destination: 'https://drop.manjo.space/:path*' // Proxy to Backend
         // destination: 'http://drop.manjo.space/:path*' // Proxy to Backend
       },

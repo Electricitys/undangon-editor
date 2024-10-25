@@ -82,12 +82,12 @@ export const MetadataForm: React.FC<{
         label="Description"
         {...getInputProps("description")}
       />
-      <Group position="right">
+      <Group justify="end">
         <Button
           disabled={!isDirty()}
           mt="md"
           type="submit"
-          leftIcon={<IconDeviceFloppy size={18} />}
+          leftSection={<IconDeviceFloppy size={18} />}
         >
           Save
         </Button>

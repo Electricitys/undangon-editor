@@ -1,6 +1,4 @@
-"use client";
-
-import { AuthPage } from "@refinedev/mantine";
+import { AuthPage } from "@/components/page/AuthPage";
 
 export default function ForgotPasswordPage() {
   return <AuthPage type="forgotPassword" />;

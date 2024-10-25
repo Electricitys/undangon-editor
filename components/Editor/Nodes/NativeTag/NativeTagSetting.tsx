@@ -1,4 +1,3 @@
-import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _set from "lodash/set";
 import { BoxSizing } from "../../Settings/BoxSizing";
@@ -8,17 +7,12 @@ import { PanelSection } from "../../Viewport/PanelSection";
 import { Typography } from "../../Settings/Typography";
 import { Generic } from "../../Settings/Generic";
 import { Fill } from "../../Settings/Fill";
-import { Input } from "@/components/ui/input";
 import { useNode } from "@craftjs/core";
 import { Select } from "@/components/component/Select";
-import {
-  ALLOWED_HTML_TAGS,
-  ALLOWED_HTML_TAGS as HTML_TAG_NAMES,
-} from "../../utils/constants/HTML_TAG_NAMES";
+import { ALLOWED_HTML_TAGS } from "../../utils/constants/HTML_TAG_NAMES";
 import { AutoLayout } from "../../Settings/AutoLayout";
 import { Stroke } from "../../Settings/Stroke";
 import { Motion } from "../../Settings/Motion";
-import { Button } from "@/components/ui/button";
 import { DebugSetting } from "../DebugSetting";
 
 export const NativeTagSettings = () => {

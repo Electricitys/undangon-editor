@@ -125,4 +125,10 @@ NativeTag.craft = {
   related: {
     settings: NativeTagSettings,
   },
+  rules: {
+    canDrag(node, helpers) {
+      if (_get(node, "data.props.boxSizing.position")) return true;
+      else return false;
+    },
+  },
 };

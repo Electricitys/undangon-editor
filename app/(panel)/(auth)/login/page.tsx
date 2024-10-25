@@ -1,10 +1,12 @@
-"use client";
+import { get as _get } from "lodash";
+import { AuthPage } from "@/components/page/AuthPage";
 
-import { AuthPage } from "@refinedev/mantine";
-import { useSearchParams } from "next/navigation";
+type LoginPageProps = {
+  params?: Record<string, string>;
+  searchParams?: Record<string, string>;
+};
 
-export default function LoginPage() {
-  const searchParams = useSearchParams();
+export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <AuthPage
       type="login"
@@ -13,7 +15,7 @@ export default function LoginPage() {
           email: "",
           password: "",
           callbackUrl:
-            searchParams.get("callbackUrl") || searchParams.get("to"),
+            _get(searchParams, "callbackUrl") || _get(searchParams, "to"),
         },
       }}
     />
