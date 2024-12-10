@@ -20,10 +20,14 @@ import { authProvider } from "@/components/provider/authProvider";
 import { canHandler } from "@/components/provider/accessControl";
 import { PuzzleIcon } from "lucide-react";
 import { notificationProvider } from "@refinedev/mantine";
+import { Analytics } from "@/components/component/Analytics";
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
     <html lang="en">
+      <head>
+        <Analytics />
+      </head>
       <body>
         <RefineKbarProvider>
           <MantineProvider

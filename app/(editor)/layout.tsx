@@ -3,6 +3,7 @@ import "../globals.css";
 import { Inter } from "next/font/google";
 import { ClientProvider } from "@/components/client";
 import { redirect } from "next/navigation";
+import { Analytics } from "@/components/component/Analytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,9 @@ export default async function RootLayout({
         scrollBehavior: "smooth",
       }}
     >
+      <head>
+        <Analytics />
+      </head>
       <body tabIndex={0} className={inter.className}>
         <QueryProvider>
           <ClientProvider>{children}</ClientProvider>

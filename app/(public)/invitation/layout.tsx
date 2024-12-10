@@ -1,3 +1,4 @@
+import { Analytics } from "@/components/component/Analytics";
 import Wrapper from "./Wrapper";
 
 export const metadata = {
@@ -12,6 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Analytics />
+      </head>
       <body>
         <Wrapper>{children}</Wrapper>
       </body>

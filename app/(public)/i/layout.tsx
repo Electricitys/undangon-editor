@@ -1,3 +1,4 @@
+import { Analytics } from "@/components/component/Analytics";
 import "../../globals.css";
 import { Inter } from "next/font/google";
 
@@ -20,6 +21,9 @@ export default function RootLayout({
         scrollBehavior: "smooth",
       }}
     >
+      <head>
+        <Analytics />
+      </head>
       <body tabIndex={0} className={inter.className}>
         {children}
       </body>
