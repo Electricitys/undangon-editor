@@ -6,6 +6,8 @@
     "dev": "next dev --port 3001",
     "dev:debug": "NODE_OPTIONS='--inspect' npm run dev",
     "build": "next build",
+    "compile": "next experimental-compile",
+    "generate": "next experimental-generate",
     "start": "next start --port ${PORT-3002}",
     "lint": "next lint"
   },
