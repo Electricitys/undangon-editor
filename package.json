@@ -12,7 +12,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=22"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",

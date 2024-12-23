@@ -22,6 +22,7 @@ export async function generateStaticParams(): Promise<Props["params"][]> {
     .find({
       query: {
         $select: ["id", "slug"],
+        $limit: 1,
       },
     });
 

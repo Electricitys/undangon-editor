@@ -1,5 +1,9 @@
 import { featherRestApp } from "@/components/client/restClient";
-import { FeathersFindResult, InvitationSchema, MetadataSchema } from "@/components/interfaces";
+import {
+  FeathersFindResult,
+  InvitationSchema,
+  MetadataSchema,
+} from "@/components/interfaces";
 import { FrameProps } from "@/components/Editor/Viewport/Frames";
 
 import lz from "lzutf8";
@@ -20,6 +24,7 @@ export async function generateStaticParams(): Promise<Props["params"][]> {
     .find({
       query: {
         $select: ["slug"],
+        $limit: 1,
       },
     });
 
