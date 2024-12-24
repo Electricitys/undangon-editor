@@ -1,10 +1,7 @@
 import { QueryProvider } from "@/components/client/ReactQuery";
 import "../globals.css";
-import { Inter } from "next/font/google";
 import { ClientProvider } from "@/components/client";
 import { redirect } from "next/navigation";
-
-const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -23,9 +20,7 @@ export default async function RootLayout({
         scrollBehavior: "smooth",
       }}
     >
-      <body tabIndex={0} className={inter.className}>
-        {children}
-      </body>
+      <body tabIndex={0}>{children}</body>
     </html>
   );
 }

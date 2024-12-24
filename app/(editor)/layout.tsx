@@ -1,11 +1,8 @@
 import { QueryProvider } from "@/components/client/ReactQuery";
 import "../globals.css";
-import { Inter } from "next/font/google";
 import { ClientProvider } from "@/components/client";
 import { redirect } from "next/navigation";
 import { Analytics } from "@/components/component/Analytics";
-
-const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -27,7 +24,7 @@ export default async function RootLayout({
       <head>
         <Analytics />
       </head>
-      <body tabIndex={0} className={inter.className}>
+      <body tabIndex={0}>
         <QueryProvider>
           <ClientProvider>{children}</ClientProvider>
         </QueryProvider>
